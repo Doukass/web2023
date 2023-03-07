@@ -1,0 +1,10 @@
+body{
+    margin: 0;
+    font-family: system-ui;
+}
+
+
+.box{
+    background-color: azure;
+    background-image: url("../logoweb2.png");
+}
