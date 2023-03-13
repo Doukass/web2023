@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>KALAPHGE</title>
+<link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet'>
+<!-- <link rel="stylesheet" href="style.css"> -->
+<!-- <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js'></script>
+-->
+<link href="stylelogin.css" rel="stylesheet" type="text/css">
+</head>
+
+<body oncontextmenu='return false' class='snippet-body'>
+<div class="row">
+    <div class="col-md-6 mx-auto p-0">
+        <div class="card">
+            <div class="login-box">
+                <div class="login-snip"> <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">Login</label> <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">Sign Up</label>
+                    <div class="login-space">
+                        <div class="login">
+                            <form action="" method="POST">
+                            <div class="group">
+                              <label for="username" class="label">Username</label>
+                                <input id="user" name="username" type="text" class="input" placeholder="Enter your username" required>
+                           </div>
+                           <div class="group">
+                              <label for="password" class="label">Password</label>
+                                <input id="pass" name="password" type="password" class="input" data-type="password" placeholder="Enter your password" required>
+                              </div>
+                              <div class="group">
+                             <input id="check" type="checkbox" class="check" checked> <label for="check"><span class="icon"></span> Keep me Signed in</label>
+                             </div>
+                             <% if (locals.login_errors) {
+                              login_errors.forEach(function(error_msg){ %>
+                              <div class="alert alert-danger" role="alert"><%= error_msg %></div>
+                              <% });
+                              } %>
+                             <div class="group">
+                             <input type="submit" class="button" value="Sign In">
+                            </div>
+                            </form>
+
+
+
+                            <div class="hr"></div>
+                            <div class="foot"> <a href="#">Forgot Password?</a> </div>
+                        </div>
+
+
+
+
+
+                        <div class="sign-up-form">
+                          <form action="/register" method="POST">
+                            <div class="group" >
+                              <label for="username" class="label">Username</label>
+                              <input id="username" name="username"type="text" class="input" placeholder="Create your Username">
+                            </div>
+                            <div class="group">
+                              <label for="password" class="label">Password</label>
+                              <input id="password" name="password" type="password" class="input" data-type="password" placeholder="Create your password">
+                            </div>
+                            <div class="group">
+                              <label for="password2" class="label">Repeat Password</label>
+                              <input id="password2" type="password" class="input" data-type="password" placeholder="Repeat your password">
+                            </div>
+                            <div class="group">
+                              <label for="email" class="label">Email Address</label>
+                              <input id="email" name="email" type="text" class="input" placeholder="Enter your email address">
+                            </div>
+                            <% if (locals.register_error) {
+                              register_error.forEach(function(error_msg){ %>
+                                <div class="alert alert-danger" role="alert"><%= error_msg %></div>
+                                <% });
+                        } %>
+                  <script type="text/javascript">
+                      var password = document.getElementById("password")
+                        , confirm_password = document.getElementById("password2");
+
+                    function validatePassword(){
+                        if(password.value != confirm_password.value) {
+                          confirm_password.setCustomValidity("Passwords Don't Match");
+                          } else {
+                          confirm_password.setCustomValidity('');
+                              }
+                          }
+                            password.onchange = validatePassword;
+                            confirm_password.onkeyup = validatePassword;
+                  </script>
+                            <div class="group"> <input type="submit" class="button" value="Sign Up">
+                            </div>
+                                <div class="hr"></div>
+                                <div class="foot"> <label for="tab-1">Already Member?</label> </div>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        </body>
+</html>
