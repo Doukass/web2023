@@ -13,7 +13,7 @@
 }
 
 .wrapper{
-	background: url(bg1.jpg) no-repeat;
+	background: url(pair-shopping-cart-miniatures.jpg) no-repeat;
 	background-size: cover;
 	height: 100vh;
 }
@@ -50,7 +50,7 @@
 }
 .navbar ul li a.active,
 .navbar ul li a:hover{
-	background: red;
+	background: rgb(91, 89, 89);
 	border-radius: 2px;
 }
 .wrapper .center{
@@ -85,10 +85,10 @@
 	font-size: 18px;
 	font-weight: 600;
 	color: #ffb3b3;
-	background: red;
+	background: rgb(30, 83, 149);
 	outline: none;
 	cursor: pointer;
-	border: 1px solid #cc0000;
+	border: 1px solid #5e5b5b;
 	border-radius: 25px;
 	transition: .4s;
 }
@@ -96,5 +96,5 @@
 	margin-left: 25px;
 }
 .buttons button:hover{
-	background: #cc0000;
+	background: rgb(91, 89, 89);
 }

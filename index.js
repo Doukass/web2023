@@ -96,7 +96,8 @@ res.render('login-register', {
   register_error: allErrors,
   old_data: req.body
 });
-} // END OF REGISTER PAGE
+}
+}) // END OF REGISTER PAGE
 
 // LOGIN PAGE
 app.post('/', ifLoggedin, [
