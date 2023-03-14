@@ -69,10 +69,12 @@ app.post('/register', ifLoggedin,
         });
     }),
     body('username', 'Username is Empty!').trim().not().isEmpty(),
-    body('password', 'The password must be of minimum length 6 characters').trim().isLength({
-      min: 6
-    }),
-  ], // end of post data validation
+    body('password', 'The password must be of minimum length 8 characters').trim().isLength({ min:8 }),
+    body('password', 'The password must contain at least one uppercase letter').trim().not().isLowercase(),
+    body('password', 'The password must contain at least one Number').trim().matches(/\d/),
+    body('password', 'The password must contain at least one special character').matches(/[!@#$%^&*(),.?":{}|<>]/)
+
+  ], // end of post data validation/
   (req, res, next) => {
 
     const validation_result = validationResult(req);
