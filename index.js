@@ -41,7 +41,7 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
     .then(([rows]) => {
       res.render('home', { name: rows[0].name });
     });
-});
+}); // END OF ROOT PAGE
 
 // Register page
 app.post(
@@ -63,7 +63,8 @@ app.post(
     body('password', 'The password must contain at least one uppercase letter').trim().not().isLowercase(),
     body('password', 'The password must contain at least one number').trim().matches(/\d/),
     body('password', 'The password must contain at least one special character').matches(/[!@#$%^&*(),.?":{}|<>]/)
-  ],
+  ],// end of post data validation
+
   (req, res, next) => {
     const validation_result = validationResult(req);
     const { username, password, email } = req.body;
