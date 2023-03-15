@@ -4,6 +4,14 @@
 	margin: 0;
 }
 
+
+#mapid {
+
+		margin-top: 20px;
+		height: 400px;
+		width:100%;
+}
+
 .hello{
 	font-size:30px;
 	font-family: 'Roboto', sans-serif;
@@ -14,9 +22,9 @@
 }
 
 .wrapper{
-	background: url(pair-shopping-cart-miniatures.jpg) no-repeat;
+	background: url(pair-shopping-cart-miniatures.jpg) ;
 	background-size: cover;
-	height: 100vh;
+	height: 150vh;
 }
 .navbar{
 	position: fixed;
@@ -53,10 +61,13 @@
 .wrapper .center{
 	position: absolute;
 	left: 50%;
-	top: 55%;
+	top: 44%;
 	transform: translate(-50%, -50%);
 	font-family: sans-serif;
 	user-select: none;
+  height: 500px;
+  width: 100%;
+}
 }
 .center h1{
 	color: white;
@@ -64,6 +75,7 @@
 	width: 900px;
 	font-weight: bold;
 	text-align: center;
+
 }
 .center h2{
 	color: white;
@@ -88,6 +100,7 @@
 	border: 1px solid #5e5b5b;
 	border-radius: 25px;
 	transition: .4s;
+
 }
 .buttons .btn2{
 	margin-left: 25px;

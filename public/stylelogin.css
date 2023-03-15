@@ -7,6 +7,7 @@ body {
     font: 600 16px/18px 'Open Sans', sans-serif
 }
 
+
 .login-box {
     width: 100%;
     margin: auto;
@@ -14,14 +15,14 @@ body {
     min-height: 670px;
     position: relative;
     background: url(https://images.unsplash.com/photo-1507208773393-40d9fc670acf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1268&q=80) no-repeat center;
-    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19)
+    box-shadow: 0 12px 30px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19)
 }
 
 .login-snip {
     width: 100%;
     height: 100%;
     position: absolute;
-    padding: 90px 70px 50px 70px;
+    padding: 40px 70px 50px 70px;
     background: rgba(0, 77, 77, .9)
 }
 
@@ -31,7 +32,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    position: absolute;
+    position: fixed;
     transform: rotateY(180deg);
     backface-visibility: hidden;
     transition: all .4s linear
@@ -52,7 +53,7 @@ body {
 .login-snip .tab {
     font-size: 22px;
     margin-right: 15px;
-    padding-bottom: 5px;
+    padding-bottom: 10px;
     margin: 0 15px 10px 0;
     display: inline-block;
     border-bottom: 2px solid transparent
@@ -190,12 +191,13 @@ a {
 }
 
 .foot {
-    text-align: center
+    text-align: center;
 }
 
 .card {
     width: 500px;
-    left: 100px
+    margin: auto;
+
 }
 
 ::placeholder {

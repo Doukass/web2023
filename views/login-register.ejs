@@ -5,10 +5,6 @@
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <title>Web 2023</title>
 <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet'>
-<!-- <link rel="stylesheet" href="style.css"> -->
-<!-- <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
-<script type='text/javascript' src='https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js'></script>
--->
 <link href="stylelogin.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -72,13 +68,12 @@
                             </div>
                             <% if (locals.register_error) {
                               register_error.forEach(function(error_msg){ %>
-                                <div class="alert alert-danger" role="alert"><%= error_msg %></div>
+                                <div class="alert alert-warning" role="alert"><%= error_msg %></div>
                                 <% });
                         } %>
                   <script type="text/javascript">
                       var password = document.getElementById("password")
                         , confirm_password = document.getElementById("password2");
-
                     function validatePassword(){
                         if(password.value != confirm_password.value) {
                           confirm_password.setCustomValidity("Passwords Don't Match");
@@ -92,7 +87,7 @@
                             <div class="group"> <input type="submit" class="button" value="Sign Up">
                             </div>
                                 <div class="hr"></div>
-                                <div class="foot"> <label for="tab-1">Already Member?</label> </div>
+                                <div class="foot" > <label for="tab-1"> <a href="/">Already Member? </a></label> </div>
                           </form>
                         </div>
                     </div>
