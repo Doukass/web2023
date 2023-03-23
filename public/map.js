@@ -27,11 +27,21 @@ fetch('./export.geojson')
     .then(response => response.json())
     .then(data => {
         var featuresLayer = new L.GeoJSON(data, {
-            onEachFeature: function (feature, marker) {
-                marker.bindPopup("<h4>" + feature.properties.name + "</h4>");
+            pointToLayer: function (feature, latlng) {
+                return L.circleMarker(latlng, {
+                    radius: 8,
+                    color: '#1a53ff',
+                    fillColor: '#b3c6ff',
+                    fillOpacity: 0.6
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup("<h4>" + feature.properties.name + "</h4>");
             }
         });
         featuresLayer.addTo(mymap);
+
+
 
         let controlSearch = new L.Control.Search({
             position: "topright",
@@ -40,10 +50,27 @@ fetch('./export.geojson')
             initial: false,
             zoom: 34,
             marker: false
+
         });
 
+        controlSearch.on('search:locationfound', function(event) {
+    var marker = L.marker(event.latlng).addTo(mymap);
+});
+
         mymap.addControl(controlSearch);
+
+
+
+
+
+
+
+
+
+
+
     })
+
     .catch(error => {
         console.error('Error loading GeoJSON data:', error);
     });
