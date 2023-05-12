@@ -171,6 +171,14 @@ app.get("/users/map/stores", async (req, res) => {
 
 
 
+/*app.get("/users/map/search", async (req, res)=> {
+  try{
+    const [results, fields] = await dbConnection.execute('SELECT ')
+  }
+});
+
+*/
+
 
 
 

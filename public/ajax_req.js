@@ -17,16 +17,15 @@ $(document).ready(function ()
                     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 }).addTo(mymap);
 
-                mymap.locate({setView: true, maxZoom: 16});
+                mymap.locate({setView: true, maxZoom: 18});
 
                     function onLocationFound(e) 
                     {
-                        var radius = e.accuracy / 2;
+                        var radius = e.accuracy / 25;
 
-                        L.marker(e.latlng).addTo(mymap)
-                        .bindPopup("You are within " + radius + " meters from this point").openPopup();
 
-                         L.circle(e.latlng, radius).addTo(mymap);
+                         L.circle(e.latlng, radius).addTo(mymap)
+                         .bindPopup("You are within " + radius + " meters from this point").openPopup();;
                     }
 
                     function onLocationError(e) 
@@ -49,12 +48,40 @@ $(document).ready(function ()
                         var latlngs = [result[i].store_latitude, [result[i].store_longitude] ];
 
                         var marker = new L.marker(latlngs, {});
+                       
+                        var featuresLayer = new L.layerGroup([marker]);
+                        
+                        featuresLayer.addTo(mymap);
+                       
+                       
+                        //marker.addTo(mymap);
 
-                        marker.addTo(mymap);
+
+
+
+
+                        
                 }
                     }
                     
-                console.log(store_cord)
+                    //Search
+                    var featuresLayer = new L.layerGroup([marker]);
+                        
+                        featuresLayer.addTo(mymap);
+
+                    let controlSearch = new L.Control.Search({
+                        position: "topright"
+                        
+            
+                    });
+            
+                     controlSearch.on("featuresLayer", function(event) {
+                     var marker = L.marker(event.latlng).addTo(mymap);
+                     });
+            
+                    mymap.addControl(controlSearch);
+                    
+                
 
                 
                 
@@ -63,15 +90,26 @@ $(document).ready(function ()
         })
     }
 
-/------------------------------------------------/
+
+/*
+
+  function StoresSearch()
+  {
+    $.ajax(
+        {
+            type: "GET",
+            url: "/users/map/search",
+            success: function(result)
+            {
+
+            }
+        }
+    )
+
+  }
 
 
-
-
-
-
-
-
+*/
 
 
 

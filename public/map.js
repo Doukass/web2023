@@ -53,9 +53,9 @@ fetch('./export.geojson')
 
         });
 
-        controlSearch.on('search:locationfound', function(event) {
-    var marker = L.marker(event.latlng).addTo(mymap);
-});
+         controlSearch.on('search:locationfound', function(event) {
+         var marker = L.marker(event.latlng).addTo(mymap);
+         });
 
         mymap.addControl(controlSearch);
 
