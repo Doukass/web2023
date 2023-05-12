@@ -74,3 +74,4 @@ fetch('./export.geojson')
     .catch(error => {
         console.error('Error loading GeoJSON data:', error);
     });
+    */

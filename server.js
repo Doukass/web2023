@@ -159,17 +159,9 @@ app.get("/users/map/stores", async (req, res) => {
     const [results, fields] = await dbConnection.execute('SELECT store_name, store_latitude, store_longitude FROM stores');
     console.log("Query returned ${results.length} results:");
     console.log(results);
-
-    res.send(results);
-
     
 
-
-
-
-
-
-
+    res.send(results);
 
   } catch (err) {
     console.error(err);
