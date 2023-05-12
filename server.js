@@ -161,6 +161,16 @@ app.get("/users/map/stores", async (req, res) => {
     console.log(results);
 
     res.send(results);
+
+    
+
+
+
+
+
+
+
+
   } catch (err) {
     console.error(err);
     res.status(500).send("Error fetching stores");

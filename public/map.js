@@ -1,4 +1,4 @@
-let mymap = L.map('mapid');
+/*let mymap = L.map('mapid');
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
