@@ -149,33 +149,34 @@ app.get('/logout', (req, res) => {
   res.redirect('/');
 }); // END OF LOGOUT
 
-
+// alagess ston kwdikaaaa---------
 
 
 app.get("/users/map/stores", async (req, res) => {
  // console.log("handling Get req for users/map/stores");
 
-  try {
+    //to try catch pou e;ixame se ayto to shmeio den xreazetai
+    //genika try catch xrhsimopoioyme mono gia na doyme ean ena kommati tou kwdika leitoyrgei
+    //ara mporoume na to xreisimopoioyme sthn arxh gia na doume ean to kommati tou kwdika poy theloume douleuei kai meta to sbhnoume
+    //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
+
+  
     const [results, fields] = await dbConnection.execute('SELECT store_name, store_latitude, store_longitude FROM stores');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
     
-
+   //sthn parakatw entolh stelnoume ston client to results
     res.send(results);
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching stores");
-  }
 });
 
 
 
 app.get("/users/map/search", async (req, res)=> {
-  try{
-    const [results, fields] = await dbConnection.execute('SELECT ')
-  }
+  //try{
+  //  const [results, fields] = await dbConnection.execute('SELECT ')
+  //}
 });
 
 
