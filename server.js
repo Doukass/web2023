@@ -153,12 +153,13 @@ app.get('/logout', (req, res) => {
 
 
 app.get("/users/map/stores", async (req, res) => {
-  console.log("handling Get req for users/map/stores");
+ // console.log("handling Get req for users/map/stores");
 
   try {
     const [results, fields] = await dbConnection.execute('SELECT store_name, store_latitude, store_longitude FROM stores');
-    console.log("Query returned ${results.length} results:");
-    console.log(results);
+    //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
+    //console.log("Query returned ${results.length} results:");
+    //console.log(results);
     
 
     res.send(results);
@@ -171,13 +172,13 @@ app.get("/users/map/stores", async (req, res) => {
 
 
 
-/*app.get("/users/map/search", async (req, res)=> {
+app.get("/users/map/search", async (req, res)=> {
   try{
     const [results, fields] = await dbConnection.execute('SELECT ')
   }
 });
 
-*/
+
 
 
 

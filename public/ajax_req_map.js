@@ -35,7 +35,8 @@ $(document).ready(function ()
 
                     mymap.on('locationfound', onLocationFound);
                     mymap.on('locationerror', onLocationError);
-                    console.log(result)
+                    // to parakatw console.log bgazei ta apotelesmata sto browser
+                    //console.log(result)
 
                 
                 var store_cord =[]    
@@ -65,7 +66,7 @@ $(document).ready(function ()
                     }
                     
                     //Search
-                    var featuresLayer = new L.layerGroup([marker]);
+                    /*var featuresLayer = new L.layerGroup([marker]);
                         
                         featuresLayer.addTo(mymap);
 
@@ -81,7 +82,7 @@ $(document).ready(function ()
             
                     mymap.addControl(controlSearch);
                     
-                
+                */
 
                 
                 
@@ -89,31 +90,5 @@ $(document).ready(function ()
             
         })
     }
-
-
-/*
-
-  function StoresSearch()
-  {
-    $.ajax(
-        {
-            type: "GET",
-            url: "/users/map/search",
-            success: function(result)
-            {
-
-            }
-        }
-    )
-
-  }
-
-
-*/
-
-
-
-
-
 
 })
