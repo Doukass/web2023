@@ -155,7 +155,7 @@ app.get('/logout', (req, res) => {
 app.get("/users/map/stores", async (req, res) => {
  // console.log("handling Get req for users/map/stores");
 
-    //to try catch pou e;ixame se ayto to shmeio den xreazetai
+    //to try catch pou eixame se ayto to shmeio den xreazetai
     //genika try catch xrhsimopoioyme mono gia na doyme ean ena kommati tou kwdika leitoyrgei
     //ara mporoume na to xreisimopoioyme sthn arxh gia na doume ean to kommati tou kwdika poy theloume douleuei kai meta to sbhnoume
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
@@ -174,9 +174,12 @@ app.get("/users/map/stores", async (req, res) => {
 
 
 app.get("/users/map/search", async (req, res)=> {
-  //try{
-  //  const [results, fields] = await dbConnection.execute('SELECT ')
-  //}
+  
+   const [results, fields] = await dbConnection.execute('SELECT stores.store_name, discount.store_id FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
+  //console.log("Query returned ${results.length} results:");
+    //console.log(results);
+   res.send(results);
+   
 });
 
 

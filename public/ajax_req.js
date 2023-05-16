@@ -50,8 +50,9 @@ $(document).ready(function ()
                 {
                     //me to parakatw if apothikeyoume apothikeyoume ston pinaka poy dhmioyrghsame pio panw ayta pou theloume 
                     if (result[i].store_latitude != null && result[i].store_longitude != null ){
-                        store_cord.push([result[i].store_latitude, [result[i].store_longitude]])
+                        store_cord.push([result[i].store_name, result[i].store_latitude, result[i].store_longitude])
                         //edw ftiaxnoume mia metablhth sthn opoia apothikeuoume gewgrafiko mhkos kai platos
+                        //console.log(store_cord[i]);
                         var latlngs = [result[i].store_latitude, [result[i].store_longitude] ];
                         //edw ftiaxnoume enan neo marker
                         var marker = new L.marker(latlngs, {});
@@ -96,5 +97,33 @@ $(document).ready(function ()
             
         })
     }
+
+    StoresSearch();
+
+    function StoresSearch()
+    {
+        $.ajax(
+            {
+                type:"GET",
+                url:"/users/map/search",
+                success: function(results)
+                {
+                    var stores_disc = [];
+
+                    for(var i = 0; i<results.length; i++){
+                        
+                            stores_disc.push(results[i].store_id, results[i].store_name);
+                            console.log(stores_disc[i]);
+                        
+
+                    }
+                }
+
+            }
+        )
+
+    
+    }
+
 
 })
