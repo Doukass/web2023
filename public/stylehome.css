@@ -68,7 +68,7 @@
   height: 500px;
   width: 100%;
 }
-}
+
 .center h1{
 	color: white;
 	font-size: 70px;
@@ -102,6 +102,9 @@
 	transition: .4s;
 
 }
+
+
+
 .buttons .btn2{
 	margin-left: 25px;
 }

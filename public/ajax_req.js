@@ -1,3 +1,5 @@
+//const { marker } = require("leaflet");
+
 $(document).ready(function () 
 {
     //ston parakatw kwdika ftiaxnoume ton xatrh mas
@@ -24,8 +26,31 @@ $(document).ready(function ()
 
                     mymap.on('locationfound', onLocationFound);
                     mymap.on('locationerror', onLocationError);
-                    // to parakatw console.log bgazei ta apotelesmata sto browser
-                    //console.log(result)
+
+
+
+
+
+
+
+
+                    
+
+
+
+
+
+                    //mymap.addControl(
+                    //   new L.Control.Search({
+                    //      //sourceData: searchStores,
+                    //      position: 'topright'
+                    //    })
+                    //  );
+
+
+
+
+                
 
     
     //edw kaloume thn synarthsh poy dhmioyrgoyme pio katw
@@ -44,7 +69,8 @@ $(document).ready(function ()
             success: function (result)
             {
                 //edw dhlwnoume enan adeio pinaka ston opoio tha apothikeysoume ta dedomena mas
-                var store_cord =[]    
+                var store_cord =[]   
+
 
                 for (var i = 0; i<result.length; i++)
                 {
@@ -57,12 +83,21 @@ $(document).ready(function ()
                         //edw ftiaxnoume enan neo marker
                         var marker = new L.marker(latlngs, {});
                        // edw ftiaxnoume ena neo layer
-                        var featuresLayer = new L.layerGroup([marker]);
+                       marker.bindPopup(result[i].store_name);
+                       //to parapanw emfanizei ta onomata toy kathe soupermarket
+                       // var featuresLayer = new L.layerGroup([marker]);
                         // edw bazoume to layer ston xarth
-                        featuresLayer.addTo(mymap);
+                        //featuresLayer.addTo(mymap);
                        
                        
-                        //marker.addTo(mymap);
+                       marker.addTo(mymap);
+
+
+
+
+                     
+
+
 
 
 
@@ -71,6 +106,40 @@ $(document).ready(function ()
                         
                 }
                     }
+
+
+
+                   
+
+                    //mymap.addControl(
+                    //    new L.Control.Search({
+                    //   position:'topright',
+                    //    layer: marker,
+                    //   initial: false,
+                    //   zoom: 15,
+                    //   marker: false
+                        
+                   // }));
+                    
+
+                    
+
+
+
+
+
+                    //mymap.addControl(
+                    //   new L.Control.Search({
+                    //   position: 'topright'
+                    //   })
+                    // );
+
+                    
+
+
+
+
+
                     
                     //Search
                     /*var featuresLayer = new L.layerGroup([marker]);
@@ -112,11 +181,23 @@ $(document).ready(function ()
 
                     for(var i = 0; i<results.length; i++){
                         
-                            stores_disc.push(results[i].store_id, results[i].store_name);
-                            console.log(stores_disc[i]);
+                            stores_disc.push( [results[i].store_name, results[i].store_latitude, results[i].store_longitude, results[i].product_id]);
+                            //console.log(stores_disc[i]);
                         
 
+                            var latlngs = [results[i].store_latitude, [results[i].store_longitude] ];
+                            var marker = new L.marker(latlngs, {});
+                            marker.addTo(mymap);
+
                     }
+
+
+
+
+                    
+                    
+
+
                 }
 
             }
