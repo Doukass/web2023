@@ -1,5 +1,6 @@
 //const { marker } = require("leaflet");
 
+
 $(document).ready(function () 
 {
     //ston parakatw kwdika ftiaxnoume ton xatrh mas
@@ -68,8 +69,35 @@ $(document).ready(function ()
             url:"/users/map/stores",
             success: function (result)
             {
-                //edw dhlwnoume enan adeio pinaka ston opoio tha apothikeysoume ta dedomena mas
-                var store_cord =[]   
+                
+
+                    
+
+
+                var markersLayer = L.layerGroup();
+
+                    mymap.addLayer(markersLayer);
+
+                    //markersLayer.addTo(mymap);
+
+                    var controlSearch = new L.Control.Search({
+                        position:'topright',
+                        layer: markersLayer,
+                        //sourceData: users,
+                        initial: false,
+                        zoom: 20,
+                        marker: false
+                    });
+
+                    mymap.addControl(controlSearch);
+
+
+
+
+                        //edw dhlwnoume enan adeio pinaka ston opoio tha apothikeysoume ta dedomena mas
+                        var store_cord =[] 
+                       
+
 
 
                 for (var i = 0; i<result.length; i++)
@@ -77,29 +105,25 @@ $(document).ready(function ()
                     //me to parakatw if apothikeyoume apothikeyoume ston pinaka poy dhmioyrghsame pio panw ayta pou theloume 
                     if (result[i].store_latitude != null && result[i].store_longitude != null ){
                         store_cord.push([result[i].store_name, result[i].store_latitude, result[i].store_longitude])
+                        
                         //edw ftiaxnoume mia metablhth sthn opoia apothikeuoume gewgrafiko mhkos kai platos
-                        //console.log(store_cord[i]);
+                        console.log(store_cord[i]);
+                        
                         var latlngs = [result[i].store_latitude, [result[i].store_longitude] ];
                         //edw ftiaxnoume enan neo marker
                         var marker = new L.marker(latlngs, {});
                        // edw ftiaxnoume ena neo layer
                        marker.bindPopup(result[i].store_name);
+                       marker.addTo(markersLayer);
                        //to parapanw emfanizei ta onomata toy kathe soupermarket
                        // var featuresLayer = new L.layerGroup([marker]);
                         // edw bazoume to layer ston xarth
                         //featuresLayer.addTo(mymap);
                        
                        
-                       marker.addTo(mymap);
+                       //marker.addTo(mymap);
 
-
-
-
-                     
-
-
-
-
+                       
 
 
 
@@ -109,56 +133,14 @@ $(document).ready(function ()
 
 
 
-                   
-
-                    //mymap.addControl(
-                    //    new L.Control.Search({
-                    //   position:'topright',
-                    //    layer: marker,
-                    //   initial: false,
-                    //   zoom: 15,
-                    //   marker: false
-                        
-                   // }));
-                    
-
-                    
 
 
 
 
 
-                    //mymap.addControl(
-                    //   new L.Control.Search({
-                    //   position: 'topright'
-                    //   })
-                    // );
-
-                    
 
 
-
-
-
-                    
-                    //Search
-                    /*var featuresLayer = new L.layerGroup([marker]);
-                        
-                        featuresLayer.addTo(mymap);
-
-                    let controlSearch = new L.Control.Search({
-                        position: "topright"
-                        
             
-                    });
-            
-                     controlSearch.on("featuresLayer", function(event) {
-                     var marker = L.marker(event.latlng).addTo(mymap);
-                     });
-            
-                    mymap.addControl(controlSearch);
-                    
-                */
 
                 
                 
@@ -187,7 +169,7 @@ $(document).ready(function ()
 
                             var latlngs = [results[i].store_latitude, [results[i].store_longitude] ];
                             var marker = new L.marker(latlngs, {});
-                            marker.addTo(mymap);
+                            //marker.addTo(mymap);
 
                     }
 

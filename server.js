@@ -46,6 +46,12 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
     });
 }); // END OF ROOT PAGE
 
+
+
+
+
+
+
 // Register page
 app.post(
   '/register',
@@ -145,13 +151,13 @@ app.post('/', ifLoggedin, [
 
 
 app.get('/home/profile', (req, res) => {
-  pool.query("SELECT COUNT(user_id) FROM users WHERE user_id IN (SELECT user_id FROM users WHERE username = $1)",[req.session.username], function (err, count) {
+  pool.query("SELECT COUNT(id) FROM users WHERE id IN (SELECT id FROM users WHERE name = $1)",[req.session.name], function (err, count) {
     if (err)
       throw err;
       else {
         console.log(count)
         files = count;
-        res.render('profile', { name: req.session.username, password: req.session.password});
+        res.render('profile.ejs', { name: req.session.name, password: req.session.password});
       }
   });
 });
@@ -216,16 +222,16 @@ app.get("/users/map/search", async (req, res)=> {
 
 
 
+//--------
 
 
+// giati exei mpei h parakatw malakia
+//gtxm
+//app.use('/', (req, res) => {
+//  res.status(404).send('<h1>404 Page Not Found!!!!!!</h1>');
+//});
 
-
-
-app.use('/', (req, res) => {
-  res.status(404).send('<h1>404 Page Not Found!</h1>');
-});
-
-
+//-----------
 
 
 
