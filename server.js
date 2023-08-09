@@ -40,8 +40,8 @@ const ifLoggedin = (req, res, next) => {
 };
 
 // Root page
-app.get('/', ifNotLoggedin, (req, res, next) => {
-  dbConnection.execute("SELECT `name` FROM `users` WHERE `id`=?", [req.session.userID])
+app.get('/home', ifNotLoggedin, (req, res, next) => {
+  dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
       res.render('home', { name: rows[0].name });
     });
@@ -50,10 +50,10 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
 
 
 
-
+// sthn selida tou profile emfanizoyme plhrogories opws name, email
 
 app.get('/profile', ifNotLoggedin, (req, res, next) => {
-  dbConnection.execute("SELECT `name` FROM `users` WHERE `id`=?", [req.session.userID])
+  dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
       res.render('profile', { name: rows[0].name });
     });
@@ -133,7 +133,7 @@ res.render('login-register', {
 // LOGIN PAGE
 app.post('/', ifLoggedin, [
   body('username').custom((value) => {
-    return dbConnection.execute('SELECT `name` FROM `users` WHERE `name`=?', [value])
+    return dbConnection.execute('SELECT name FROM users WHERE name=?', [value])
       .then(([rows]) => {
         if (rows.length == 1) {
           return true;
@@ -147,7 +147,7 @@ app.post('/', ifLoggedin, [
   const { password, username } = req.body;
 
   if (validation_result.isEmpty()) {
-    dbConnection.execute("SELECT * FROM `users` WHERE `name`=?", [username])
+    dbConnection.execute("SELECT * FROM users WHERE name=?", [username])
       .then(([rows]) => {
         bcrypt.compare(password, rows[0].password).then(compare_result => {
           if (compare_result === true) {

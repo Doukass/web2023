@@ -111,3 +111,24 @@
 .buttons button:hover{
 	background: rgb(91, 89, 89);
 }
+
+
+
+
+
+
+.form-group1 {
+	position: fixed;
+	height: 200px; /* Make sure to specify units (e.g., px) */
+	width: 50%;
+	top: 50%;
+	left: 0%;
+  }
+
+  .form-group2 {
+	position: fixed;
+	height: 200px; /* Make sure to specify units (e.g., px) */
+	width: 50%;
+	top: 70%;
+	left: 0%;
+  }
