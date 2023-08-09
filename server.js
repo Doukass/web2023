@@ -40,7 +40,7 @@ const ifLoggedin = (req, res, next) => {
 };
 
 // Root page
-app.get('/home', ifNotLoggedin, (req, res, next) => {
+app.get('/', ifNotLoggedin, (req, res, next) => {
   dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
       res.render('home', { name: rows[0].name });
@@ -50,12 +50,28 @@ app.get('/home', ifNotLoggedin, (req, res, next) => {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // sthn selida tou profile emfanizoyme plhrogories opws name, email
 
 app.get('/profile', ifNotLoggedin, (req, res, next) => {
-  dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
+  dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
-      res.render('profile', { name: rows[0].name });
+      res.render('profile', { name: rows[0].name, password:rows[0].password });
     });
 });
     
@@ -178,6 +194,92 @@ app.post('/', ifLoggedin, [
 //app.get('/profile', (req,res) => {
 //  res.render('profile')
 //});
+
+
+//-------------------
+//ALLAGH username kai password
+
+
+app.post("/home/profile", async (req, res) => {
+  let { newname, newpassword, secpassword } = req.body;
+
+  let errors = [];
+
+  console.log({
+    newname,
+    newpassword,
+    secpassword
+  });
+
+  if (!newname || !newpassword || !secpassword) {
+    errors.push({ message: "Please enter all fields" });
+  }
+
+  if (newpassword.length < 6) {
+    errors.push({ message: "Password must be a least 6 characters long." });
+  }
+  if (newpassword.match(/[a-z]+/) == null){
+    errors.push({ message: "Passwords must contain at least a small letter." });
+  }
+  if (newpassword.match(/[A-Z]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one capital letter." });
+  }
+  if (newpassword.match(/[0-9]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one number." });
+  }
+  if (newpassword.match(/[$@#&!]+/) == null) {
+    errors.push({ message: "Passwords must contain at least one symbol ($@#&!)" });
+  }
+
+  if (newpassword !== secpassword) {
+    errors.push({ message: "Passwords do not match" });
+  }
+
+  if (errors.length > 0) {
+    res.render("profile", { name: req.session.name, password: req.session.password, errors, newname, newpassword, secpassword });
+  } else {
+    // Validation passed
+    dbConnection.execute(
+      `UPDATE users SET name = $1, password = $2
+          WHERE name = $3 AND password = $4`,
+      [newname, newpassword, req.session.name, req.session.password],
+      (err, results) => {
+        if (err) {
+          console.log(err);
+        }
+        else {
+          console.log(results.rows);
+          req.session.name = newname;
+          req.session.password = newpassword;
+          req.flash("success", "Your information changed succesfully");
+          res.render('profile', { name: newname, password: newpassword });
+        }
+      }
+    );
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//-------------------------
 
 
 

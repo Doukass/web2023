@@ -117,7 +117,7 @@
 
 
 
-.form-group1 {
+.form {
 	position: fixed;
 	height: 200px; /* Make sure to specify units (e.g., px) */
 	width: 50%;
@@ -125,10 +125,56 @@
 	left: 0%;
   }
 
-  .form-group2 {
+
+  .btn-primary1{
 	position: fixed;
-	height: 200px; /* Make sure to specify units (e.g., px) */
-	width: 50%;
-	top: 70%;
+	height: 50px; /* Make sure to specify units (e.g., px) */
+	width: 30%;
+	top: 71%;
 	left: 0%;
+	background: rgb(30, 83, 149);
+	outline: none;
+	cursor: pointer;
+	border: 1px solid #5e5b5b;
   }
+
+  .btn-primary2{
+	position: fixed;
+	height: 50px; /* Make sure to specify units (e.g., px) */
+	width: 30%;
+	top: 81%;
+	left: 0%;
+	background: rgb(30, 83, 149);
+	outline: none;
+	cursor: pointer;
+	border: 1px solid #5e5b5b;
+  }
+
+
+
+    .centered-list {
+		position: fixed;
+		height: 50px; /* Make sure to specify units (e.g., px) */
+		width: 40%;
+		top: 30%;
+		left: 0%;
+        
+    }
+
+    .centered-list li {
+        text-align: center;
+    }
+
+	.centered-list2 {
+		position: fixed;
+		height: 50px; /* Make sure to specify units (e.g., px) */
+		width:40%;
+		top: 35%;
+		left: 0%;
+        
+    }
+
+    .centered-list2 li {
+        text-align: center;
+    }
+
