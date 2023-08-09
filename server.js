@@ -4,6 +4,7 @@ const cookieSession = require('cookie-session');
 const bcrypt = require('bcryptjs');
 const dbConnection = require('./database');
 const { body, validationResult } = require('express-validator');
+const { name } = require('ejs');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
@@ -45,6 +46,26 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
       res.render('home', { name: rows[0].name });
     });
 }); // END OF ROOT PAGE
+
+
+
+
+
+
+app.get('/profile', ifNotLoggedin, (req, res, next) => {
+  dbConnection.execute("SELECT `name` FROM `users` WHERE `id`=?", [req.session.userID])
+    .then(([rows]) => {
+      res.render('profile', { name: rows[0].name });
+    });
+});
+    
+   
+  
+  
+
+
+
+
 
 
 
@@ -150,17 +171,17 @@ app.post('/', ifLoggedin, [
 
 
 
-app.get('/home/profile', (req, res) => {
-  pool.query("SELECT COUNT(id) FROM users WHERE id IN (SELECT id FROM users WHERE name = $1)",[req.session.name], function (err, count) {
-    if (err)
-      throw err;
-      else {
-        console.log(count)
-        files = count;
-        res.render('profile.ejs', { name: req.session.name, password: req.session.password});
-      }
-  });
-});
+
+
+
+
+//app.get('/profile', (req,res) => {
+//  res.render('profile')
+//});
+
+
+
+
 
 
 
