@@ -330,7 +330,7 @@ app.get("/users/map/search", async (req, res)=> {
   
    const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
   //console.log("Query returned ${results.length} results:");
-   //console.log(results);
+   console.log(results);
    res.send(results);
    
 });
