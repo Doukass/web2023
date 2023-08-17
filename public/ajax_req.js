@@ -83,7 +83,7 @@ $(document).ready(function ()
                     var controlSearch = new L.Control.Search({
                         position:'topright',
                         layer: markersLayer,
-                        //sourceData: users,
+                        
                         initial: false,
                         zoom: 20,
                         marker: false
