@@ -116,6 +116,38 @@ for (let i = 0; i < result.length; i++) {
           }
       })
   }
+
+
+
+  var dropdownmenu= L.control({position: "bottomleft"});
+
+  dropdownmenu.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'dropdownmenu');
+      div.innerHTML = '<select><option>1</option><option>2</option><option>3</option>';
+     
+      L.DomEvent.disableClickPropagation(div);
+      return div;
+  };
+  dropdownmenu.addTo(mymap);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 });
 
 
