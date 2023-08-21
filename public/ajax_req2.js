@@ -52,27 +52,41 @@ $(document).ready(function () {
 
               mymap.addControl(controlSearch);
 
-              for (let i = 0; i < result.length; i++) {
-                let title = data[i].store_name;
-                let loc = [data[i].store_latitude, data[i].store_longitude];
-                let discount_on = data[i].discount_on;
-            
-                if (discount_on == 0) {
-                    let marker = L.circleMarker(L.latLng(loc), { title: title });
-                    marker.bindPopup(title);
-                    markersLayer.addLayer(marker);
-                } else {
-                    let product_id = data[i].product_id; // Extract product_id
-            
-                    let marker = L.marker(L.latLng(loc), { title: title });
-                    
-                    // Create the popup content, including the product_id
-                    let popupContent = `<strong>${title}</strong><br>Product ID: ${product_id}`;
-                    
-                    marker.bindPopup(popupContent); // Bind the popup with content
-                    markersLayer.addLayer(marker);
-                }
-            }
+              // Create an object to store products by location
+const productsByLocation = {};
+
+for (let i = 0; i < result.length; i++) {
+    let title = data[i].store_name;
+    let loc = [data[i].store_latitude, data[i].store_longitude];
+    let discount_on = data[i].discount_on;
+    let product_id = data[i].product_id;
+
+    if (discount_on === 0) {
+        let marker = L.circleMarker(L.latLng(loc), { title: title });
+        marker.bindPopup(title);
+        markersLayer.addLayer(marker);
+    } else {
+        if (!productsByLocation[loc]) {
+            productsByLocation[loc] = [];
+        }
+
+        if (product_id !== null) {
+            productsByLocation[loc].push(product_id);
+        }
+
+        let marker = L.marker(L.latLng(loc), { title: title });
+        
+        let popupContent = `<strong>${title}</strong>`;
+        
+        if (productsByLocation[loc].length > 0) {
+            popupContent += `<br>Product IDs: ${productsByLocation[loc].join(", ")}`;
+        }
+        
+        marker.bindPopup(popupContent);
+        markersLayer.addLayer(marker);
+    }
+}
+
             
 
               controlSearch.on('search:locationfound', function (event) {
