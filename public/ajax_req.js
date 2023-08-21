@@ -173,13 +173,6 @@ $(document).ready(function ()
 
                     }
 
-
-
-
-                    
-                    
-
-
                 }
 
             }

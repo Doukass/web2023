@@ -314,7 +314,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
   
-    const [results, fields] = await dbConnection.execute('SELECT store_name, store_latitude, store_longitude FROM stores WHERE store_name IS NOT NULL;');
+    const [results, fields] = await dbConnection.execute('SELECT store_name, store_latitude, store_longitude, discount_on FROM stores WHERE store_name IS NOT NULL;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);

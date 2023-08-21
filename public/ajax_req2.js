@@ -54,9 +54,22 @@ $(document).ready(function () {
               for (var i = 0; i < result.length; i++) {
                   let title = data[i].store_name;
                   let loc = [data[i].store_latitude, data[i].store_longitude];
-                  let marker = L.marker(L.latLng(loc), { title: title });
-                  marker.bindPopup(title);
-                  markersLayer.addLayer(marker);
+                  let discount_on = [data[i].discount_on];
+                  console.log(discount_on);
+
+                    if (discount_on == 0){
+                        let marker = L.circleMarker(L.latLng(loc), { title: title });
+                        marker.bindPopup(title);
+                        markersLayer.addLayer(marker);
+                    } else{
+                        let marker = L.marker(L.latLng(loc), { title: title });
+                        marker.bindPopup(title);
+                        markersLayer.addLayer(marker);
+                    }
+
+
+
+                  
               }
 
               controlSearch.on('search:locationfound', function (event) {
