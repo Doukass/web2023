@@ -60,6 +60,10 @@ for (let i = 0; i < result.length; i++) {
     let loc = [data[i].store_latitude, data[i].store_longitude];
     let discount_on = data[i].discount_on;
     let product_id = data[i].product_id;
+    let product_name = data[i].name;
+    let price = data[i].price
+    let date = data[i].date_entered;
+    
 
     if (discount_on === 0) {
         let marker = L.circleMarker(L.latLng(loc), { title: title });
@@ -71,7 +75,7 @@ for (let i = 0; i < result.length; i++) {
         }
 
         if (product_id !== null) {
-            productsByLocation[loc].push(product_id);
+            productsByLocation[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date );
         }
 
         let marker = L.marker(L.latLng(loc), { title: title });
@@ -79,7 +83,7 @@ for (let i = 0; i < result.length; i++) {
         let popupContent = `<strong>${title}</strong>`;
         
         if (productsByLocation[loc].length > 0) {
-            popupContent += `<br>Product IDs: ${productsByLocation[loc].join(", ")}`;
+            popupContent += ` ${productsByLocation[loc].join(" ")}`;
         }
         
         marker.bindPopup(popupContent);
