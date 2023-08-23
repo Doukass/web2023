@@ -339,7 +339,7 @@ app.get("/users/map/search", async (req, res)=> {
 
 app.get("/users/map/category", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.price, discount.date_entered, products.name, category.name AS cat_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id;');
+  const [results, fields] = await dbConnection.execute('SELECT c.name AS category_name, d.store_id, d.price, d.date_entered, p.name AS product_name, s.store_name, s.store_latitude, s.store_longitude FROM discount AS d JOIN products AS p ON d.product_id = p.product_id JOIN stores AS s ON d.store_id = s.store_id JOIN category AS c ON p.category_id = c.category_id;');
  //console.log("Query returned ${results.length} results:");
   console.log(results);
   res.send(results);
