@@ -16,8 +16,10 @@ $(document).ready(function () {
       L.circle(e.latlng, radius).addTo(mymap)
           .bindPopup("You are within " + userCoords + " meters from this point").openPopup();
 
-      console.log(userCoords);
+      //console.log(userCoords);
   }
+
+  console.log(userCoords);
 
   function onLocationError(e) {
       alert(e.message);
