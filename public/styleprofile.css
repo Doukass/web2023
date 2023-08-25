@@ -22,32 +22,6 @@ body {
     background: linear-gradient(135deg, #00aaff, #00ffaa);
 }
 
-.navbar {
-    background-color: #333;
-    color: white;
-    width: 100%;
-    padding: 10px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-    padding: 0 20px;
-}
-
-.navbar a {
-    color: white;
-    text-decoration: none;
-}
-
-.navbar .active {
-    font-weight: bold;
-}
 
 .centered-list {
     text-align: center;
