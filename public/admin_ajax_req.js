@@ -12,18 +12,20 @@ $(document).ready(function () {
             success: function(result) {
                 let data = result;
                 const dataItems = [];
-
+                console.log(result);
                 for (let i = 0; i < result.length; i++) {
                     let discount_on = data[i].discount_on;
 
                     if (discount_on === 1) {
                         let title = data[i].store_name;
                         let loc = [data[i].store_latitude, data[i].store_longitude];
-                        let user_name = data[i].name;
-                        let product_name = data[i].name;
+                        let user_name = data[i].user_name;
+                        let product_name = data[i].product_name;
                         let price = data[i].price;
                         let date = data[i].date_entered;
                         let product_id = data[i].product_id;
+                        let discount_id = data[i].discount_id;
+
 
                         const dataItem = {
                             title,
@@ -32,7 +34,8 @@ $(document).ready(function () {
                             product_name,
                             price,
                             date,
-                            product_id
+                            product_id,
+                            discount_id
                         };
 
                         dataItems.push(dataItem);
@@ -55,6 +58,7 @@ $(document).ready(function () {
             // Generate HTML for the data item using dataItem properties
             let itemHTML = `<div class="discount-item">
                 <h3>${dataItem.title}</h3>
+                <p>Discount id: ${dataItem.discount_id}</p>
                 <p>User: ${dataItem.user_name}</p>
                 <p>Product: ${dataItem.product_name}</p>
                 <p>Price: ${dataItem.price}</p>

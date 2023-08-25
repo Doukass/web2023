@@ -1,185 +1,68 @@
-//const { marker } = require("leaflet");
+$(document).ready(function () {
+    // Attach a click event handler to the "Discounts" button
+    $("#displayButton").click(function () {
+        // Call the function to fetch and display data items
+        aksiologhsh();
+    });
 
+    function aksiologhsh() {
+        $.ajax({
+            type: "GET",
+            url: "/users/map/aksiologhsh",
+            success: function(result) {
+                let data = result;
+                const dataItems = [];
 
-$(document).ready(function () 
-{
-    //ston parakatw kwdika ftiaxnoume ton xatrh mas
-    var mymap = L.map('mapid');
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                }).addTo(mymap);
+                for (let i = 0; i < result.length; i++) {
+                    let discount_on = data[i].discount_on;
 
-                mymap.locate({setView: true, maxZoom: 18});
+                    if (discount_on === 1) {
+                        let title = data[i].store_name;
+                        let loc = [data[i].store_latitude, data[i].store_longitude];
+                        let user_name = data[i].name;
+                        let product_name = data[i].name;
+                        let price = data[i].price;
+                        let date = data[i].date_entered;
+                        let product_id = data[i].product_id;
 
-                    function onLocationFound(e) 
-                    {
-                        var radius = e.accuracy / 25;
+                        const dataItem = {
+                            title,
+                            loc,
+                            user_name,
+                            product_name,
+                            price,
+                            date,
+                            product_id
+                        };
 
-
-                         L.circle(e.latlng, radius).addTo(mymap)
-                         .bindPopup("You are within " + radius + " meters from this point").openPopup();;
+                        dataItems.push(dataItem);
                     }
-
-                    function onLocationError(e) 
-                    {
-                    alert(e.message);
-                    }
-
-                    mymap.on('locationfound', onLocationFound);
-                    mymap.on('locationerror', onLocationError);
-
-
-
-
-
-
-
-
-                    
-
-
-
-
-
-                    //mymap.addControl(
-                    //   new L.Control.Search({
-                    //      //sourceData: searchStores,
-                    //      position: 'topright'
-                    //    })
-                    //  );
-
-
-
-
-                
-
-    
-    //edw kaloume thn synarthsh poy dhmioyrgoyme pio katw
-    //genika opoiadhpote synarthsh dhmioyrgoume prepei kai na thn kaloyme sto idio arxeio
-    userStoresGet();
-
-    function userStoresGet()
-    {
-        $.ajax(
-        {
-            // sthn parakatw entolh dhlwnoyme ton typo tou ajax request 'GET' h opoia dhlwnei oti tha paroume stoixeia apo thn bash dedomenwn mas
-            // anti gia 'GET' mporoume na baloume 'POST' to opoio dhlwnei oti tha steiloyme dedomena sthn bash mas
-            type:"GET",
-            //me thn parakatw entolh ousiastika dinoume to kyrio onoma sto request mas
-            url:"/users/map/stores",
-            success: function (result)
-            {
-                
-
-                    
-
-
-                var markersLayer = L.layerGroup();
-
-                    mymap.addLayer(markersLayer);
-
-                    //markersLayer.addTo(mymap);
-
-                    var controlSearch = new L.Control.Search({
-                        position:'topright',
-                        layer: markersLayer,
-                        
-                        initial: false,
-                        zoom: 20,
-                        marker: false
-                    });
-
-                    mymap.addControl(controlSearch);
-
-
-
-
-                        //edw dhlwnoume enan adeio pinaka ston opoio tha apothikeysoume ta dedomena mas
-                        var store_cord =[] 
-                       
-
-
-
-                for (var i = 0; i<result.length; i++)
-                {
-                    //me to parakatw if apothikeyoume apothikeyoume ston pinaka poy dhmioyrghsame pio panw ayta pou theloume 
-                    if (result[i].store_latitude != null && result[i].store_longitude != null ){
-                        store_cord.push([result[i].store_name, result[i].store_latitude, result[i].store_longitude])
-                        
-                        //edw ftiaxnoume mia metablhth sthn opoia apothikeuoume gewgrafiko mhkos kai platos
-                        console.log(store_cord[i]);
-                        
-                        var latlngs = [result[i].store_latitude, [result[i].store_longitude] ];
-                        //edw ftiaxnoume enan neo marker
-                        var marker = new L.marker(latlngs, {});
-                       // edw ftiaxnoume ena neo layer
-                       marker.bindPopup(result[i].store_name);
-                       marker.addTo(markersLayer);
-                       //to parapanw emfanizei ta onomata toy kathe soupermarket
-                       // var featuresLayer = new L.layerGroup([marker]);
-                        // edw bazoume to layer ston xarth
-                        //featuresLayer.addTo(mymap);
-                       
-                       
-                       //marker.addTo(mymap);
-
-                       
-
-
-
-                        
-                }
-                    }
-
-
-
-
-
-
-
-
-
-
-            
-
-                
-                
-            }
-            
-        })
-    }
-
-    StoresSearch();
-
-    function StoresSearch()
-    {
-        $.ajax(
-            {
-                type:"GET",
-                url:"/users/map/search",
-                success: function(results)
-                {
-                    var stores_disc = [];
-
-                    for(var i = 0; i<results.length; i++){
-                        
-                            stores_disc.push( [results[i].store_name, results[i].store_latitude, results[i].store_longitude, results[i].product_id]);
-                            //console.log(stores_disc[i]);
-                        
-
-                            var latlngs = [results[i].store_latitude, [results[i].store_longitude] ];
-                            var marker = new L.marker(latlngs, {});
-                            //marker.addTo(mymap);
-
-                    }
-
                 }
 
+                // Call a function to display the data items
+                displayDataItems(dataItems);
             }
-        )
-
-    
+        });
     }
 
+    function displayDataItems(dataItems) {
+        // Clear previous data if any
+        $("#dataContainer").empty();
 
-})
+        // Iterate through dataItems and generate HTML for each item
+        for (let i = 0; i < dataItems.length; i++) {
+            let dataItem = dataItems[i];
+            // Generate HTML for the data item using dataItem properties
+            let itemHTML = `<div class="discount-item">
+                <h3>${dataItem.title}</h3>
+                <p>User: ${dataItem.user_name}</p>
+                <p>Product: ${dataItem.product_name}</p>
+                <p>Price: ${dataItem.price}</p>
+                <p>Date: ${dataItem.date}</p>
+            </div>`;
+
+            // Append the HTML to the dataContainer
+            $("#dataContainer").append(itemHTML);
+        }
+    }
+});
