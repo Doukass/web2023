@@ -28,7 +28,24 @@
     <script src="https://unpkg.com/leaflet-search@2.9.0/src/leaflet-search.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-			  
+
+
+	<script>
+		document.addEventListener("DOMContentLoaded", function() {
+		  const discountButton = document.getElementById("discountButton");
+		  const showAllButton = document.getElementById("showAllButton");
+		  const resultsContainer = document.getElementById("resultsContainer");
+	  
+		  discountButton.addEventListener("click", function() {
+			window.location.href = "profile"; // Navigate to the profile page
+		  });
+	  
+		  showAllButton.addEventListener("click", function() {
+			resultsContainer.style.display = "block"; // Show the results container
+		  });
+		});
+	  </script>
+
 
 
 </head>
@@ -52,8 +69,22 @@
 			<div id="mapid"></div>
 
 			<div class="buttons" style="margin-left:45%;">
-			<button>Discount</button>
-			<button>Find discounts</button>
+				<button id="discountButton">Discount</button>
+			
+				<div id="resultsContainer" style="display: none;">
+					<% dataItems.forEach(item => { %>
+					  <div class="data-item">
+						<h3>Title: <%= item.title %></h3>
+						<p>User Name: <%= item.user_name %></p>
+						<p>Product Name: <%= item.product_name %></p>
+						<p>Price: <%= item.price %></p>
+						<p>Date: <%= item.date %></p>
+						<p>Product ID: <%= item.product_id %></p>
+					  </div>
+					<% }); %>
+				  </div>
+
+
 
 
 		</div>

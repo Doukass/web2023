@@ -39,13 +39,16 @@ const ifLoggedin = (req, res, next) => {
   next();
 };
 
-// Root page
 app.get('/', ifNotLoggedin, (req, res, next) => {
   dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
-      res.render('home', { name: rows[0].name });
+      if (rows[0].name === 'admin') {
+        res.render('admin', { name: rows[0].name }); // Render admin.ejs for admin
+      } else {
+        res.render('home', { name: rows[0].name }); // Render home.ejs for non-admin users
+      }
     });
-}); // END OF ROOT PAGE
+}); 
 
 
 
@@ -350,13 +353,22 @@ app.get("/users/map/category", async (req, res)=> {
 
 
 
-
+app.get("/users/map/aksiologhsh", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.price, discount.date_entered, products.name, users.name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN users ON discount.user_id = users.id;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
 
 
 
 
 
 //--------
+
+
 
 
 // giati exei mpei h parakatw malakia

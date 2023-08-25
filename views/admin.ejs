@@ -1,38 +1,51 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Admin Panel</title>
   <meta charset="UTF-8">
-  <title>Web 2023</title>
-  <!--     <link rel="stylesheet" href="style.css">      ------->
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-<link href="stylehome.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-      crossorigin="" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@3.0.2/dist/leaflet-search.min.css" />
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-      crossorigin=""></script>
-            <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.2/leaflet-search.min.js"></script>
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/leafletsearch/3.0.2/leaflet-search.min.js"> </script>
-            <script src="https://cdn.jsdelivr.net/npm/leafletsearch@3.0.2/dist/leaflet-search.min.css"> </script>
-            <script src="ajax_req2.js"></script>
-            <script src="profile"></script>
-            <script src="server.js"></script>
-            <script src="home"></script>
-
-            <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet-search@2.9.0/src/leaflet-search.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <title>Admin Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <link href="stylehome.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="styleadmin.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@3.0.2/dist/leaflet-search.min.css" />
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.2/leaflet-search.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script src="/admin_ajax_req.js"></script>
 </head>
 <body>
-  <h1>Welcome to the Admin Panel, <%= name %>!</h1>
-  <p>Here, you can manage various admin tasks.</p>
-  <!-- Add your admin panel components, forms, and functionality here -->
-  <a href="/logout">Logout</a>
+  <div class="wrapper">
+    <nav class="navbar">
+      <nav class="navbar">
+        <a class='hello' style="color:#e7e4e4;">Welcome, <%= name %></a>
+        <ul>
+          <li><a class="active" href="/">Home</a></li>
+          <li><a href="profile">Profile</a></li>
+          <li><a href="contact">Contact</a></li>
+          <li><a href="/logout" class="btn btn-danger">Logout</a></li>
+        </ul>
+      </nav>
+    </nav>
+
+    <div class="center-container">
+      <button id="displayButton">Discounts</button>
+    </div>
+
+    <div id="dataContainer">
+      <!-- Data will be dynamically added here -->
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <input id="editTitle" type="text">
+        <input id="editLoc" type="text">
+        <input id="editUser" type="text">
+        <button id="saveEditButton">Save Changes</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+

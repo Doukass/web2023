@@ -125,25 +125,70 @@ for (let i = 0; i < result.length; i++) {
 
 
 
-  var dropdownmenu= L.control({position: "bottomleft"});
 
-  dropdownmenu.onAdd = function (map) {
-      var div = L.DomUtil.create('div', 'dropdownmenu');
-      div.innerHTML = '<select><option>1</option><option>2</option><option>3</option>';
-     
-      L.DomEvent.disableClickPropagation(div);
-      return div;
-  };
-  dropdownmenu.addTo(mymap);
+/*
 
+  aksiologhsh();
 
-
-
-
-
+  function aksiologhsh() {
+    $.ajax({
+      type: "GET",
+      url: "/users/map/aksiologhsh",
+      success: function(result) {
+        console.log(result);
+  
+        let data = result;
+        const dataItems = [];
 
 
 
+        for (let i = 0; i < result.length; i++) {
+            let discount_on = data[i].discount_on;
+
+                if(discount_on === 1){
+                    let title = data[i].store_name;
+                    let loc = [data[i].store_latitude, data[i].store_longitude];
+                    let user_name = data[i].name;
+                    let product_name = data[i].name;
+                    let price = data[i].price
+                    let date = data[i].date_entered;
+                    let product_id = data[i].product_id;
+
+
+                    const dataItem = {
+                        title,
+                        loc,
+                        user_name,
+                        product_name,
+                        price,
+                        date,
+                        product_id
+                      };
+
+                      dataItems.push(dataItem);
+                
+            }
+            
+
+
+
+    
+        }
+        //console.log(dataItems);
+
+    
+
+       
+       
+      }
+    });
+  }
+
+
+
+
+
+*/
 
 
 
