@@ -50,10 +50,22 @@
     <!-- Add a button to trigger XML data display -->
     <div class="center-container">
       <!-- Add a button to trigger XML data display -->
+
+      <div id="dropArea" class="drop-area">
+        <p>Drag and drop a JSON file here or click to select one.</p>
+        <input type="file" id="jsonInput" style="display: none;" accept=".json">
+        <div id="uploadIcon" class="upload-icon">&#10003;</div>
+      </div>
+
+    <input type="file" id="jsonInput" style="display: none;" accept=".json">
+      <button id="Sumbit">Submit</button>
       <button id="displayButton">Discounts</button>
       <button id="DeleteButton">Delete</button>
       
+      
     </div>
+<!--drag and drop -->
+<script src="/admin.js"></script>
 
     <div style = "position:relative; left:-400px; top:-900px;" id="dataContainer">
       <!--  data will be dynamically added here -->
