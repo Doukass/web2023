@@ -15,21 +15,36 @@
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
-    margin-bottom: 300px; /* Added this */
+    margin-bottom: 10px; /* Added this */
   }
   
   #displayButton:hover {
     background-color: #0056b3;
   }
+  #DeleteButton {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-bottom: 0px; /* Added this */
+  }
+  
+  #DeleteButton:hover {
+    background-color: #0056b3;
+  }
+
+
   
   /* Style the array-like data display */
   #dataContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    max-height: calc(100vh - 500px); /* Adjust as needed based on other elements' heights */
+    max-height: calc(100vh - 500px);/*  Adjust as needed based on other elements' heights */
     overflow: auto;
-    margin-top: 100px;
+    margin-top: 50px !important;
     
   }
   
