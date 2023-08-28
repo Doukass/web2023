@@ -125,16 +125,12 @@ for (let i = 0; i < result.length; i++) {
             if(distance <50 )
             {
 
-            productsByLocation[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date, 'category name' , catname , '<button id="test" onclick="test()">Διαγραφη</button>',
-            '<select id="ratingInputId" onchange="handleRatingChange(this)"">',
-            '<option value="">Αξιολογηση</option>',
-            '<option value="1">1 αστέρι</option>',
-            '<option value="2">2 αστέρια</option>',
-            '<option value="3">3 αστέρια</option>',
-            '<option value="4">4 αστέρια</option>',
-            '<option value="5">5 αστέρια</option>',
-            '</select>',
-            '<br>');
+                productsByLocation[loc].push(
+                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname,
+                    '<button class="like-button" onclick="handleLikeClick(this)">Like</button>',
+                    '<button class="dislike-button" onclick="handleDislikeClick(this)">Dislike</button>',
+                    '<br>'
+                );
             // You can add an event listener to save the rating when the input changes.
            
             
@@ -212,64 +208,6 @@ for (let i = 0; i < result.length; i++) {
   }
 
 
-//----
-
-
-
-
-
-
-
-
-
-
-
-
-
-  aksiologhsh();
-
-  function aksiologhsh() {
-    $.ajax({
-      type: "GET",
-      url: "/users/map/category",
-      success: function(result) {
-        //console.log(result);
-  
-        let data = result;
-        const dataItems = [];
-
-
-
-        for (let i = 0; i < result.length; i++) {
-                    let title = data[i].store_name;
-                    let loc = [data[i].store_latitude, data[i].store_longitude];
-                    let user_name = data[i].name;
-                    let product_name = data[i].name;
-                    let price = data[i].price
-                    let date = data[i].date_entered;
-                    let product_id = data[i].product_id;
-                    let category_name = data[i].category_name;
-                    
-
-
-    
-        }
-        
-
-    
-
-       
-       
-      }
-    });
-  }
-
-
-
-
-
-
-
 
 
 
@@ -305,10 +243,26 @@ function test() {
 }
 
 
-    function handleRatingChange(selectElement) {
-        selectedRating = selectElement.value;
-        console.log(`Selected Rating: ${selectedRating}`);
-    }
+function handleLikeClick(button) {
+    const parentElement = button.parentElement;
+    const productInfo = parentElement.textContent; // Extract the product information from the text
+    const likeValue = 'like'; // You can customize this value based on your needs
+
+    // Here, you can implement the logic to store the like value associated with the productInfo.
+    console.log(`Liked: ${productInfo}`);
+}
+
+function handleDislikeClick(button) {
+    const parentElement = button.parentElement;
+    const productInfo = parentElement.textContent; // Extract the product information from the text
+    const dislikeValue = 'dislike'; // You can customize this value based on your needs
+
+    // Here, you can implement the logic to store the dislike value associated with the productInfo.
+    console.log(`Disliked: ${productInfo}`);
+}
+
+
+
     
 
 
