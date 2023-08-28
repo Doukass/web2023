@@ -9,17 +9,17 @@ $(document).ready(function () {
   let userCoords;
 
   function onLocationFound(e) {
-      var radius = e.accuracy / 25;
+      var radius = e.accuracy / 50;
 
-      userCoords = [e.latitude, e.longitude];
+      userCoords = [38.26340103149414, 21.74340057373047];
 
-      L.circle(e.latlng, radius).addTo(mymap)
-          .bindPopup("You are within " + userCoords + " meters from this point").openPopup();
+      L.circle(userCoords, radius, {color:"red"}).addTo(mymap)
+          .openPopup();
 
       //console.log(userCoords);
   }
 
-  console.log(userCoords);
+  //console.log(userCoords);
 
   function onLocationError(e) {
       alert(e.message);
@@ -29,6 +29,21 @@ $(document).ready(function () {
   mymap.on('locationerror', onLocationError);
 
   userStoresGet();
+
+
+
+
+//--------
+
+
+
+
+
+
+
+
+
+
 
   function userStoresGet() {
       $.ajax({
@@ -54,38 +69,111 @@ $(document).ready(function () {
 
               mymap.addControl(controlSearch);
 
+
+
+              let controlSearch2 = new L.Control.Search({
+                position: "topright",
+                layer: markersLayer,
+                propertyName: "catname",
+                initial: false,
+                zoom: 20,
+                marker: false,
+                textPlaceholder: "Search for a category..."
+            });
+
+            mymap.addControl(controlSearch2);
+
+
+
+
+
+
+
               // Create an object to store products by location
+              // h prwth einai gia na apothikeuw gia thn aksiologhsh kai h deyterh gia ekei poy den mporw na kanw aksiologhsh
 const productsByLocation = {};
+const productsByLocation2 = {};
+
+
+
 
 for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
+    let catname = data[i].category_name;
     let loc = [data[i].store_latitude, data[i].store_longitude];
     let discount_on = data[i].discount_on;
     let product_id = data[i].product_id;
-    let product_name = data[i].name;
+    let product_name = data[i].product_name;
     let price = data[i].price
     let date = data[i].date_entered;
-    
+    let selectedRating = null;
+    const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+
 
     if (discount_on === 0) {
-        let marker = L.circleMarker(L.latLng(loc), { title: title });
+        let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
         marker.bindPopup(title);
         markersLayer.addLayer(marker);
     } else {
-        if (!productsByLocation[loc]) {
+        if (!productsByLocation[loc], !productsByLocation2[loc]) {
             productsByLocation[loc] = [];
+            productsByLocation2[loc] = [];
         }
 
         if (product_id !== null) {
-            productsByLocation[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date );
+            
+            if(distance <50 )
+            {
+
+            productsByLocation[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date, 'category name' , catname , '<button id="test" onclick="test()">Διαγραφη</button>',
+            '<select id="ratingInputId" onchange="handleRatingChange(this)"">',
+            '<option value="">Αξιολογηση</option>',
+            '<option value="1">1 αστέρι</option>',
+            '<option value="2">2 αστέρια</option>',
+            '<option value="3">3 αστέρια</option>',
+            '<option value="4">4 αστέρια</option>',
+            '<option value="5">5 αστέρια</option>',
+            '</select>',
+            '<br>');
+            // You can add an event listener to save the rating when the input changes.
+           
+            
+
+
+            }
+            else{
+                productsByLocation2[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date,  '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
+            // You can add an event listener to save the rating when the input changes.
+
+            }
+
+
+
+            
+            
+        
+            
+            
+            
+            
+            
+            
+            
+            //prepei na ftiaksw to popup giati einai san gamw ton xristo soy
+           
+            
         }
 
-        let marker = L.marker(L.latLng(loc), { title: title });
+        let marker = L.marker(L.latLng(loc),{ title: title ,  catname: catname });
         
-        let popupContent = `<strong>${title}</strong>`;
+        let popupContent = `<strong>${title}</strong> <br>`;
+                    
         
         if (productsByLocation[loc].length > 0) {
             popupContent += ` ${productsByLocation[loc].join(" ")}`;
+        }
+        if (productsByLocation2[loc].length > 0) {
+            popupContent += ` ${productsByLocation2[loc].join(" ")}`;
         }
         
         marker.bindPopup(popupContent);
@@ -124,18 +212,28 @@ for (let i = 0; i < result.length; i++) {
   }
 
 
+//----
 
 
-/*
+
+
+
+
+
+
+
+
+
+
 
   aksiologhsh();
 
   function aksiologhsh() {
     $.ajax({
       type: "GET",
-      url: "/users/map/aksiologhsh",
+      url: "/users/map/category",
       success: function(result) {
-        console.log(result);
+        //console.log(result);
   
         let data = result;
         const dataItems = [];
@@ -143,9 +241,6 @@ for (let i = 0; i < result.length; i++) {
 
 
         for (let i = 0; i < result.length; i++) {
-            let discount_on = data[i].discount_on;
-
-                if(discount_on === 1){
                     let title = data[i].store_name;
                     let loc = [data[i].store_latitude, data[i].store_longitude];
                     let user_name = data[i].name;
@@ -153,28 +248,13 @@ for (let i = 0; i < result.length; i++) {
                     let price = data[i].price
                     let date = data[i].date_entered;
                     let product_id = data[i].product_id;
-
-
-                    const dataItem = {
-                        title,
-                        loc,
-                        user_name,
-                        product_name,
-                        price,
-                        date,
-                        product_id
-                      };
-
-                      dataItems.push(dataItem);
-                
-            }
-            
-
+                    let category_name = data[i].category_name;
+                    
 
 
     
         }
-        //console.log(dataItems);
+        
 
     
 
@@ -188,8 +268,6 @@ for (let i = 0; i < result.length; i++) {
 
 
 
-*/
-
 
 
 
@@ -200,5 +278,41 @@ for (let i = 0; i < result.length; i++) {
 
 
 });
+
+function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // Earth's radius in meters
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+}
+
+// Function to convert degrees to radians
+function toRad(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+
+
+
+function test() {
+    console.log("eisai malakas");
+    console.log(`Selected Rating: ${selectedRating}`);
+}
+
+
+    function handleRatingChange(selectElement) {
+        selectedRating = selectElement.value;
+        console.log(`Selected Rating: ${selectedRating}`);
+    }
+    
+
+
+
+
 
 

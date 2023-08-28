@@ -6,6 +6,7 @@ const dbConnection = require('./database');
 const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 
+
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
@@ -317,7 +318,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
   
-    const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.price, discount.date_entered, products.name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id;');
+    const [results, fields] = await dbConnection.execute('SELECT COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, COALESCE(discount.store_id, "Unknown") AS store_id, COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered, COALESCE(products.name, "Unknown") AS product_name, COALESCE(category.name, "Unknown") AS category_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id; ');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -331,7 +332,7 @@ app.get("/users/map/stores", async (req, res) => {
 
 app.get("/users/map/search", async (req, res)=> {
   
-   const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
+   const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id,   FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
   //console.log("Query returned ${results.length} results:");
    console.log(results);
    res.send(results);

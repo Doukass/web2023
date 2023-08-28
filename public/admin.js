@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const dropArea = document.getElementById("dropArea");
     const jsonInput = document.getElementById("jsonInput");
     const dataContainer = document.getElementById("dataContainer");
-    const uploadIcon = document.getElementById("uploadIcon");
+    
   
     dropArea.addEventListener("dragover", function (e) {
       e.preventDefault();
@@ -35,13 +35,12 @@ document.addEventListener("DOMContentLoaded", function () {
           const reader = new FileReader();
           reader.onload = function (e) {
             const fileContent = e.target.result; // Debugging: log this content
-            try {
+            
               const jsonData = JSON.parse(fileContent);
               displayJsonData(jsonData);
-              showUploadIcon();
-            } catch (error) {
+              
               console.error("Error parsing JSON:", error);
-            }
+            
           };
           reader.readAsText(file);
         }
@@ -66,11 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
       dataContainer.appendChild(marker);
     }
   
-    function showUploadIcon() {
-      uploadIcon.style.display = "block";
-      setTimeout(() => {
-        uploadIcon.style.display = "none";
-      }, 2000); // Show for 2 seconds
-    }
+   
   });
   
