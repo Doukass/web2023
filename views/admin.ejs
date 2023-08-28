@@ -26,6 +26,8 @@
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/admin_ajax_req.js"></script>
+  <script src="/admin.js"></script>
+  <script src="/admin_delete_button.js"></script>
 </head>
 <body>
   <div class="wrapper">
@@ -60,12 +62,24 @@
     <input type="file" id="jsonInput" style="display: none;" accept=".json">
       <button id="Sumbit">Submit</button>
       <button id="displayButton">Discounts</button>
-      <button id="DeleteButton">Delete</button>
+      
+      <form>
+        <div>
+          <input
+            type="search"
+            id="mySearch"
+            name="q"
+            placeholder="Discount ID "
+            required />
+            <button id="deleteDiscount">Delete discount</button>
+          <span class="validity"></span>
+        </div>
+      </form>
       
       
     </div>
 <!--drag and drop -->
-<script src="/admin.js"></script>
+
 
     <div style = "position:relative; left:-400px; top:-900px;" id="dataContainer">
       <!--  data will be dynamically added here -->
