@@ -44,16 +44,15 @@ $(document).ready(function () {
 
 
 
-
   function userStoresGet() {
       $.ajax({
           type: "GET",
           url: "/users/map/stores",
           success: function (result) {
               let data = result;
-              console.log(data);
+              //console.log(data);
 
-              let markersLayer = L.layerGroup();
+              var markersLayer = L.layerGroup();
               mymap.addLayer(markersLayer);
               markersLayer.addTo(mymap);
 
@@ -110,14 +109,26 @@ for (let i = 0; i < result.length; i++) {
     const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
 
+    
+
+
     if (discount_on === 0) {
         let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
-        marker.bindPopup(title);
+
+        let popupContent = `<strong>${title}</strong>  
+        <div>
+            <p>Add a Discount</p>
+            <button onclick="AddDiscount()">Add Discount</button>
+        </div>
+      <br>`;
+
+        marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
     } else {
         if (!productsByLocation[loc], !productsByLocation2[loc]) {
             productsByLocation[loc] = [];
             productsByLocation2[loc] = [];
+            //if rows toy pinaka >1 i-- i=0
         }
 
         if (product_id !== null) {
@@ -125,14 +136,19 @@ for (let i = 0; i < result.length; i++) {
             if(distance <50 )
             {
 
+                const Products_Info = {title: title, catname: catname, product_name: product_name, price : price, date: date };
+
+
                 productsByLocation[loc].push(
-                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname,
+                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 
+                    '<button class="details-button" onclick="handleLikeClick(this)">Details</button>',
                     '<button class="like-button" onclick="handleLikeClick(this)">Like</button>',
                     '<button class="dislike-button" onclick="handleDislikeClick(this)">Dislike</button>',
                     '<br>'
                 );
             // You can add an event listener to save the rating when the input changes.
            
+            
             
 
 
@@ -143,19 +159,6 @@ for (let i = 0; i < result.length; i++) {
 
             }
 
-
-
-            
-            
-        
-            
-            
-            
-            
-            
-            
-            
-            //prepei na ftiaksw to popup giati einai san gamw ton xristo soy
            
             
         }
@@ -246,10 +249,17 @@ function test() {
 function handleLikeClick(button) {
     const parentElement = button.parentElement;
     const productInfo = parentElement.textContent; // Extract the product information from the text
-    const likeValue = 'like'; // You can customize this value based on your needs
+    const modalMessage = document.getElementById("modal-message");
+    modalMessage.textContent = productInfo; // Display productInfo in the modal
 
-    // Here, you can implement the logic to store the like value associated with the productInfo.
-    console.log(`Liked: ${productInfo}`);
+    const modal = document.getElementById("modal");
+    modal.style.display = "block";
+    
+}
+
+function closeModal() {
+    const modal = document.getElementById("modal");
+    modal.style.display = "none";
 }
 
 function handleDislikeClick(button) {
@@ -261,9 +271,64 @@ function handleDislikeClick(button) {
     console.log(`Disliked: ${productInfo}`);
 }
 
+AddDiscount();
+function AddDiscount() {
+
+
 
 
     
+        $.ajax({
+          type: "GET",
+          url: "/users/map/category",
+          success: function (result) {
+            
+                let data1= result;
+                let categname=[];
+
+
+                for (let i = 0; i < result.length; i++){
+                    //var categname=data1[i].name;
+                    //console.log(categname);
+                }
+
+
+                 categname.push(data1);
+                console.log(categname);
+
+
+
+
+            const modalMessage = document.getElementById("modal-message");
+            modalMessage.textContent = categname; // Clear existing content
+            
+        
+        
+            const modal = document.getElementById("modal");
+            modal.style.display = "block";
+
+
+
+
+
+
+
+
+            }
+          });
+      
+
+
+
+
+
+
+
+}
+
+
+
+
 
 
 

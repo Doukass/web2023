@@ -1,9 +1,8 @@
 $(document).ready(function () {
     // Attach a click event handler to the "Discounts" button
-    $("#displayButton").click(function () {
-        // Call the function to fetch and display data items
+    
         aksiologhsh();
-    });
+    
 
     function aksiologhsh() {
         $.ajax({
@@ -12,7 +11,7 @@ $(document).ready(function () {
             success: function(result) {
                 let data = result;
                 const dataItems = [];
-                console.log(result);
+                //console.log(result);
                 for (let i = 0; i < result.length; i++) {
                     let discount_on = data[i].discount_on;
 
@@ -43,32 +42,64 @@ $(document).ready(function () {
                 }
 
                 // Call a function to display the data items
-                displayDataItems(dataItems);
+                //displayDataItems(dataItems);
             }
         });
     }
 
-    function displayDataItems(dataItems) {
-        // Clear previous data if any
-        $("#dataContainer").empty();
 
-        // Iterate through dataItems and generate HTML for each item
-        for (let i = 0; i < dataItems.length; i++) {
-            let dataItem = dataItems[i];
-            // Generate HTML for the data item using dataItem properties
-            let itemHTML = `<div class="discount-item">
-                <h3>${dataItem.title}</h3>
-                <p>Discount id: ${dataItem.discount_id}</p>
-                <p>User: ${dataItem.user_name}</p>
-                <p>Product: ${dataItem.product_name}</p>
-                <p>Price: ${dataItem.price}</p>
-                <p>Date: ${dataItem.date}</p>
-            </div>`;
+// to parakatw einai gia charts
+chart1();
 
-            // Append the HTML to the dataContainer
-            $("#dataContainer").append(itemHTML);
+
+  function chart1() {
+    $.ajax({
+      type: "GET",
+      url: "/admin/pchart1",
+      success: function (result) {
+        if(window.chart){
+            window.chart.destroy();
         }
-    }
+        getchart(result);
+        }
+      });
+  }
+
+
+  function getchart(result) {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    ctx.canvas.width = 500;
+    ctx.canvas.height = 350;
+    window.chart = new Chart(ctx, {
+      // The type of chart we want to create
+      type: 'pie',
+  
+      // The data for our dataset
+      data: {
+        labels: ['PRIVATE', 'PUBLIC', 'NO-CACHE', 'NO-STORE'],
+        datasets: [{
+          label: 'My First dataset',
+          backgroundColor: [
+            'rgb(50, 205, 102)',
+            'rgb(50, 153, 205)',
+            'rgb(205, 50, 153)',
+            'rgb(205, 102, 50)'
+          ],
+          borderColor: 'rgba(88, 88, 88, 0.2)',
+          data: [result[0].private, result[0].public, result[0].no_catch, result[0].no_store]
+        }]
+      },
+  
+      // Configuration options 
+      options: {
+        responsive:false
+      }
+    });
+  }
+
+
+
+
 
 
 

@@ -27,7 +27,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/admin_ajax_req.js"></script>
   <script src="/admin.js"></script>
-  <script src="/admin_delete_button.js"></script>
+ 
 </head>
 <body>
   <div class="wrapper">
@@ -61,7 +61,7 @@
 
     <input type="file" id="jsonInput" style="display: none;" accept=".json">
       <button id="Sumbit">Submit</button>
-      <button id="displayButton">Discounts</button>
+      <button id="displayButton" onclick="chart1()">Discounts</button>
       
     
       
@@ -74,10 +74,15 @@
       <!--  data will be dynamically added here -->
     </div>
 
-    <script id="discountItemTemplate" type="text/template">
+   <!--  <script id="discountItemTemplate" type="text/template">
       <div class="discount-item">
         
       </div>
+-->
+        <!--    dokimastiko gia charts-->
+      <canvas id="discountChart" width="800" height="400"></canvas>
+      <button id="dsicountChart" onclick="chart1()">Details</button>
+
 
 
 </body>

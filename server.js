@@ -5,12 +5,16 @@ const bcrypt = require('bcryptjs');
 const dbConnection = require('./database');
 const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
+const bodyParser = require('body-parser');
+const mysql = require('mysql2');
+
+
 
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
-
+app.use(bodyParser.json());
 
 
 
@@ -121,17 +125,10 @@ app.post(
     // If validation_result has no errors
     if (validation_result.isEmpty()) {
       // Password encryption (using bcryptjs)
-      bcrypt.hash(password, 12).then((hash_pass) => {
-        // Inserting user into database
-        dbConnection.execute("INSERT INTO `users`(`name`,`email`,`password`) VALUES(?,?,?)", [username, email, hash_pass])
-          .then(result => {
+      dbConnection.execute("INSERT INTO `users`(`name`,`email`,`password`) VALUES(?,?,?)", [username, email, password])
+        .then(result => {
             res.send(`Your account has been created successfully. Now you can <a href="/">Login</a>`);
-          })
-          .catch(err => {
-            // Throw inserting user errors
-            if (err) throw err;
-          });
-      })
+        })
       .catch(err => {
         // Throw hashing errors
         if (err) throw err;
@@ -168,18 +165,24 @@ app.post('/', ifLoggedin, [
 
   if (validation_result.isEmpty()) {
     dbConnection.execute("SELECT * FROM users WHERE name=?", [username])
-      .then(([rows]) => {
-        bcrypt.compare(password, rows[0].password).then(compare_result => {
-          if (compare_result === true) {
-            req.session.isLoggedIn = true;
-            req.session.userID = rows[0].id;
-            res.redirect('/');
-          } else {
-            res.render('login-register', { login_errors: ['Invalid Password!'] });
-          }
-        }).catch(err => { if (err) throw err; });
-      }).catch(err => { if (err) throw err; });
-  } else {
+        .then(([rows]) => {
+            if (rows.length === 0) {
+                res.render('login-register', { login_errors: ['User not found.'] });
+            } else if (rows[0].password === password) {
+                req.session.isLoggedIn = true;
+                req.session.userID = rows[0].id;
+                res.redirect('/');
+            } else {
+                res.render('login-register', { login_errors: ['Invalid Password!'] });
+            }
+        }).catch(err => {
+            // Handle database query errors
+            if (err) throw err;
+        });
+}
+
+  
+  else {
     let allErrors = validation_result.errors.map((error) => {
       return error.msg;
     });
@@ -195,9 +198,7 @@ app.post('/', ifLoggedin, [
 
 
 
-//app.get('/profile', (req,res) => {
-//  res.render('profile')
-//});
+
 
 
 //-------------------
@@ -244,8 +245,8 @@ app.post("/home/profile", async (req, res) => {
   } else {
     // Validation passed
     dbConnection.execute(
-      `UPDATE users SET name = $1, password = $2
-          WHERE name = $3 AND password = $4`,
+      `UPDATE users SET name = ?, password = ?
+          WHERE name = ? AND password = ?`,
       [newname, newpassword, req.session.name, req.session.password],
       (err, results) => {
         if (err) {
@@ -334,7 +335,7 @@ app.get("/users/map/search", async (req, res)=> {
   
    const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id,   FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
   //console.log("Query returned ${results.length} results:");
-   console.log(results);
+   //console.log(results);
    res.send(results);
    
 });
@@ -343,9 +344,9 @@ app.get("/users/map/search", async (req, res)=> {
 
 app.get("/users/map/category", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT c.name AS category_name, d.store_id, d.price, d.date_entered, p.name AS product_name, s.store_name, s.store_latitude, s.store_longitude FROM discount AS d JOIN products AS p ON d.product_id = p.product_id JOIN stores AS s ON d.store_id = s.store_id JOIN category AS c ON p.category_id = c.category_id;');
+  const [results, fields] = await dbConnection.execute('SELECT name FROM category');
  //console.log("Query returned ${results.length} results:");
-  console.log(results);
+  //console.log(results);
   res.send(results);
   
 });
@@ -358,11 +359,21 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
   
   const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
  //console.log("Query returned ${results.length} results:");
-  console.log(results);
+  //console.log(results);
   res.send(results);
   
 });
 
+
+
+app.get("/admin/chart1", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('date_entered FROM discount');
+ //console.log("Query returned ${results.length} results:");
+  
+  res.send(results);
+  
+});
 
 
 
@@ -380,12 +391,48 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 
 //-----------
 
+//------ update database -----------//
+app.post('/update-database', (req, res) => {
+  const jsonData = req.body;
+
+  const insertQuery = `
+    INSERT INTO prices (product_id, latest_date, price1, price2, price3, price4, price5, price_avg)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      latest_date = VALUES(latest_date),
+      price1 = VALUES(price1),
+      price2 = VALUES(price2),
+      price3 = VALUES(price3),
+      price4 = VALUES(price4),
+      price5 = VALUES(price5),
+      price_avg = VALUES(price_avg)
+  `;
+
+  for (const item of jsonData.data) {
+    const { product_id, prices } = item;
+
+    //const latestPrice = prices[prices.length - 1].price;
+    const priceValues = prices.map(price => price.price);
+    const priceAvg = priceValues.reduce((total, price) => total + price, 0) / priceValues.length;
+
+    dbConnection.query(insertQuery, [product_id, new Date(), ...priceValues, priceAvg], (error, results) => {
+      if (error) {
+        console.error('Error updating database:', error);
+        res.status(500).json({ error: 'Database update failed' });
+        return;
+      }
+    });
+  }
+
+  res.json({ message: 'Database updated successfully' });
+});
 
 
 
 
 
 
+//------ end of update database -----------//
 
 
 app.listen(3000, () => console.log("Server is Running..."));
