@@ -16,7 +16,7 @@ $(document).ready(function () {
       L.circle(userCoords, radius, {color:"red"}).addTo(mymap)
           .openPopup();
 
-      //console.log(userCoords);
+      console.log(userCoords);
   }
 
   //console.log(userCoords);
@@ -106,6 +106,7 @@ for (let i = 0; i < result.length; i++) {
     let price = data[i].price
     let date = data[i].date_entered;
     let selectedRating = null;
+    
     const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
 
@@ -299,13 +300,13 @@ function AddDiscount() {
 
 
 
-            const modalMessage = document.getElementById("modal-message");
-            modalMessage.textContent = categname; // Clear existing content
+            //const modalMessage = document.getElementById("modal-message");
+            //modalMessage.textContent = categname; // Clear existing content
             
         
         
-            const modal = document.getElementById("modal");
-            modal.style.display = "block";
+            //const modal = document.getElementById("modal");
+           // modal.style.display = "block";
 
 
 
