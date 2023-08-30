@@ -1,3 +1,5 @@
+
+
 $(document).ready(function () {
   let mymap = L.map('mapid');
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -55,7 +57,7 @@ $(document).ready(function () {
           url: "/users/map/stores",
           success: function (result) {
               let data = result;
-              //console.log(data);
+              console.log(data);
 
               var markersLayer = L.layerGroup();
               mymap.addLayer(markersLayer);
@@ -110,11 +112,14 @@ for (let i = 0; i < result.length; i++) {
     let product_name = data[i].product_name;
     let price = data[i].price
     let date = data[i].date_entered;
+    let username =data[i].user_name;
     let selectedRating = null;
+    
     //console.log(userCoords[0]);
     const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+    //console.log(data[i].user_name)
 
-
+    //console.log(data[i].username);
     
 
 
@@ -135,23 +140,37 @@ for (let i = 0; i < result.length; i++) {
             productsByLocation[loc] = [];
             productsByLocation2[loc] = [];
             //if rows toy pinaka >1 i-- i=0
+            //console.log(productsByLocation);
         }
+        
 
         if (product_id !== null) {
             
             if(distance <50 )
             {
 
-                const Products_Info = {title: title, catname: catname, product_name: product_name, price : price, date: date };
-
-
-                productsByLocation[loc].push(
+                var DisplayDetails = [
                     'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 
-                    '<button class="details-button" onclick="handleLikeClick(this)">Details</button>',
-                    '<button class="like-button" onclick="handleLikeClick(this)">Like</button>',
-                    '<button class="dislike-button" onclick="handleDislikeClick(this)">Dislike</button>',
+                    `<button class="details-button" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" onclick="handleDetailsClick(this)">Details</button>
+                    `,
                     '<br>'
-                );
+                ];
+                
+                productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
+                //console.log(data[i].user_name);
+               
+                
+                
+            
+
+                    
+              //  productsByLocation[loc].push(
+              //      'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 
+              //      '<button class="details-button" onclick="handleLikeClick(this)">Details</button>',
+              //      '<button class="like-button" onclick="handleLikeClick(this)">Like</button>',
+               //     '<button class="dislike-button" onclick="handleDislikeClick(this)">Dislike</button>',
+               //     '<br>'
+              //  );
             // You can add an event listener to save the rating when the input changes.
            
             
@@ -252,14 +271,124 @@ function test() {
 }
 
 
-function handleLikeClick(button) {
-    const parentElement = button.parentElement;
-    const productInfo = parentElement.textContent; // Extract the product information from the text
+
+
+function handleDetailsClick(button) {
+    const username = button.getAttribute("data-username");
+    const dateEntered = button.getAttribute("data-date");
+    const price = button.getAttribute("data-price");
+    const product = button.getAttribute("data-product");
+
     const modalMessage = document.getElementById("modal-message");
-    modalMessage.textContent = productInfo; // Display productInfo in the modal
+    modalMessage.innerHTML = `
+        Username: ${username}<br>
+        Date Entered: ${dateEntered}<br>
+        Price: ${price}<br>
+        Product: ${product}<br>
+        <button class="like-button" onclick="handleLikeClick()">Like</button>
+        <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
+    `;
 
     const modal = document.getElementById("modal");
     modal.style.display = "block";
+}
+
+function handleLikeClick() {
+    // Handle like functionality here
+    console.log("Liked");
+}
+
+function handleDislikeClick() {
+    // Handle dislike functionality here
+    console.log("Disliked");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//handleDetailsClick();
+function handleDetailsClick2(button) {
+
+
+    $.ajax({
+        type: "GET",
+        url: "/users/map/aksiologhsh",
+        success: function (result) {
+          
+              //let data1= result;
+              let username = [];
+              let date_enterded = [];
+              let price = [];
+              let product_name = [];
+              let Info = [];
+
+              console.log(result);
+
+
+              for (let i = 0; i < result.length; i++){
+                  //var categname=data1[i].name;
+                  //console.log(categname);
+                  
+                  if(result[i].user_name !== null){
+
+
+                     Info.push({
+                        username: result[i].user_name,
+                        date_entered: result[i].date_entered,
+                        price: result[i].price,
+                        product_name: result[i].product_name
+                    });
+
+                     
+                  }
+ 
+              }
+
+              console.log(Info);
+
+
+
+             // Create a formatted string for each item in the 'Info' array
+        let formattedInfo = Info.map(item => {
+            return `Username: ${item.username}, Date Entered: ${item.date_entered}, Price: ${item.price}, Product Name: ${item.product_name}`;
+        });
+
+        const modalMessage = document.getElementById("modal-message");
+        modalMessage.textContent = formattedInfo.join("\n"); // Display the result from the AJAX call in the modal
+
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
+
+
+
+            
+
+          }
+        });
+
+
+
+
+
     
 }
 
@@ -268,14 +397,7 @@ function closeModal() {
     modal.style.display = "none";
 }
 
-function handleDislikeClick(button) {
-    const parentElement = button.parentElement;
-    const productInfo = parentElement.textContent; // Extract the product information from the text
-    const dislikeValue = 'dislike'; // You can customize this value based on your needs
 
-    // Here, you can implement the logic to store the dislike value associated with the productInfo.
-    console.log(`Disliked: ${productInfo}`);
-}
 
 AddDiscount();
 function AddDiscount() {
@@ -300,7 +422,7 @@ function AddDiscount() {
 
 
                  categname.push(data1);
-                console.log(categname);
+                //console.log(categname);
 
 
 
