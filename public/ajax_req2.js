@@ -4,19 +4,21 @@ $(document).ready(function () {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
   }).addTo(mymap);
 
-  mymap.locate({ setView: true, maxZoom: 18 });
+  mymap.locate({ setView: true, maxZoom: 25 });
 
-  let userCoords;
+  let userCoords ;
 
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
-      userCoords = [38.26340103149414, 21.74340057373047];
+    userCoords = [38.26340103149414, 21.74310557373047];
+     // console.log(userCoords);
+      //console.log(userCoords[1]);
+      //console.log(userCoords[0]);
 
-      L.circle(userCoords, radius, {color:"red"}).addTo(mymap)
-          .openPopup();
+      L.circle(userCoords, radius, {color:"red"}).addTo(mymap);
+      mymap.setView(userCoords, 25);
 
-      console.log(userCoords);
   }
 
   //console.log(userCoords);
@@ -28,6 +30,9 @@ $(document).ready(function () {
   mymap.on('locationfound', onLocationFound);
   mymap.on('locationerror', onLocationError);
 
+
+
+  
   userStoresGet();
 
 
@@ -106,7 +111,7 @@ for (let i = 0; i < result.length; i++) {
     let price = data[i].price
     let date = data[i].date_entered;
     let selectedRating = null;
-    
+    //console.log(userCoords[0]);
     const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
 

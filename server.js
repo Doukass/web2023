@@ -13,16 +13,17 @@ const mysql = require('mysql2');
 
 const app = express();
 app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join('public', "js")));
+app.use(express.static('public'));
 app.use(bodyParser.json());
-app.use("/public", express.public('./public/'));
+
 
 
 // Set our views and view engine
-app.set('views', path.join('static', 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Apply cookie session middleware
+// na moy to ekshghsei o teo
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
