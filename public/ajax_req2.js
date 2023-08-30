@@ -112,6 +112,7 @@ for (let i = 0; i < result.length; i++) {
     let product_name = data[i].product_name;
     let price = data[i].price
     let date = data[i].date_entered;
+    let discount_id = data[i].discount_id;
     let username =data[i].user_name;
     let selectedRating = null;
     
@@ -148,10 +149,11 @@ for (let i = 0; i < result.length; i++) {
             
             if(distance <50 )
             {
+                console.log(discount_id);
 
                 var DisplayDetails = [
-                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 
-                    `<button class="details-button" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" onclick="handleDetailsClick(this)">Details</button>
+                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
+                    `<button class="details-button" data-discountid="${data[i].discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
                     `,
                     '<br>'
                 ];
@@ -278,6 +280,7 @@ function handleDetailsClick(button) {
     const dateEntered = button.getAttribute("data-date");
     const price = button.getAttribute("data-price");
     const product = button.getAttribute("data-product");
+    const discount_id = button.getAttribute("data-discountid")
 
     const modalMessage = document.getElementById("modal-message");
     modalMessage.innerHTML = `
@@ -285,6 +288,7 @@ function handleDetailsClick(button) {
         Date Entered: ${dateEntered}<br>
         Price: ${price}<br>
         Product: ${product}<br>
+        Discount ID: ${discount_id}<br>
         <button class="like-button" onclick="handleLikeClick()">Like</button>
         <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
     `;
@@ -294,7 +298,24 @@ function handleDetailsClick(button) {
 }
 
 function handleLikeClick() {
-    // Handle like functionality here
+    $.ajax({
+        type:"POST",
+        url: "/upload/like",
+        data: {
+            user_id : username,
+            discount_id: discount_id,
+        },
+        success: function (response) {
+            console.log("Database updated with like");
+        },
+        error: function (error) {
+            console.error("Error updating database with like:", error);
+        }
+
+
+
+
+    });
     console.log("Liked");
 }
 

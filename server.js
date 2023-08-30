@@ -320,7 +320,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
   
-    const [results, fields] = await dbConnection.execute('SELECT COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, COALESCE(discount.store_id, "Unknown") AS store_id, COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered, COALESCE(products.name, "Unknown") AS product_name, COALESCE(category.name, "Unknown") AS category_name, COALESCE(users.name, "Unknown") AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
+    const [results, fields] = await dbConnection.execute('SELECT COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, COALESCE(discount.store_id, "Unknown") AS store_id, COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered, discount_id AS discount_id,COALESCE(products.name, "Unknown") AS product_name, COALESCE(category.name, "Unknown") AS category_name, COALESCE(users.name, "Unknown") AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -379,10 +379,22 @@ app.get("/admin/chart1", async (req, res)=> {
 
 
 
-//--------
+//-------- upload likes
+
+app.post("/upload/like", async (req, res)=> {
+  const { username, discount_id } = req.body;
+
+
+  
+});
 
 
 
+
+
+
+
+//----------
 
 // giati exei mpei h parakatw malakia
 //gtxm
