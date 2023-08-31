@@ -345,7 +345,7 @@ app.get("/users/map/search", async (req, res)=> {
 
 app.get("/users/map/category", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT category.name AS catname, subcategory_id, subcategory.name AS subname FROM category LEFT JOIN subcategory ON category.category_id= subcategory.category_id');
+  const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);

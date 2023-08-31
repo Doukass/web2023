@@ -334,61 +334,73 @@ function closeModal() {
 
 function handleAddDiscount() {
     var categories = []; // Array to store categories (each category will contain subcategories)
-    
+
     $.ajax({
         type: "GET",
         url: "/users/map/category",
         success: function (result) {
-            // Assuming result is an array of objects with properties catname and subname
+            // Assuming result is an array of objects with properties category_name, subcategory_name, and product_name
             console.log(result);
-            // Loop through the result array and organize data into the categories array
+
             for (var i = 0; i < result.length; i++) {
-                var catname = result[i].catname;
-                var subname = result[i].subname;
-                
-                // Check if the category already exists in the categories array
+                var catname = result[i].category_name;
+                var subname = result[i].subcategory_name;
+                var pname = result[i].product_name;
+
                 var existingCategory = categories.find(category => category.catname === catname);
-                
+
                 if (existingCategory) {
-                    // Category already exists, add subname to its subcategories array
-                    existingCategory.subcategories.push(subname);
+                    var existingSubcategory = existingCategory.subcategories.find(subcategory => subcategory.subname === subname);
+                    if (existingSubcategory) {
+                        existingSubcategory.products.push(pname);
+                    } else {
+                        existingCategory.subcategories.push({
+                            subname: subname,
+                            products: [pname]
+                        });
+                    }
                 } else {
-                    // Category doesn't exist, create a new category object
                     categories.push({
                         catname: catname,
-                        subcategories: [subname]
+                        subcategories: [{
+                            subname: subname,
+                            products: [pname]
+                        }]
                     });
                 }
             }
-            
+
             // Now you have the organized categories array
+            console.log(categories);
+
+            // Create the modal with dropdowns
             var modal = document.createElement("div");
             modal.className = "modal";
-            
+
             var modalContent = document.createElement("div");
             modalContent.className = "modal-content";
-            
+
             var closeBtn = document.createElement("span");
             closeBtn.className = "close";
             closeBtn.innerHTML = "&times;";
-            closeBtn.addEventListener("click", function() {
+            closeBtn.addEventListener("click", function () {
                 modal.style.display = "none";
             });
-            
+
             var categoryDropdown = document.createElement("select");
             categoryDropdown.id = "categoryDropdown";
             var defaultCategoryOption = document.createElement("option");
             defaultCategoryOption.value = "";
             defaultCategoryOption.textContent = "Select Category";
             categoryDropdown.appendChild(defaultCategoryOption);
-            
+
             categories.forEach(category => {
                 var option = document.createElement("option");
                 option.value = category.catname;
                 option.textContent = category.catname;
                 categoryDropdown.appendChild(option);
             });
-            
+
             var subcategoryDropdown = document.createElement("select");
             subcategoryDropdown.id = "subcategoryDropdown";
             subcategoryDropdown.style.display = "none";
@@ -396,38 +408,128 @@ function handleAddDiscount() {
             defaultSubcategoryOption.value = "";
             defaultSubcategoryOption.textContent = "Select Subcategory";
             subcategoryDropdown.appendChild(defaultSubcategoryOption);
+
+            var productDropdown = document.createElement("select");
+            productDropdown.id = "productDropdown";
+            productDropdown.style.display = "none";
+            var defaultProductOption = document.createElement("option");
+            defaultProductOption.value = "";
+            defaultProductOption.textContent = "Select Product";
+            productDropdown.appendChild(defaultProductOption);
+
+            var inputTextarea = document.createElement("textarea");
+            inputTextarea.style.display = "none"; // Initially hidden
             
-            categoryDropdown.addEventListener("change", function() {
+
+            categoryDropdown.addEventListener("change", function () {
                 var selectedCatname = this.value;
                 var selectedCategory = categories.find(category => category.catname === selectedCatname);
-                
+
+                subcategoryDropdown.innerHTML = ""; // Clear subcategory options
+                productDropdown.innerHTML = ""; // Clear product options
+
                 if (selectedCategory) {
-                    subcategoryDropdown.innerHTML = ""; // Clear previous options
+                    var defaultSubcategoryOption = document.createElement("option");
+                    defaultSubcategoryOption.value = "";
+                    defaultSubcategoryOption.textContent = "Select Subcategory";
+                    subcategoryDropdown.appendChild(defaultSubcategoryOption);
+
                     selectedCategory.subcategories.forEach(subcategory => {
                         var option = document.createElement("option");
-                        option.value = subcategory;
-                        option.textContent = subcategory;
+                        option.value = subcategory.subname;
+                        option.textContent = subcategory.subname;
                         subcategoryDropdown.appendChild(option);
                     });
+
                     subcategoryDropdown.style.display = "block";
                 } else {
                     subcategoryDropdown.style.display = "none";
                 }
+                productDropdown.style.display = "none";
             });
-            
+
+            subcategoryDropdown.addEventListener("change", function () {
+                var selectedCatname = categoryDropdown.value;
+                var selectedSubname = this.value;
+
+                productDropdown.innerHTML = ""; // Clear product options
+
+                var selectedCategory = categories.find(category => category.catname === selectedCatname);
+
+                if (selectedCategory) {
+                    var selectedSubcategory = selectedCategory.subcategories.find(subcategory => subcategory.subname === selectedSubname);
+
+                    if (selectedSubcategory) {
+                        var defaultProductOption = document.createElement("option");
+                        defaultProductOption.value = "";
+                        defaultProductOption.textContent = "Select Product";
+                        productDropdown.appendChild(defaultProductOption);
+
+                        selectedSubcategory.products.forEach(product => {
+                            var option = document.createElement("option");
+                            option.value = product;
+                            option.textContent = product;
+                            productDropdown.appendChild(option);
+                        });
+
+                        productDropdown.style.display = "block";
+                    }
+                }
+            });
+
+
+
+
+
+            productDropdown.addEventListener("change", function () {
+                var selectedCatname = categoryDropdown.value;
+                var selectedSubname = subcategoryDropdown.value;
+                var selectedProduct = this.value;
+
+                console.log("Selected Category:", selectedCatname);
+                console.log("Selected Subcategory:", selectedSubname);
+                console.log("Selected Product:", selectedProduct);
+                inputTextarea.style.display = "block";
+                inputTextarea.placeholder = "Give us your price";
+                submitButton.style.display = "block";
+                
+            });
+
+            var submitButton = document.createElement("button");
+            submitButton.textContent = "Submit"; // Set button text
+            submitButton.style.display = "none"; // Initially hidden
+
+            submitButton.addEventListener("click", function () {
+                var enteredPrice = inputTextarea.value;
+                console.log("Entered Price:", enteredPrice);
+
+                // Add your logic to handle the entered price
+
+                // Hide the modal after processing
+                modal.style.display = "none";
+            });
+
+
+
+
             modalContent.appendChild(closeBtn);
             modalContent.appendChild(categoryDropdown);
             modalContent.appendChild(subcategoryDropdown);
+            modalContent.appendChild(productDropdown);
+            modalContent.appendChild(inputTextarea); // Add the input text area
+            modalContent.appendChild(submitButton);
             modal.appendChild(modalContent);
-            
+
             document.body.appendChild(modal);
             modal.style.display = "block";
-            
-            window.onclick = function(event) {
+
+            window.onclick = function (event) {
                 if (event.target === modal) {
                     modal.style.display = "none";
                 }
             };
+
+            
         }
     });
 }
