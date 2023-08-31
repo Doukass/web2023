@@ -123,6 +123,7 @@ for (let i = 0; i < result.length; i++) {
     //console.log(data[i].username);
     
 
+    //opoio store den exei discount ftiaxnoume ena circlemarker me popup sto opoio yparxei koumpi gia na balei prosfora
 
     if (discount_on === 0) {
         let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
@@ -130,13 +131,13 @@ for (let i = 0; i < result.length; i++) {
         let popupContent = `<strong>${title}</strong>  
         <div>
             <p>Add a Discount</p>
-            <button onclick="AddDiscount()">Add Discount</button>
+            <button   onclick="handleAddDiscount()">Add Discount</button>
         </div>
       <br>`;
 
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
-    } else {
+    } else { // parakatw exoume ftiaksei enan pinaka me basei ta gewgrafika stoixeia twn stores gia na mporoume na apothikeusoume parapanw apo mia prosfores sto kathena
         if (!productsByLocation[loc], !productsByLocation2[loc]) {
             productsByLocation[loc] = [];
             productsByLocation2[loc] = [];
@@ -144,36 +145,26 @@ for (let i = 0; i < result.length; i++) {
             //console.log(productsByLocation);
         }
         
-
+        // o parakatw kwdikas einai gia ta stores ta opoia einai sta 50metra
         if (product_id !== null) {
             
             if(distance <50 )
             {
-                console.log(discount_id);
+               // console.log(discount_id);
 
+                // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
                 var DisplayDetails = [
                     'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
                     `<button class="details-button" data-discountid="${data[i].discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
+                    
                     `,
                     '<br>'
                 ];
-                
+                //to concat kanei ennonei dyo pinakes
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
-                //console.log(data[i].user_name);
+                //console.log(DisplayDetails);
                
                 
-                
-            
-
-                    
-              //  productsByLocation[loc].push(
-              //      'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 
-              //      '<button class="details-button" onclick="handleLikeClick(this)">Details</button>',
-              //      '<button class="like-button" onclick="handleLikeClick(this)">Like</button>',
-               //     '<button class="dislike-button" onclick="handleDislikeClick(this)">Dislike</button>',
-               //     '<br>'
-              //  );
-            // You can add an event listener to save the rating when the input changes.
            
             
             
@@ -201,6 +192,12 @@ for (let i = 0; i < result.length; i++) {
         if (productsByLocation2[loc].length > 0) {
             popupContent += ` ${productsByLocation2[loc].join(" ")}`;
         }
+
+        popupContent += ` <div>
+        <p>Add a Discount</p>
+        <button onclick="handleAddDiscount()">Add Discount</button>
+    </div>
+  <br>`;
         
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
@@ -327,92 +324,6 @@ function handleDislikeClick() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//handleDetailsClick();
-function handleDetailsClick2(button) {
-
-
-    $.ajax({
-        type: "GET",
-        url: "/users/map/aksiologhsh",
-        success: function (result) {
-          
-              //let data1= result;
-              let username = [];
-              let date_enterded = [];
-              let price = [];
-              let product_name = [];
-              let Info = [];
-
-              console.log(result);
-
-
-              for (let i = 0; i < result.length; i++){
-                  //var categname=data1[i].name;
-                  //console.log(categname);
-                  
-                  if(result[i].user_name !== null){
-
-
-                     Info.push({
-                        username: result[i].user_name,
-                        date_entered: result[i].date_entered,
-                        price: result[i].price,
-                        product_name: result[i].product_name
-                    });
-
-                     
-                  }
- 
-              }
-
-              console.log(Info);
-
-
-
-             // Create a formatted string for each item in the 'Info' array
-        let formattedInfo = Info.map(item => {
-            return `Username: ${item.username}, Date Entered: ${item.date_entered}, Price: ${item.price}, Product Name: ${item.product_name}`;
-        });
-
-        const modalMessage = document.getElementById("modal-message");
-        modalMessage.textContent = formattedInfo.join("\n"); // Display the result from the AJAX call in the modal
-
-        const modal = document.getElementById("modal");
-        modal.style.display = "block";
-
-
-
-            
-
-          }
-        });
-
-
-
-
-
-    
-}
-
 function closeModal() {
     const modal = document.getElementById("modal");
     modal.style.display = "none";
@@ -420,60 +331,110 @@ function closeModal() {
 
 
 
-AddDiscount();
-function AddDiscount() {
 
-
-
-
+function handleAddDiscount() {
+    var categories = []; // Array to store categories (each category will contain subcategories)
     
-        $.ajax({
-          type: "GET",
-          url: "/users/map/category",
-          success: function (result) {
-            
-                let data1= result;
-                let categname=[];
-
-
-                for (let i = 0; i < result.length; i++){
-                    //var categname=data1[i].name;
-                    //console.log(categname);
+    $.ajax({
+        type: "GET",
+        url: "/users/map/category",
+        success: function (result) {
+            // Assuming result is an array of objects with properties catname and subname
+            console.log(result);
+            // Loop through the result array and organize data into the categories array
+            for (var i = 0; i < result.length; i++) {
+                var catname = result[i].catname;
+                var subname = result[i].subname;
+                
+                // Check if the category already exists in the categories array
+                var existingCategory = categories.find(category => category.catname === catname);
+                
+                if (existingCategory) {
+                    // Category already exists, add subname to its subcategories array
+                    existingCategory.subcategories.push(subname);
+                } else {
+                    // Category doesn't exist, create a new category object
+                    categories.push({
+                        catname: catname,
+                        subcategories: [subname]
+                    });
                 }
-
-
-                 categname.push(data1);
-                //console.log(categname);
-
-
-
-
-            //const modalMessage = document.getElementById("modal-message");
-            //modalMessage.textContent = categname; // Clear existing content
-            
-        
-        
-            //const modal = document.getElementById("modal");
-           // modal.style.display = "block";
-
-
-
-
-
-
-
-
             }
-          });
-      
-
-
-
-
-
-
-
+            
+            // Now you have the organized categories array
+            var modal = document.createElement("div");
+            modal.className = "modal";
+            
+            var modalContent = document.createElement("div");
+            modalContent.className = "modal-content";
+            
+            var closeBtn = document.createElement("span");
+            closeBtn.className = "close";
+            closeBtn.innerHTML = "&times;";
+            closeBtn.addEventListener("click", function() {
+                modal.style.display = "none";
+            });
+            
+            var categoryDropdown = document.createElement("select");
+            categoryDropdown.id = "categoryDropdown";
+            var defaultCategoryOption = document.createElement("option");
+            defaultCategoryOption.value = "";
+            defaultCategoryOption.textContent = "Select Category";
+            categoryDropdown.appendChild(defaultCategoryOption);
+            
+            categories.forEach(category => {
+                var option = document.createElement("option");
+                option.value = category.catname;
+                option.textContent = category.catname;
+                categoryDropdown.appendChild(option);
+            });
+            
+            var subcategoryDropdown = document.createElement("select");
+            subcategoryDropdown.id = "subcategoryDropdown";
+            subcategoryDropdown.style.display = "none";
+            var defaultSubcategoryOption = document.createElement("option");
+            defaultSubcategoryOption.value = "";
+            defaultSubcategoryOption.textContent = "Select Subcategory";
+            subcategoryDropdown.appendChild(defaultSubcategoryOption);
+            
+            categoryDropdown.addEventListener("change", function() {
+                var selectedCatname = this.value;
+                var selectedCategory = categories.find(category => category.catname === selectedCatname);
+                
+                if (selectedCategory) {
+                    subcategoryDropdown.innerHTML = ""; // Clear previous options
+                    selectedCategory.subcategories.forEach(subcategory => {
+                        var option = document.createElement("option");
+                        option.value = subcategory;
+                        option.textContent = subcategory;
+                        subcategoryDropdown.appendChild(option);
+                    });
+                    subcategoryDropdown.style.display = "block";
+                } else {
+                    subcategoryDropdown.style.display = "none";
+                }
+            });
+            
+            modalContent.appendChild(closeBtn);
+            modalContent.appendChild(categoryDropdown);
+            modalContent.appendChild(subcategoryDropdown);
+            modal.appendChild(modalContent);
+            
+            document.body.appendChild(modal);
+            modal.style.display = "block";
+            
+            window.onclick = function(event) {
+                if (event.target === modal) {
+                    modal.style.display = "none";
+                }
+            };
+        }
+    });
 }
+
+
+
+
 
 
 
