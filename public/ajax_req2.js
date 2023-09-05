@@ -288,6 +288,7 @@ function handleDetailsClick(button) {
         Discount ID: ${discount_id}<br>
         <button class="like-button" onclick="handleLikeClick()">Like</button>
         <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
+        <span id="likeCount">0 Likes</span>
     `;
 
     const modal = document.getElementById("modal");
@@ -295,24 +296,7 @@ function handleDetailsClick(button) {
 }
 
 function handleLikeClick() {
-    $.ajax({
-        type:"POST",
-        url: "/upload/like",
-        data: {
-            user_id : username,
-            discount_id: discount_id,
-        },
-        success: function (response) {
-            console.log("Database updated with like");
-        },
-        error: function (error) {
-            console.error("Error updating database with like:", error);
-        }
 
-
-
-
-    });
     console.log("Liked");
 }
 
