@@ -113,6 +113,7 @@ for (let i = 0; i < result.length; i++) {
     let price = data[i].price
     let date = data[i].date_entered;
     let discount_id = data[i].discount_id;
+    let store_id = data[i].store_id;
     let username =data[i].user_name;
     let selectedRating = null;
     
@@ -131,7 +132,7 @@ for (let i = 0; i < result.length; i++) {
         let popupContent = `<strong>${title}</strong>  
         <div>
             <p>Add a Discount</p>
-            <button   onclick="handleAddDiscount()">Add Discount</button>
+            <button   onclick="handleAddDiscount((${store_id}))">Add Discount</button>
         </div>
       <br>`;
 
@@ -195,7 +196,7 @@ for (let i = 0; i < result.length; i++) {
 
         popupContent += ` <div>
         <p>Add a Discount</p>
-        <button onclick="handleAddDiscount()">Add Discount</button>
+        <button onclick="handleAddDiscount((${store_id}))">Add Discount</button>
     </div>
   <br>`;
         
@@ -316,7 +317,13 @@ function closeModal() {
 
 
 
-function handleAddDiscount() {
+function handleAddDiscount(store_id) {
+
+    console.log("Store ID:", store_id);
+    
+
+
+
     var categories = []; // Array to store categories (each category will contain subcategories)
 
     $.ajax({
@@ -487,9 +494,7 @@ function handleAddDiscount() {
                 var enteredPrice = inputTextarea.value;
                 console.log("Entered Price:", enteredPrice);
 
-                // Add your logic to handle the entered price
-
-                // Hide the modal after processing
+                updateData();
                 modal.style.display = "none";
             });
 
@@ -497,9 +502,9 @@ function handleAddDiscount() {
 
 
             modalContent.appendChild(closeBtn);
-            modalContent.appendChild(categoryDropdown);
-            modalContent.appendChild(subcategoryDropdown);
-            modalContent.appendChild(productDropdown);
+            modalContent.appendChild(categoryDropdown);     // dropsown first option
+            modalContent.appendChild(subcategoryDropdown); // dropdown 2nd option
+            modalContent.appendChild(productDropdown); // dropdown 3rd option
             modalContent.appendChild(inputTextarea); // Add the input text area
             modalContent.appendChild(submitButton);
             modal.appendChild(modalContent);
@@ -517,6 +522,14 @@ function handleAddDiscount() {
         }
     });
 }
+
+
+
+
+function updateData(){
+    console.log("malakia");
+}
+
 
 
 

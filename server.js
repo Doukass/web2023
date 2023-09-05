@@ -389,7 +389,23 @@ app.post("/upload/like", async (req, res)=> {
 });
 
 
+//-------- upload discount
 
+
+
+app.post("/add/discount", (req, res) => {
+  // Extract data from the request body
+  const { catname, subname, product, price } = req.body;
+
+  // Insert the data into your database (you'll need to implement this part)
+  // Example using a fictional database library:
+   dbConnection.query({ catname, subname, product, price });
+
+   
+
+  // Respond with a success message
+  res.status(200).json({ message: "Data stored successfully" });
+});
 
 
 
