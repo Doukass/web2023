@@ -152,3 +152,22 @@
 
 
 
+/* CSS styles for the like and dislike buttons */
+.like-button,
+.dislike-button {
+    padding: 10px 20px; /* Adjust padding as needed */
+    border: none;
+    background-color: #007bff; /* Blue color for like button */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Add some spacing between buttons */
+}
+
+.dislike-button {
+    background-color: #dc3545; /* Red color for dislike button */
+}
+
+
+
+
