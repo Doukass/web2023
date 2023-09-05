@@ -441,9 +441,50 @@ app.post('/update-database', (req, res) => {
 });
 
 
+app.post('/update-database1', (req, res) => {
+  const jsonData1 = req.body;
 
+  const insertQuery1 = `
+    INSERT INTO stores (store_id, store_name, discount_on, store_latitude, store_longitude)
+    VALUES (?, ?, ?, ?, ?)
+    ON DUPLICATE KEY UPDATE
+      store_id = VALUES(store_id),
+      store_name = VALUES(store_name),
+      discount_on = VALUES(discount_on),
+      store_latitude = VALUES(store_latitude),
+      store_longitude = VALUES(store_longitude)
+  `;
 
+  for (const item of jsonData1.features) {
+    const {
+      "@id": id,
+      name: store_name,
+      discount_on = 0, //because the json file does not have it 
+    } = item.properties;
 
+    //take only the number from id json
+    const store_id = id.replace(/\D/g, ''); // remove non numbers
+
+    const {
+      coordinates: [store_longitude, store_latitude],
+    } = item.geometry;
+
+    console.log('store_id:', store_id);
+    console.log('store_name:', store_name);
+    console.log('discount_on:', discount_on);
+    console.log('store_latitude:', store_latitude);
+    console.log('store_longitude:', store_longitude);
+
+    dbConnection.query(insertQuery1,[store_id, store_name, discount_on, store_latitude, store_longitude],(error, results) => {
+        if (error) {
+          console.error('Error updating database:', error);
+          res.status(500).json({ error: 'Database update failed' });
+          return;
+        }
+        res.json({ message: 'Database updated successfully' });
+      });
+    }
+  });
 
 //------ end of update database -----------//
 

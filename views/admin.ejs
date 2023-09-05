@@ -54,9 +54,15 @@
       <!-- Add a button to trigger XML data display -->
 
       <div id="dropArea" class="drop-area">
-        <p>Drag and drop a JSON file here or click to select one.</p>
+        <p>Drag and drop  JSON file for PRICES here or click to select one.</p>
         <input type="file" id="jsonInput" style="display: none;" accept=".json">
         <div id="uploadIcon" class="upload-icon">&#10003;</div>
+      </div>
+
+      <div id="dropArea1" class="drop-area">
+        <p>Drag and drop a JSON file for STORES here or click to select one.</p>
+        <input type="file" id="jsonInput1" style="display: none;" accept=".json">
+        <div id="uploadIcon1" class="upload-icon">&#10003;</div>
       </div>
 
     <input type="file" id="jsonInput" style="display: none;" accept=".json">
@@ -73,6 +79,16 @@
     <div style = "position:relative; left:-400px; top:-900px;" id="dataContainer">
       <!--  data will be dynamically added here -->
     </div>
+
+  </div>
+  <!--drag and drop -->
+  
+  
+      <div style = "position:relative; right:400px; top:-900px;" id="dataContainer1">
+        <!--  data will be dynamically added here -->
+      </div>
+
+    
 
    <!--  <script id="discountItemTemplate" type="text/template">
       <div class="discount-item">
