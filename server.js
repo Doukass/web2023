@@ -345,7 +345,7 @@ app.get("/users/map/search", async (req, res)=> {
 
 app.get("/users/map/category", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
+  const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name, p.product_id AS product_id FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
@@ -392,20 +392,34 @@ app.post("/upload/like", async (req, res)=> {
 //-------- upload discount
 
 
+app.post('/updateData', (req, res) => {
+  const { product_id, store_id, enteredPrice } = req.body;
 
-app.post("/add/discount", (req, res) => {
-  // Extract data from the request body
-  const { catname, subname, product, price } = req.body;
 
-  // Insert the data into your database (you'll need to implement this part)
-  // Example using a fictional database library:
-   dbConnection.query({ catname, subname, product, price });
-
-   
-
-  // Respond with a success message
-  res.status(200).json({ message: "Data stored successfully" });
+  // Create an SQL query to insert the data into the database
+  const sql = 'INSERT INTO discount (user_id, product_id, store_id, price, date_entered, like_counter) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 0)';
+  
+  // Execute the SQL query
+  dbConnection.query(sql, [req.session.userID, product_id, store_id, enteredPrice], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
 });
+
+
+
+
+
+
+
+
+
+
 
 
 

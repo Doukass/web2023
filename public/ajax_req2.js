@@ -296,6 +296,7 @@ function handleDetailsClick(button) {
     modal.style.display = "block";
 }
 
+
 function handleLikeClick() {
 
     console.log("Liked");
@@ -331,12 +332,14 @@ function handleAddDiscount(store_id) {
         url: "/users/map/category",
         success: function (result) {
             // Assuming result is an array of objects with properties category_name, subcategory_name, and product_name
-            console.log(result);
-
+           // console.log(result);
+           // console.log(result.product_id);
             for (var i = 0; i < result.length; i++) {
                 var catname = result[i].category_name;
                 var subname = result[i].subcategory_name;
                 var pname = result[i].product_name;
+                var prodid = result[i].product_id;
+               // console.log(result[i].product_id);
 
                 var existingCategory = categories.find(category => category.catname === catname);
 
@@ -355,14 +358,15 @@ function handleAddDiscount(store_id) {
                         catname: catname,
                         subcategories: [{
                             subname: subname,
-                            products: [pname]
+                            products: [pname],
+                            
                         }]
                     });
                 }
             }
 
             // Now you have the organized categories array
-            console.log(categories);
+           // console.log(categories);
 
             // Create the modal with dropdowns
             var modal = document.createElement("div");
@@ -472,19 +476,42 @@ function handleAddDiscount(store_id) {
 
 
 
-            productDropdown.addEventListener("change", function () {
-                var selectedCatname = categoryDropdown.value;
-                var selectedSubname = subcategoryDropdown.value;
-                var selectedProduct = this.value;
+          
 
-                console.log("Selected Category:", selectedCatname);
-                console.log("Selected Subcategory:", selectedSubname);
-                console.log("Selected Product:", selectedProduct);
-                inputTextarea.style.display = "block";
-                inputTextarea.placeholder = "Give us your price";
-                submitButton.style.display = "block";
-                
-            });
+productDropdown.addEventListener("change", function () {
+    var selectedCatname = categoryDropdown.value;
+    var selectedSubname = subcategoryDropdown.value;
+    var selectedProduct = this.value;
+
+    // Find the selected product's product_id
+    var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
+
+    console.log("Selected Category:", selectedCatname);
+    console.log("Selected Subcategory:", selectedSubname);
+    console.log("Selected Product:", selectedProduct);
+    console.log("Selected Product ID:", selectedProductID);
+
+    inputTextarea.style.display = "block";
+    inputTextarea.placeholder = "Give us your price";
+    submitButton.style.display = "block";
+});
+
+// Function to find the product_id based on selected category, subcategory, and product
+function findProductID(selectedCatname, selectedSubname, selectedProduct) {
+    for (var i = 0; i < result.length; i++) {
+        if (
+            result[i].category_name === selectedCatname &&
+            result[i].subcategory_name === selectedSubname &&
+            result[i].product_name === selectedProduct
+        ) {
+            return result[i].product_id;
+        }
+    }
+    return null; // Return null if product_id is not found
+}
+
+
+
 
             var submitButton = document.createElement("button");
             submitButton.textContent = "Submit"; // Set button text
@@ -492,9 +519,13 @@ function handleAddDiscount(store_id) {
 
             submitButton.addEventListener("click", function () {
                 var enteredPrice = inputTextarea.value;
-                console.log("Entered Price:", enteredPrice);
+                //console.log("Entered Price:", enteredPrice);
+                var selectedCatname = categoryDropdown.value;
+                var selectedSubname = subcategoryDropdown.value;
+                var selectedProduct = productDropdown.value;
+                var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
 
-                updateData();
+                updateData(selectedProductID, store_id, enteredPrice);
                 modal.style.display = "none";
             });
 
@@ -526,9 +557,32 @@ function handleAddDiscount(store_id) {
 
 
 
-function updateData(){
-    console.log("malakia");
+function updateData(product_id, store_id, enteredPrice) {
+   // var dataToSend = {
+   //     product_id: product_id,
+   //     store_id: store_id,
+   //     enteredPrice: enteredPrice
+   // };
+
+    $.ajax({
+        type: "POST",
+        url: "/updateData", // Replace with your actual server endpoint URL
+        data: {
+        product_id: product_id,
+        store_id: store_id,
+        enteredPrice: enteredPrice 
+        },
+        success: function(response) {
+            // Handle the success response here
+            console.log('Data sent successfully:', response);
+        },
+        error: function(error) {
+            // Handle errors here
+           // console.error('Error sending data:', error);
+        }
+    });
 }
+
 
 
 
