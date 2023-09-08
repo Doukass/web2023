@@ -1,6 +1,7 @@
 
 
 $(document).ready(function () {
+    //xarths
   let mymap = L.map('mapid');
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -9,7 +10,7 @@ $(document).ready(function () {
   mymap.locate({ setView: true, maxZoom: 25 });
 
   let userCoords ;
-
+//topothesia pou theloume
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
@@ -34,24 +35,12 @@ $(document).ready(function () {
 
 
 
-  
-  userStoresGet();
+
+userStoresGet();
 
 
 
-
-//--------
-
-
-
-
-
-
-
-
-
-
-  function userStoresGet() {
+  function userStoresGet() {//fwrtoma ston xarth
       $.ajax({
           type: "GET",
           url: "/users/map/stores",
@@ -102,7 +91,7 @@ const productsByLocation2 = {};
 
 
 
-
+//analysh twn apotelesmatwn tou ajax call
 for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
     let catname = data[i].category_name;
@@ -117,8 +106,8 @@ for (let i = 0; i < result.length; i++) {
     let username =data[i].user_name;
     let selectedRating = null;
     
-    //console.log(userCoords[0]);
-    const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+    //console.log(loc[0], loc[1]);
+    let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
     //console.log(data[i].user_name)
 
     //console.log(data[i].username);
@@ -127,13 +116,11 @@ for (let i = 0; i < result.length; i++) {
     //opoio store den exei discount ftiaxnoume ena circlemarker me popup sto opoio yparxei koumpi gia na balei prosfora
 
     if (discount_on === 0) {
+        // bazw onoma kai marker sta supermarket pou den exoun kamia prosofra
         let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
 
         let popupContent = `<strong>${title}</strong>  
-        <div>
-            <p>Add a Discount</p>
-            <button   onclick="handleAddDiscount((${store_id}))">Add Discount</button>
-        </div>
+       
       <br>`;
 
         marker.bindPopup(popupContent);
@@ -265,12 +252,6 @@ function toRad(degrees) {
 
 
 
-function test() {
-    console.log("eisai malakas");
-    console.log(`Selected Rating: ${selectedRating}`);
-}
-
-
 
 
 function handleDetailsClick(button) {
@@ -287,7 +268,7 @@ function handleDetailsClick(button) {
         Price: ${price}<br>
         Product: ${product}<br>
         Discount ID: ${discount_id}<br>
-        <button class="like-button" onclick="handleLikeClick()">Like</button>
+        <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(this)">Like</button>
         <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
         <span id="likeCount">0 Likes</span>
     `;
@@ -297,10 +278,62 @@ function handleDetailsClick(button) {
 }
 
 
-function handleLikeClick() {
+let likeCounter = 0; // Initialize the like counter
 
-    console.log("Liked");
+function handleLikeClick(button) {
+    const likeButton = button;
+    const liked = likeButton.getAttribute("data-liked") === "true";
+    
+    if (!liked) {
+        // Increment the like counter
+        likeCounter++;
+
+        // Update the data-likes attribute and display the new count
+        const likeCountElement = document.getElementById("likeCount");
+        likeButton.setAttribute("data-likes", likeCounter);
+        likeCountElement.textContent = `${likeCounter} Like${likeCounter === 1 ? "" : "s"}`;
+
+        // Mark the button as liked and disable it
+        likeButton.setAttribute("data-liked", "true");
+        likeButton.disabled = true;
+
+        // Send the likeCounter value to the server via AJAX POST
+        sendLikeCountToServer(likeCounter);
+    } else {
+        const likeMessage = document.getElementById("likeMessage");
+        likeMessage.textContent = "You've already liked this item.";
+        likeMessage.style.display = "block";
+    }
 }
+
+function sendLikeCountToServer(likeCount, discount_id) {
+    // Prepare the data to send to the server
+    const requestData = {
+        likeCount: likeCount,
+        discount_id: discount_id
+    };
+
+    // Send the data to the server using AJAX POST
+    $.ajax({
+        type: "POST",
+        url: "/update/like", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("Like count sent to the server:", likeCount);
+            console.log("Server response:", response);
+        },
+        error: function(error) {
+            // Handle errors here
+            console.error("Error sending like count to the server:", error);
+        }
+    });
+}
+
+
+
+
+
 
 function handleDislikeClick() {
     // Handle dislike functionality here

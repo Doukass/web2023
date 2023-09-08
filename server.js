@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const { error } = require('console');
 
 
 
@@ -381,10 +382,20 @@ app.get("/admin/chart1", async (req, res)=> {
 
 //-------- upload likes
 
-app.post("/upload/like", async (req, res)=> {
-  const { username, discount_id } = req.body;
+app.post('/update/like', (req, res) => {
+  const { discount_id  } = req.body;
 
+const sql = 'INSERT INTO like ( user_id, discount_id  VALUES (?, ?))' 
 
+dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
+  if (error) {
+    console.error('Error inserting data into the database:', error);
+    res.status(500).json({ error: 'An error occurred while updating data' });
+  } else {
+    console.log('Data inserted successfully');
+    res.status(200).json({ message: 'Data inserted successfully' });
+  }
+});
   
 });
 
