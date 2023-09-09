@@ -254,12 +254,62 @@ function toRad(degrees) {
 
 
 
+
+
+
+
 function handleDetailsClick(button) {
     const username = button.getAttribute("data-username");
     const dateEntered = button.getAttribute("data-date");
     const price = button.getAttribute("data-price");
     const product = button.getAttribute("data-product");
     const discount_id = button.getAttribute("data-discountid")
+
+
+    uploadLikeCounter()
+    function uploadLikeCounter() {
+        var likedItems = []; // Initialize an array to store liked items
+    
+        $.ajax({
+            type: "GET",
+            url: "/like/counter",
+            success: function (result) {
+                console.log(result);
+                for (let i = 0; i < result.length; i++) {
+                    var user_id = result[i].user_id;
+                    var discount_id = result[i].discount_id;
+    
+                    // Check if the combination of user_id and discount_id already exists in the likedItems array
+                    var alreadyLiked = likedItems.some(function (item) {
+                        return item.user_id === user_id && item.discount_id === discount_id;
+                    });
+    
+                    // If it's not already liked, add it to the array
+                    if (!alreadyLiked) {
+                        likedItems.push({
+                            user_id: user_id,
+                            discount_id: discount_id
+                        });
+                    }
+                    
+                }
+            }
+        });
+    }
+    
+
+
+ 
+
+
+
+
+
+
+
+
+
+
 
     const modalMessage = document.getElementById("modal-message");
     modalMessage.innerHTML = `
@@ -268,7 +318,7 @@ function handleDetailsClick(button) {
         Price: ${price}<br>
         Product: ${product}<br>
         Discount ID: ${discount_id}<br>
-        <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(this)">Like</button>
+        <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
         <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
         <span id="likeCount">0 Likes</span>
     `;
@@ -278,38 +328,39 @@ function handleDetailsClick(button) {
 }
 
 
-let likeCounter = 0; // Initialize the like counter
+let likeCounter = 0;
 
-function handleLikeClick(button) {
-    const likeButton = button;
-    const liked = likeButton.getAttribute("data-liked") === "true";
-    
+
+function handleLikeClick(discount_id, button) {
+    // Check if the button is already liked
+    const liked = button.getAttribute("data-liked") === "true";
+
     if (!liked) {
         // Increment the like counter
         likeCounter++;
 
-        // Update the data-likes attribute and display the new count
+        // Update the button's data attributes and text
+        button.setAttribute("data-liked", "true");
+        button.textContent = "Liked";
+        button.style.backgroundColor = "green"; // Optional: Change button style
+
+        // Disable the button to prevent multiple clicks
+        button.disabled = true;
+
+        // Update the like count display
         const likeCountElement = document.getElementById("likeCount");
-        likeButton.setAttribute("data-likes", likeCounter);
         likeCountElement.textContent = `${likeCounter} Like${likeCounter === 1 ? "" : "s"}`;
 
-        // Mark the button as liked and disable it
-        likeButton.setAttribute("data-liked", "true");
-        likeButton.disabled = true;
-
-        // Send the likeCounter value to the server via AJAX POST
-        sendLikeCountToServer(likeCounter);
-    } else {
-        const likeMessage = document.getElementById("likeMessage");
-        likeMessage.textContent = "You've already liked this item.";
-        likeMessage.style.display = "block";
+        // Send the like to the server (optional)
+        sendLikeToServer(discount_id);
     }
 }
 
-function sendLikeCountToServer(likeCount, discount_id) {
+
+
+function sendLikeToServer(discount_id) {
     // Prepare the data to send to the server
     const requestData = {
-        likeCount: likeCount,
         discount_id: discount_id
     };
 
@@ -320,12 +371,12 @@ function sendLikeCountToServer(likeCount, discount_id) {
         data: requestData,
         success: function(response) {
             // Handle the success response from the server if needed
-            console.log("Like count sent to the server:", likeCount);
+            console.log("Like sent to the server for Discount ID:", discount_id);
             console.log("Server response:", response);
         },
         error: function(error) {
             // Handle errors here
-            console.error("Error sending like count to the server:", error);
+            console.error("Error sending like to the server:", error);
         }
     });
 }

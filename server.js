@@ -380,12 +380,17 @@ app.get("/admin/chart1", async (req, res)=> {
 
 
 
-//-------- upload likes
+//-------- store likes
 
 app.post('/update/like', (req, res) => {
   const { discount_id  } = req.body;
 
-const sql = 'INSERT INTO like ( user_id, discount_id  VALUES (?, ?))' 
+  const sql = `
+  INSERT INTO \`like\` (user_id, discount_id)
+  VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE user_id=user_id, discount_id =discount_id
+`;
+
 
 dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
   if (error) {
@@ -396,6 +401,16 @@ dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
     res.status(200).json({ message: 'Data inserted successfully' });
   }
 });
+  
+});
+
+//----------- upload likes 
+app.get("/like/counter", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM \`like\`  ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
   
 });
 
