@@ -461,6 +461,17 @@ app.post('/in/stock', (req, res) => {
   });
 });
 
+//---------------------- upload stock---------
+
+
+app.get("/upload/stock", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT stock, discount.discount_id FROM discount  ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
 
 
 

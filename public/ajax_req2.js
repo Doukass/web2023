@@ -105,9 +105,9 @@ for (let i = 0; i < result.length; i++) {
     let store_id = data[i].store_id;
     let like_id = data[i].like_id;
 
-    console.log(like_id);
-    let username =data[i].user_name;
-    let selectedRating = null;
+    //console.log(like_id);
+    //let username =data[i].user_name;
+    //let selectedRating = null;
     
     //console.log(loc[0], loc[1]);
     let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
@@ -296,6 +296,8 @@ function handleDetailsClick(button) {
 
     // Call uploadLikeCounter with the callback
     uploadLikeCounter(discount_id, displayModalWithLikeCounts);
+    uploadStock(discount_id);
+
 }
 
 // Modify uploadLikeCounter to accept a callback
@@ -429,6 +431,35 @@ function handleInStockClick(discount_id){
     });
     
 
+}
+
+
+
+
+
+function uploadStock(discount_id){
+    $.ajax({
+        type: "GET",
+        url: "/upload/stock",
+        success: function (result) {
+
+            var ItemsOnStock = []
+           
+            for (let i = 0; i < result.length; i++) 
+            {
+           var stock = result[i].stock;
+           var discount_id_server = result[i].discount_id;
+
+           ItemsOnStock.push({stock : stock, discount_id: discount_id})
+            
+           }
+           //console.log(ItemsOnStock);
+            
+           
+
+        }
+    });
+    
 }
 
 
