@@ -283,7 +283,7 @@ function handleDetailsClick(button) {
             <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button><br>
             
             <!--Σε αποθεμα -->
-            <button class="option-button1" onclick="handleInStockClick()">Σε αποθεμα</button>
+            <button class="option-button1" onclick="handleInStockClick(${discount_id}, this)">Σε αποθεμα</button>
             
             <!-- Εξαντλήθηκε -->
             <button class="option-button2" onclick="handleOutOfStockClick(${discount_id}, this)">Εξαντλήθηκε</button>
@@ -394,10 +394,44 @@ function handleDislikeClick() {
 
 
 function handleOutOfStockClick(discount_id){
-    console.log(discount_id);
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/out/of/stock", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("Like sent to the server for Discount ID:", discount_id);
+            console.log("Server response:", response);
+        }
+    });
     
 
 }
+
+function handleInStockClick(discount_id){
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/in/stock", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("Like sent to the server for Discount ID:", discount_id);
+            console.log("Server response:", response);
+        }
+    });
+    
+
+}
+
+
 
 
 
