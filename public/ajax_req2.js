@@ -103,6 +103,9 @@ for (let i = 0; i < result.length; i++) {
     let date = data[i].date_entered;
     let discount_id = data[i].discount_id;
     let store_id = data[i].store_id;
+    let like_id = data[i].like_id;
+
+    console.log(like_id);
     let username =data[i].user_name;
     let selectedRating = null;
     
@@ -143,7 +146,7 @@ for (let i = 0; i < result.length; i++) {
                 // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
                 var DisplayDetails = [
                     'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
-                    `<button class="details-button" data-discountid="${data[i].discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
                     
                     `,
                     '<br>'
@@ -256,79 +259,81 @@ function toRad(degrees) {
 
 
 
-
+// details, like, dislike(akoma den to exw ftiaksei)
 
 function handleDetailsClick(button) {
     const username = button.getAttribute("data-username");
     const dateEntered = button.getAttribute("data-date");
     const price = button.getAttribute("data-price");
     const product = button.getAttribute("data-product");
-    const discount_id = button.getAttribute("data-discountid")
+    const discount_id = button.getAttribute("data-discountid");
 
-
-    uploadLikeCounter()
-    function uploadLikeCounter() {
-        var likedItems = []; // Initialize an array to store liked items
+    // Define a callback function to display the modal with likeCounts
+    function displayModalWithLikeCounts(likeCounts) {
+        const modalMessage = document.getElementById("modal-message");
+        modalMessage.innerHTML = `
+            Username: ${username}<br>
+            Date Entered: ${dateEntered}<br>
+            Price: ${price}<br>
+            Product: ${product}<br>
+            Discount ID: ${discount_id}<br>
+            Likes: ${likeCounts[discount_id]}<br> 
+            
+            <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
+            <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button><br>
+            
+            <!--Σε αποθεμα -->
+            <button class="option-button1" onclick="handleInStockClick()">Σε αποθεμα</button>
+            
+            <!-- Εξαντλήθηκε -->
+            <button class="option-button2" onclick="handleOutOfStockClick(${discount_id}, this)">Εξαντλήθηκε</button>
+        `;
     
-        $.ajax({
-            type: "GET",
-            url: "/like/counter",
-            success: function (result) {
-                console.log(result);
-                for (let i = 0; i < result.length; i++) {
-                    var user_id = result[i].user_id;
-                    var discount_id = result[i].discount_id;
-    
-                    // Check if the combination of user_id and discount_id already exists in the likedItems array
-                    var alreadyLiked = likedItems.some(function (item) {
-                        return item.user_id === user_id && item.discount_id === discount_id;
-                    });
-    
-                    // If it's not already liked, add it to the array
-                    if (!alreadyLiked) {
-                        likedItems.push({
-                            user_id: user_id,
-                            discount_id: discount_id
-                        });
-                    }
-                    
-                }
-            }
-        });
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
     }
     
 
-
- 
-
-
-
-
-
-
-
-
-
-
-
-    const modalMessage = document.getElementById("modal-message");
-    modalMessage.innerHTML = `
-        Username: ${username}<br>
-        Date Entered: ${dateEntered}<br>
-        Price: ${price}<br>
-        Product: ${product}<br>
-        Discount ID: ${discount_id}<br>
-        <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
-        <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
-        <span id="likeCount">0 Likes</span>
-    `;
-
-    const modal = document.getElementById("modal");
-    modal.style.display = "block";
+    // Call uploadLikeCounter with the callback
+    uploadLikeCounter(discount_id, displayModalWithLikeCounts);
 }
 
+// Modify uploadLikeCounter to accept a callback
+function uploadLikeCounter(discount_id, callback) {
+    var likeCounts = {}; // Initialize an object to store like counts
 
-let likeCounter = 0;
+    $.ajax({
+        type: "GET",
+        url: "/like/counter",
+        success: function (result) {
+            // Iterate through the result array
+            for (let i = 0; i < result.length; i++) {
+                // den to xreiazomai telika var user_id = result[i].user_id;
+                var discount_id_server = result[i].discount_id;
+
+                // Check if the discount_id matches the one provided as an argument
+                if (discount_id = discount_id_server) {
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (!likeCounts.hasOwnProperty(discount_id)) {
+                        likeCounts[discount_id] = 1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        likeCounts[discount_id]++;
+                    }
+                }
+            }
+
+            // Now likeCounts object contains the count for each specific discount_id
+            //console.log(likeCounts);
+
+            // Call the callback function with likeCounts
+            if (typeof callback === "function") {
+                callback(likeCounts);
+            }
+        }
+    });
+}
+
 
 
 function handleLikeClick(discount_id, button) {
@@ -336,8 +341,7 @@ function handleLikeClick(discount_id, button) {
     const liked = button.getAttribute("data-liked") === "true";
 
     if (!liked) {
-        // Increment the like counter
-        likeCounter++;
+        
 
         // Update the button's data attributes and text
         button.setAttribute("data-liked", "true");
@@ -347,9 +351,6 @@ function handleLikeClick(discount_id, button) {
         // Disable the button to prevent multiple clicks
         button.disabled = true;
 
-        // Update the like count display
-        const likeCountElement = document.getElementById("likeCount");
-        likeCountElement.textContent = `${likeCounter} Like${likeCounter === 1 ? "" : "s"}`;
 
         // Send the like to the server (optional)
         sendLikeToServer(discount_id);
@@ -390,6 +391,23 @@ function handleDislikeClick() {
     // Handle dislike functionality here
     console.log("Disliked");
 }
+
+
+function handleOutOfStockClick(discount_id){
+    console.log(discount_id);
+    
+
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

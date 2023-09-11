@@ -169,5 +169,27 @@
 }
 
 
+.option-button1 {
+	padding: 7px 15px; /* Adjust padding as needed */
+    border: none;
+    background-color: #02a50d; /* Blue color for like button */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Add some spacing between buttons */
+}
+
+/* Style Option 2 button */
+.option-button2 {
+    padding: 7px 15px; /* Adjust padding as needed */
+    border: none;
+    background-color: #ff0000; /* Blue color for like button */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Add some spacing between buttons */
+}
+
+
 
 
