@@ -443,41 +443,6 @@ function handleInStockClick(discount_id){
 
 
 
-function uploadStock(discount_id){
-    $.ajax({
-        type: "GET",
-        url: "/upload/stock",
-        success: function (result) {
-
-            var ItemsOnStock = []
-           
-            for (let i = 0; i < result.length; i++) 
-            {
-           var stock = result[i].stock;
-           var discount_id_server = result[i].discount_id;
-
-           ItemsOnStock.push({stock : stock, discount_id: discount_id})
-            
-           }
-           //console.log(ItemsOnStock);
-            
-           
-
-        }
-    });
-    
-}
-
-
-
-
-
-
-
-
-
-
-
 
 
 
