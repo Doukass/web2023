@@ -7,6 +7,7 @@ const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
+const { error } = require('console');
 
 
 
@@ -206,63 +207,24 @@ app.post('/', ifLoggedin, [
 //ALLAGH username kai password
 
 
-app.post("/home/profile", async (req, res) => {
-  let { newname, newpassword, secpassword } = req.body;
+app.post('/home/profile', (req, res) => {
+  const { newname, newpassword, secpassword } = req.body;
 
-  let errors = [];
-
-  console.log({
-    newname,
-    newpassword,
-    secpassword
-  });
-
-  if (!newname || !newpassword || !secpassword) {
-    errors.push({ message: "Please enter all fields" });
-  }
-
-  if (newpassword.length < 6) {
-    errors.push({ message: "Password must be a least 6 characters long." });
-  }
-  if (newpassword.match(/[a-z]+/) == null){
-    errors.push({ message: "Passwords must contain at least a small letter." });
-  }
-  if (newpassword.match(/[A-Z]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one capital letter." });
-  }
-  if (newpassword.match(/[0-9]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one number." });
-  }
-  if (newpassword.match(/[$@#&!]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one symbol ($@#&!)" });
-  }
-
+  // Validate form data (e.g., check if newpassword matches secpassword)
   if (newpassword !== secpassword) {
-    errors.push({ message: "Passwords do not match" });
+    return res.status(400).send('Passwords do not match');
   }
-
-  if (errors.length > 0) {
-    res.render("profile", { name: req.session.name, password: req.session.password, errors, newname, newpassword, secpassword });
-  } else {
-    // Validation passed
-    dbConnection.execute(
-      `UPDATE users SET name = ?, password = ?
-          WHERE name = ? AND password = ?`,
-      [newname, newpassword, req.session.name, req.session.password],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-        }
-        else {
-          console.log(results.rows);
-          req.session.name = newname;
-          req.session.password = newpassword;
-          req.flash("success", "Your information changed succesfully");
-          res.render('profile', { name: newname, password: newpassword });
-        }
-      }
-    );
-  }
+  else{// Update the user's information in the database
+    const userId = req.session.userID; // Replace with the actual user ID
+    const sql = 'UPDATE users SET name=?, password=? WHERE id=?';
+  
+    dbConnection.query(sql, [newname, newpassword, userId], (err, result) => {
+      
+      console.log('User information updated successfully');
+      // Redirect the user to a success page or send a response accordingly
+      res.render('/home/profile');
+    });}
+  
 });
 
 
@@ -320,7 +282,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
   
-    const [results, fields] = await dbConnection.execute('SELECT COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, COALESCE(discount.store_id, "Unknown") AS store_id, COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered, discount_id AS discount_id,COALESCE(products.name, "Unknown") AS product_name, COALESCE(category.name, "Unknown") AS category_name, COALESCE(users.name, "Unknown") AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
+    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -345,7 +307,7 @@ app.get("/users/map/search", async (req, res)=> {
 
 app.get("/users/map/category", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
+  const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name, p.product_id AS product_id FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
@@ -376,17 +338,224 @@ app.get("/admin/chart1", async (req, res)=> {
   
 });
 
+//------------ add 5 points for like-----------
 
+app.post('/add/score', (req, res) => {
+  const { user_id } = req.body;
 
+  const sql = `
+    INSERT INTO score (user_id, date, points)
+    VALUES (?, CURRENT_TIMESTAMP, 5)
+  `;
 
-//-------- upload likes
+  dbConnection.query(sql, [user_id], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
 
-app.post("/upload/like", async (req, res)=> {
-  const { username, discount_id } = req.body;
+//---------------- -1 points fro dislike----------------
+app.post('/min/score', (req, res) => {
+  const { user_id } = req.body;
 
+  const sql = `
+    INSERT INTO score (user_id, date, points)
+    VALUES (?, CURRENT_TIMESTAMP, -1)
+  `;
 
+  dbConnection.query(sql, [user_id], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+// --------------- upload score-------------
+
+app.get("/final/score", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
+ //console.log("Query returned ${results.length} results:");
+  
+  res.send(results);
   
 });
+
+
+
+
+//-------- store likes
+
+app.post('/update/like', (req, res) => {
+  const { discount_id  } = req.body;
+
+  const sql = `
+  INSERT INTO \`like\` (user_id, discount_id)
+  VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE user_id=user_id, discount_id =discount_id
+`;
+
+
+dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
+  if (error) {
+    console.error('Error inserting data into the database:', error);
+    res.status(500).json({ error: 'An error occurred while updating data' });
+  } else {
+    console.log('Data inserted successfully');
+    res.status(200).json({ message: 'Data inserted successfully' });
+  }
+});
+  
+});
+//------------------------ dislike----------------
+app.post('/update/dislike', (req, res) => {
+  const { discount_id  } = req.body;
+
+  const sql = `
+  INSERT INTO dislike (user_id, discount_id)
+  VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE user_id=user_id, discount_id =discount_id
+`;
+
+
+dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
+  if (error) {
+    console.error('Error inserting data into the database:', error);
+    res.status(500).json({ error: 'An error occurred while updating data' });
+  } else {
+    console.log('Data inserted successfully');
+    res.status(200).json({ message: 'Data inserted successfully' });
+  }
+});
+  
+});
+//------------------ out of stock----- 
+
+ app.post('/out/of/stock', (req, res) => {
+  const { discount_id } = req.body;
+
+  const sql = `
+    UPDATE discount
+    SET stock = 0
+    WHERE discount_id = ?;
+  `;
+
+  dbConnection.query(sql, [discount_id], (error, results) => {
+    if (error) {
+      console.error('Error updating data in the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      if (results.affectedRows === 0) {
+        // If no rows were affected, the discount_id doesn't exist in the table.
+        res.status(404).json({ error: 'Discount not found' });
+      } else {
+        console.log('Data updated successfully');
+        res.status(200).json({ message: 'Data updated successfully' });
+      }
+    }
+  });
+});
+
+
+
+
+
+
+//----------------------in stock-------------
+app.post('/in/stock', (req, res) => {
+  const { discount_id } = req.body;
+
+  const sql = `
+    UPDATE discount
+    SET stock = 1
+    WHERE discount_id = ?;
+  `;
+
+  dbConnection.query(sql, [discount_id], (error, results) => {
+    if (error) {
+      console.error('Error updating data in the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      if (results.affectedRows === 0) {
+        // If no rows were affected, the discount_id doesn't exist in the table.
+        res.status(404).json({ error: 'Discount not found' });
+      } else {
+        console.log('Data updated successfully');
+        res.status(200).json({ message: 'Data updated successfully' });
+      }
+    }
+  });
+});
+
+//---------------------- upload dislike---------
+app.get("/dislike/counter", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM dislike  ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
+
+//----------------------- upload stock--- dexn xreazete
+app.get("/update/stock", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT stock, discount_id FROM discount ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
+
+
+//----------- upload likes 
+app.get("/like/counter", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM \`like\`  ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
+
+
+//-------- upload discount
+
+
+app.post('/updateData', (req, res) => {
+  const { product_id, store_id, enteredPrice } = req.body;
+
+
+  // Create an SQL query to insert the data into the database
+  const sql = 'INSERT INTO discount (user_id, product_id, store_id, price, date_entered, stock) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 1)';
+  
+  // Execute the SQL query
+  dbConnection.query(sql, [req.session.userID, product_id, store_id, enteredPrice], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+
+
+
+
+
+
 
 
 

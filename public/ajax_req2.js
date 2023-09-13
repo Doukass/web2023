@@ -1,6 +1,8 @@
 
 
+
 $(document).ready(function () {
+    //xarths
   let mymap = L.map('mapid');
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -9,11 +11,11 @@ $(document).ready(function () {
   mymap.locate({ setView: true, maxZoom: 25 });
 
   let userCoords ;
-
+//topothesia pou theloume
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
-    userCoords = [38.26340103149414, 21.74310557373047];
+    userCoords = [38.26340103149414, 21.74340057373047];
      // console.log(userCoords);
       //console.log(userCoords[1]);
       //console.log(userCoords[0]);
@@ -34,24 +36,12 @@ $(document).ready(function () {
 
 
 
-  
-  userStoresGet();
+
+userStoresGet();
 
 
 
-
-//--------
-
-
-
-
-
-
-
-
-
-
-  function userStoresGet() {
+  function userStoresGet() {//fwrtoma ston xarth
       $.ajax({
           type: "GET",
           url: "/users/map/stores",
@@ -102,7 +92,7 @@ const productsByLocation2 = {};
 
 
 
-
+//analysh twn apotelesmatwn tou ajax call
 for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
     let catname = data[i].category_name;
@@ -113,96 +103,62 @@ for (let i = 0; i < result.length; i++) {
     let price = data[i].price
     let date = data[i].date_entered;
     let discount_id = data[i].discount_id;
-    let username =data[i].user_name;
-    let selectedRating = null;
-    
-    //console.log(userCoords[0]);
-    const distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
-    //console.log(data[i].user_name)
+    let store_id = data[i].store_id;
+    let like_id = data[i].like_id;
+    var user_id = data[i].user_id
 
-    //console.log(data[i].username);
-    
+    let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
-    //opoio store den exei discount ftiaxnoume ena circlemarker me popup sto opoio yparxei koumpi gia na balei prosfora
-
-    if (discount_on === 0) {
-        let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
-
-        let popupContent = `<strong>${title}</strong>  
-        <div>
-            <p>Add a Discount</p>
-            <button   onclick="handleAddDiscount()">Add Discount</button>
-        </div>
-      <br>`;
-
+    if (discount_id === null) {
+        let marker = L.circleMarker(L.latLng(loc), { title: title, catname: catname });
+        let popupContent = `<strong>${title}</strong><br>`;
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
-    } else { // parakatw exoume ftiaksei enan pinaka me basei ta gewgrafika stoixeia twn stores gia na mporoume na apothikeusoume parapanw apo mia prosfores sto kathena
+
+        if (distance < 50) {
+            console.log(store_id);
+            popupContent += `<div><button data-username="${store_id}" onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+        }
+       
+        marker.bindPopup(popupContent);
+        markersLayer.addLayer(marker);
+    } else {
         if (!productsByLocation[loc], !productsByLocation2[loc]) {
             productsByLocation[loc] = [];
             productsByLocation2[loc] = [];
-            //if rows toy pinaka >1 i-- i=0
-            //console.log(productsByLocation);
         }
         
-        // o parakatw kwdikas einai gia ta stores ta opoia einai sta 50metra
-        if (product_id !== null) {
-            
-            if(distance <50 )
-            {
-               // console.log(discount_id);
-
-                // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
+        
+            if (distance < 50) {
                 var DisplayDetails = [
-                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
-                    `<button class="details-button" data-discountid="${data[i].discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
-                    
-                    `,
-                    '<br>'
+                    'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}" data-userid = "${data[i].user_id}" onclick="handleDetailsClick(this)">Details</button><br><br>`,
                 ];
-                //to concat kanei ennonei dyo pinakes
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
-                //console.log(DisplayDetails);
-               
-                
-           
-            
-            
-
-
+            } else {
+                productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
             }
-            else{
-                productsByLocation2[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date,  '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
-            // You can add an event listener to save the rating when the input changes.
-
-            }
-
-           
-            
-        }
-
-        let marker = L.marker(L.latLng(loc),{ title: title ,  catname: catname });
         
-        let popupContent = `<strong>${title}</strong> <br>`;
-                    
+
+        let marker = L.marker(L.latLng(loc), { title: title, catname: catname });
+        let popupContent = `<strong>${title}</strong><br>`;
         
         if (productsByLocation[loc].length > 0) {
-            popupContent += ` ${productsByLocation[loc].join(" ")}`;
+            popupContent += `${productsByLocation[loc].join(" ")}`;
         }
         if (productsByLocation2[loc].length > 0) {
-            popupContent += ` ${productsByLocation2[loc].join(" ")}`;
+            popupContent += `${productsByLocation2[loc].join(" ")}`;
         }
 
-        popupContent += ` <div>
-        <p>Add a Discount</p>
-        <button onclick="handleAddDiscount()">Add Discount</button>
-    </div>
-  <br>`;
+        if (distance < 50) {
+            popupContent += `<div><button onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+        }
         
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
     }
 }
+
 
             
 
@@ -264,46 +220,337 @@ function toRad(degrees) {
 
 
 
-function test() {
-    console.log("eisai malakas");
-    console.log(`Selected Rating: ${selectedRating}`);
-}
 
 
 
+
+// details, like, dislike(akoma den to exw ftiaksei)
 
 function handleDetailsClick(button) {
     const username = button.getAttribute("data-username");
     const dateEntered = button.getAttribute("data-date");
     const price = button.getAttribute("data-price");
     const product = button.getAttribute("data-product");
-    const discount_id = button.getAttribute("data-discountid")
+    const discount_id = button.getAttribute("data-discountid");
+    const stock = button.getAttribute("data-stock");
+    const user_id = button.getAttribute("data-userid");
 
-    const modalMessage = document.getElementById("modal-message");
-    modalMessage.innerHTML = `
-        Username: ${username}<br>
-        Date Entered: ${dateEntered}<br>
-        Price: ${price}<br>
-        Product: ${product}<br>
-        Discount ID: ${discount_id}<br>
-        <button class="like-button" onclick="handleLikeClick()">Like</button>
-        <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button>
-        <span id="likeCount">0 Likes</span>
+    //console.log(stock);
+
+
+
+    // Define a callback function to display the modal with likeCounts
+    function displayModalWithLikeCounts(likeCounts, dislikeCounts) {
+        const modalMessage = document.getElementById("modal-message");
+        modalMessage.innerHTML = `
+            Username: ${username}<br>
+            Date Entered: ${dateEntered}<br>
+            Price: ${price}<br>
+            Product: ${product}<br>
+            Discount ID: ${discount_id}<br>
+            Likes: ${likeCounts[discount_id]}<br> 
+            Dislikes: ${dislikeCounts[discount_id]}<br> 
+            Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
+            
+            <!--like -->
+            
+            <button class="like-button" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Like</button>
+
+            <!--Dislike -->
+            
+            <button class="dislike-button" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Dislike</button><br>
+
+            
+            <!--Σε αποθεμα -->
+            <button class="option-button1" onclick="handleInStockClick(${discount_id}, this)">Σε αποθεμα</button>
+            
+            <!-- Εξαντλήθηκε -->
+            <button class="option-button2" onclick="handleOutOfStockClick(${discount_id}, this)">Εξαντλήθηκε</button>
+        
     `;
 
-    const modal = document.getElementById("modal");
-    modal.style.display = "block";
+    
+        const modal = document.getElementById("modal");
+        modal.style.display = "block";
+    }
+    
+
+    // Call uploadLikeCounter with the callback
+    uploadLikeDisLikeCounter(discount_id, displayModalWithLikeCounts);
+    
+
 }
 
-function handleLikeClick() {
+// Modify uploadLikeCounter to accept a callback
+function uploadLikeDisLikeCounter(discount_id, callback) {
+    var likeCounts = {}; // Initialize an object to store like counts
+    var dislikeCounts = {};
+    var completedRequests = 0; // Track the number of completed AJAX requests
 
-    console.log("Liked");
+    // Function to check if both AJAX requests have completed and call the callback
+    function checkAndCallback() {
+        completedRequests++;
+        if (completedRequests === 2) {
+            if (typeof callback === "function") {
+                callback(likeCounts, dislikeCounts);
+            }
+        }
+    }
+
+    $.ajax({
+        type: "GET",
+        url: "/like/counter",
+        success: function (result) {
+            // Iterate through the result array
+            for (let i = 0; i < result.length; i++) {
+                
+                var discount_id_server = result[i].discount_id;
+                
+
+                // Check if the discount_id matches the one provided as an argument
+                if (discount_id = discount_id_server) {
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (!likeCounts.hasOwnProperty(discount_id)) {
+                        likeCounts[discount_id] = 1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        likeCounts[discount_id]++;
+                    }
+                    
+                    
+                    
+                }
+                
+            }
+
+            // Call the checkAndCallback function to check if both requests have completed
+            checkAndCallback();
+        }
+    });
+
+    $.ajax({
+        type: "GET",
+        url: "/dislike/counter",
+        success: function (result) {
+            // Iterate through the result array
+            for (let i = 0; i < result.length; i++) {
+                var discount_id_server = result[i].discount_id;
+
+                // Check if the discount_id matches the one provided as an argument
+                if (discount_id = discount_id_server) {
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (!dislikeCounts.hasOwnProperty(discount_id)) {
+                        dislikeCounts[discount_id] = 1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        dislikeCounts[discount_id]++;
+                    }
+                }
+            }
+
+            // Call the checkAndCallback function to check if both requests have completed
+            checkAndCallback();
+        }
+    });
+
+
+
+    /*
+    $.ajax({
+        type: "GET",
+        url: "/update/stock",
+        success: function (result) {
+            for (let i = 0; i < result.length; i++) {
+                var discount_id_server = result[i].discount_id;
+                var stock1 = result[i].stock
+                
+                if (discount_id = discount_id_server) {
+                    console.log('geia')
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (stock.hasOwnProperty(discount_id)) {
+                        stock[discount_id] = stock1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        stock[discount_id] = stock1;
+                    }
+                }
+                
+                    //console.log(stock[discount_id]);
+                    
+                
+            }
+            
+            
+            checkAndCallback();
+        }
+    });
+    */
 }
 
-function handleDislikeClick() {
-    // Handle dislike functionality here
-    console.log("Disliked");
+
+
+
+function handleLikeClick(discount_id, user_id, button) {
+    // Check if the button is already liked
+    const liked = button.getAttribute("data-liked") === "true";
+
+    if (!liked) {
+        
+
+        // Update the button's data attributes and text
+        button.setAttribute("data-liked", "true");
+        button.textContent = "Liked";
+        button.style.backgroundColor = "green"; // Optional: Change button style
+
+        // Disable the button to prevent multiple clicks
+        button.disabled = true;
+
+
+        // Send the like to the server (optional)
+        sendLikeToServer(discount_id);
+        AddScore(user_id)
+    }
 }
+
+
+
+function sendLikeToServer(discount_id) {
+    // Prepare the data to send to the server
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    // Send the data to the server using AJAX POST
+    $.ajax({
+        type: "POST",
+        url: "/update/like", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+            //console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
+        },
+        error: function(error) {
+            // Handle errors here
+           // console.error("Error sending like to the server:", error);
+        }
+    });
+}
+
+
+
+
+
+
+function handleDislikeClick(discount_id, user_id, button) {
+    const liked = button.getAttribute("data-disliked") === "true";
+
+    if (!liked) {
+        
+
+        // Update the button's data attributes and text
+        button.setAttribute("data-disliked", "true");
+        button.textContent = "Disliked";
+        button.style.backgroundColor = "black"; // Optional: Change button style
+
+        // Disable the button to prevent multiple clicks
+        button.disabled = true;
+
+
+        // Send the like to the server (optional)
+        sendDisLikeToServer(discount_id);
+        MinScore(user_id);
+        console.log(user_id);
+    }
+}
+
+
+function sendDisLikeToServer(discount_id) {
+    // Prepare the data to send to the server
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    // Send the data to the server using AJAX POST
+    $.ajax({
+        type: "POST",
+        url: "/update/dislike", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+          //  console.log("Dislike sent to the server for Discount ID:", discount_id);
+          //  console.log("Server response:", response);
+        },
+        error: function(error) {
+            // Handle errors here
+          //  console.error("Error sending like to the server:", error);
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function handleOutOfStockClick(discount_id){
+    const requestData = {
+        discount_id: discount_id
+    };
+    //console.log(discount_id);
+
+    $.ajax({
+        type: "POST",
+        url: "/out/of/stock", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+           // console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
+        }
+    });
+    
+
+}
+
+function handleInStockClick(discount_id){
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    $.ajax({
+        type: "POST",
+        url: "/in/stock", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+           // console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
+        }
+    });
+    
+
+}
+
+
+
+
+
+
 
 
 
@@ -316,7 +563,13 @@ function closeModal() {
 
 
 
-function handleAddDiscount() {
+function handleAddDiscount(store_id) {
+
+    //console.log("Store ID:", store_id);
+    
+
+
+
     var categories = []; // Array to store categories (each category will contain subcategories)
 
     $.ajax({
@@ -324,12 +577,14 @@ function handleAddDiscount() {
         url: "/users/map/category",
         success: function (result) {
             // Assuming result is an array of objects with properties category_name, subcategory_name, and product_name
-            console.log(result);
-
+           // console.log(result);
+           // console.log(result.product_id);
             for (var i = 0; i < result.length; i++) {
                 var catname = result[i].category_name;
                 var subname = result[i].subcategory_name;
                 var pname = result[i].product_name;
+                var prodid = result[i].product_id;
+               // console.log(result[i].product_id);
 
                 var existingCategory = categories.find(category => category.catname === catname);
 
@@ -348,14 +603,15 @@ function handleAddDiscount() {
                         catname: catname,
                         subcategories: [{
                             subname: subname,
-                            products: [pname]
+                            products: [pname],
+                            
                         }]
                     });
                 }
             }
 
             // Now you have the organized categories array
-            console.log(categories);
+           // console.log(categories);
 
             // Create the modal with dropdowns
             var modal = document.createElement("div");
@@ -388,18 +644,12 @@ function handleAddDiscount() {
             var subcategoryDropdown = document.createElement("select");
             subcategoryDropdown.id = "subcategoryDropdown";
             subcategoryDropdown.style.display = "none";
-            var defaultSubcategoryOption = document.createElement("option");
-            defaultSubcategoryOption.value = "";
-            defaultSubcategoryOption.textContent = "Select Subcategory";
-            subcategoryDropdown.appendChild(defaultSubcategoryOption);
+           
 
             var productDropdown = document.createElement("select");
             productDropdown.id = "productDropdown";
             productDropdown.style.display = "none";
-            var defaultProductOption = document.createElement("option");
-            defaultProductOption.value = "";
-            defaultProductOption.textContent = "Select Product";
-            productDropdown.appendChild(defaultProductOption);
+            
 
             var inputTextarea = document.createElement("textarea");
             inputTextarea.style.display = "none"; // Initially hidden
@@ -465,19 +715,42 @@ function handleAddDiscount() {
 
 
 
-            productDropdown.addEventListener("change", function () {
-                var selectedCatname = categoryDropdown.value;
-                var selectedSubname = subcategoryDropdown.value;
-                var selectedProduct = this.value;
+          
 
-                console.log("Selected Category:", selectedCatname);
-                console.log("Selected Subcategory:", selectedSubname);
-                console.log("Selected Product:", selectedProduct);
-                inputTextarea.style.display = "block";
-                inputTextarea.placeholder = "Give us your price";
-                submitButton.style.display = "block";
-                
-            });
+productDropdown.addEventListener("change", function () {
+    var selectedCatname = categoryDropdown.value;
+    var selectedSubname = subcategoryDropdown.value;
+    var selectedProduct = this.value;
+
+    // Find the selected product's product_id
+    var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
+
+    console.log("Selected Category:", selectedCatname);
+    console.log("Selected Subcategory:", selectedSubname);
+    console.log("Selected Product:", selectedProduct);
+    console.log("Selected Product ID:", selectedProductID);
+
+    inputTextarea.style.display = "block";
+    inputTextarea.placeholder = "Give us your price";
+    submitButton.style.display = "block";
+});
+
+// Function to find the product_id based on selected category, subcategory, and product
+function findProductID(selectedCatname, selectedSubname, selectedProduct) {
+    for (var i = 0; i < result.length; i++) {
+        if (
+            result[i].category_name === selectedCatname &&
+            result[i].subcategory_name === selectedSubname &&
+            result[i].product_name === selectedProduct
+        ) {
+            return result[i].product_id;
+        }
+    }
+    return null; // Return null if product_id is not found
+}
+
+
+
 
             var submitButton = document.createElement("button");
             submitButton.textContent = "Submit"; // Set button text
@@ -485,11 +758,14 @@ function handleAddDiscount() {
 
             submitButton.addEventListener("click", function () {
                 var enteredPrice = inputTextarea.value;
-                console.log("Entered Price:", enteredPrice);
+                //console.log("Entered Price:", enteredPrice);
+                var selectedCatname = categoryDropdown.value;
+                var selectedSubname = subcategoryDropdown.value;
+                var selectedProduct = productDropdown.value;
+                var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
 
-                // Add your logic to handle the entered price
-
-                // Hide the modal after processing
+                updateData(selectedProductID, store_id, enteredPrice);
+                // edw prepei na mpei to call gia to function tou score. ean h timh einai toso mikroterh dwse tosous pontous.
                 modal.style.display = "none";
             });
 
@@ -497,9 +773,9 @@ function handleAddDiscount() {
 
 
             modalContent.appendChild(closeBtn);
-            modalContent.appendChild(categoryDropdown);
-            modalContent.appendChild(subcategoryDropdown);
-            modalContent.appendChild(productDropdown);
+            modalContent.appendChild(categoryDropdown);     // dropsown first option
+            modalContent.appendChild(subcategoryDropdown); // dropdown 2nd option
+            modalContent.appendChild(productDropdown); // dropdown 3rd option
             modalContent.appendChild(inputTextarea); // Add the input text area
             modalContent.appendChild(submitButton);
             modal.appendChild(modalContent);
@@ -519,6 +795,112 @@ function handleAddDiscount() {
 }
 
 
+
+
+function updateData(product_id, store_id, enteredPrice) {
+   // var dataToSend = {
+   //     product_id: product_id,
+   //     store_id: store_id,
+   //     enteredPrice: enteredPrice
+   // };
+
+    $.ajax({
+        type: "POST",
+        url: "/updateData", // Replace with your actual server endpoint URL
+        data: {
+        product_id: product_id,
+        store_id: store_id,
+        enteredPrice: enteredPrice 
+        },
+        success: function(response) {
+            // Handle the success response here
+          //  console.log('Data sent successfully:', response);
+        },
+        error: function(error) {
+            // Handle errors here
+           // console.error('Error sending data:', error);
+        }
+    });
+}
+
+
+
+
+
+function AddScore(user_id) {
+    
+
+    $.ajax({
+        type: "POST",
+        url: "/add/score", // Replace with your server endpoint URL
+        data: {
+            user_id: user_id 
+        },
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("User ID sent to the server:", user_id);
+            console.log("Server response:", response);
+            // You can add more code here to handle the response as per your requirements
+        }
+    });
+}
+
+
+function MinScore(user_id){
+    $.ajax({
+        type: "POST",
+        url: "/min/score", // Replace with your server endpoint URL
+        data: {
+            user_id: user_id
+        },
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("User ID sent to the server:", user_id);
+            console.log("Server response:", response);
+            // You can add more code here to handle the response as per your requirements
+        }
+    });
+}
+
+FinalScore();
+function FinalScore() {
+    $.ajax({
+        type: "GET",
+        url: "/final/score",
+        success: function (result) {
+           // console.log(result);
+
+            // Create an object to store points for each user_id
+            var userPoints = {};
+
+            for (var i = 0; i < result.length; i++) {
+                var user_id = result[i].user_id;
+               // var score_id = result[i].score_id;
+                var points = result[i].points;
+
+                // Check if the user_id is already in the userPoints object
+                if (userPoints[user_id] === undefined) {
+                    // If not, initialize it with the points
+                    userPoints[user_id] = points;
+                } else {
+                    // If yes, add the points to the existing total
+                    userPoints[user_id] += points;
+                }
+            }
+
+            // Convert the userPoints object to an array of objects
+            var ScoreBoard = [];
+            for (var user_id in userPoints) {
+                ScoreBoard.push({
+                    user_id: user_id,
+                    points: userPoints[user_id]
+                });
+            }
+
+            console.log(ScoreBoard);
+        }
+    });
+}
 
 
 
