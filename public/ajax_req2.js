@@ -274,7 +274,7 @@ function handleDetailsClick(button) {
 
 
     // Define a callback function to display the modal with likeCounts
-    function displayModalWithLikeCounts(likeCounts) {
+    function displayModalWithLikeCounts(likeCounts, dislikeCounts) {
         const modalMessage = document.getElementById("modal-message");
         modalMessage.innerHTML = `
             Username: ${username}<br>
@@ -283,6 +283,7 @@ function handleDetailsClick(button) {
             Product: ${product}<br>
             Discount ID: ${discount_id}<br>
             Likes: ${likeCounts[discount_id]}<br> 
+            Dislikes: ${dislikeCounts[discount_id]}<br> 
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
@@ -301,14 +302,26 @@ function handleDetailsClick(button) {
     
 
     // Call uploadLikeCounter with the callback
-    uploadLikeCounter(discount_id, displayModalWithLikeCounts);
-    uploadStock(discount_id);
+    uploadLikeDisLikeCounter(discount_id, displayModalWithLikeCounts);
+    
 
 }
 
 // Modify uploadLikeCounter to accept a callback
-function uploadLikeCounter(discount_id, callback) {
+function uploadLikeDisLikeCounter(discount_id, callback) {
     var likeCounts = {}; // Initialize an object to store like counts
+    var dislikeCounts = {};
+    var completedRequests = 0; // Track the number of completed AJAX requests
+
+    // Function to check if both AJAX requests have completed and call the callback
+    function checkAndCallback() {
+        completedRequests++;
+        if (completedRequests === 2) {
+            if (typeof callback === "function") {
+                callback(likeCounts, dislikeCounts);
+            }
+        }
+    }
 
     $.ajax({
         type: "GET",
@@ -316,7 +329,6 @@ function uploadLikeCounter(discount_id, callback) {
         success: function (result) {
             // Iterate through the result array
             for (let i = 0; i < result.length; i++) {
-                // den to xreiazomai telika var user_id = result[i].user_id;
                 var discount_id_server = result[i].discount_id;
 
                 // Check if the discount_id matches the one provided as an argument
@@ -331,16 +343,37 @@ function uploadLikeCounter(discount_id, callback) {
                 }
             }
 
-            // Now likeCounts object contains the count for each specific discount_id
-            //console.log(likeCounts);
+            // Call the checkAndCallback function to check if both requests have completed
+            checkAndCallback();
+        }
+    });
 
-            // Call the callback function with likeCounts
-            if (typeof callback === "function") {
-                callback(likeCounts);
+    $.ajax({
+        type: "GET",
+        url: "/dislike/counter",
+        success: function (result) {
+            // Iterate through the result array
+            for (let i = 0; i < result.length; i++) {
+                var discount_id_server = result[i].discount_id;
+
+                // Check if the discount_id matches the one provided as an argument
+                if (discount_id = discount_id_server) {
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (!dislikeCounts.hasOwnProperty(discount_id)) {
+                        dislikeCounts[discount_id] = 1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        dislikeCounts[discount_id]++;
+                    }
+                }
             }
+
+            // Call the checkAndCallback function to check if both requests have completed
+            checkAndCallback();
         }
     });
 }
+
 
 
 
@@ -438,6 +471,9 @@ function sendDisLikeToServer(discount_id) {
         }
     });
 }
+
+
+
 
 
 

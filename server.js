@@ -459,6 +459,15 @@ app.post('/in/stock', (req, res) => {
   });
 });
 
+//---------------------- upload dislike---------
+app.get("/dislike/counter", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM dislike  ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
 
 
 
