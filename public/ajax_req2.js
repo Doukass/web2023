@@ -145,11 +145,11 @@ for (let i = 0; i < result.length; i++) {
 
                 // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
                 var DisplayDetails = [
-                    'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
+                    'Προιον:', product_name, '<br>' , 'Tιμη:', price, '$', '<br>' ,   'Hμερομηνια', date, '<br>' ,   'Discount ID:' , discount_id,
                     `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}"  onclick="handleDetailsClick(this)">Details</button>
                     
                     `,
-                    '<br>'
+                    '<br>' , '<br>' 
                 ];
                 //to concat kanei ennonei dyo pinakes
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
@@ -163,7 +163,7 @@ for (let i = 0; i < result.length; i++) {
 
             }
             else{
-                productsByLocation2[loc].push('Προιν:',product_name,'τιμη:', price, '$', 'ημερομηνια', date,  '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
+                productsByLocation2[loc].push('Προιν:',product_name , '<br>' ,'Tιμη:', price , '$' , '<br>', 'Hμερομηνια', date , '<br>',  '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
             // You can add an event listener to save the rating when the input changes.
 
             }
@@ -185,10 +185,10 @@ for (let i = 0; i < result.length; i++) {
         }
 
         popupContent += ` <div>
-        <p>Add a Discount</p>
-        <button onclick="handleAddDiscount((${store_id}))">Add Discount</button>
+        <button onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button>
     </div>
   <br>`;
+
         
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
@@ -269,7 +269,7 @@ function handleDetailsClick(button) {
     const discount_id = button.getAttribute("data-discountid");
     const stock = button.getAttribute("data-stock");
 
-    console.log(stock);
+    //console.log(stock);
 
 
 
@@ -413,12 +413,12 @@ function sendLikeToServer(discount_id) {
         data: requestData,
         success: function(response) {
             // Handle the success response from the server if needed
-            console.log("Like sent to the server for Discount ID:", discount_id);
-            console.log("Server response:", response);
+            //console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
         },
         error: function(error) {
             // Handle errors here
-            console.error("Error sending like to the server:", error);
+           // console.error("Error sending like to the server:", error);
         }
     });
 }
@@ -462,12 +462,12 @@ function sendDisLikeToServer(discount_id) {
         data: requestData,
         success: function(response) {
             // Handle the success response from the server if needed
-            console.log("Dislike sent to the server for Discount ID:", discount_id);
-            console.log("Server response:", response);
+          //  console.log("Dislike sent to the server for Discount ID:", discount_id);
+          //  console.log("Server response:", response);
         },
         error: function(error) {
             // Handle errors here
-            console.error("Error sending like to the server:", error);
+          //  console.error("Error sending like to the server:", error);
         }
     });
 }
@@ -502,8 +502,8 @@ function handleOutOfStockClick(discount_id){
         data: requestData,
         success: function(response) {
             // Handle the success response from the server if needed
-            console.log("Like sent to the server for Discount ID:", discount_id);
-            console.log("Server response:", response);
+           // console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
         }
     });
     
@@ -521,8 +521,8 @@ function handleInStockClick(discount_id){
         data: requestData,
         success: function(response) {
             // Handle the success response from the server if needed
-            console.log("Like sent to the server for Discount ID:", discount_id);
-            console.log("Server response:", response);
+           // console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
         }
     });
     
@@ -548,7 +548,7 @@ function closeModal() {
 
 function handleAddDiscount(store_id) {
 
-    console.log("Store ID:", store_id);
+    //console.log("Store ID:", store_id);
     
 
 
@@ -754,6 +754,7 @@ function findProductID(selectedCatname, selectedSubname, selectedProduct) {
                 var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
 
                 updateData(selectedProductID, store_id, enteredPrice);
+                // edw prepei na mpei to call gia to function tou score. ean h timh einai toso mikroterh dwse tosous pontous.
                 modal.style.display = "none";
             });
 
@@ -802,7 +803,7 @@ function updateData(product_id, store_id, enteredPrice) {
         },
         success: function(response) {
             // Handle the success response here
-            console.log('Data sent successfully:', response);
+          //  console.log('Data sent successfully:', response);
         },
         error: function(error) {
             // Handle errors here

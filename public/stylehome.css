@@ -153,9 +153,8 @@
 
 
 /* CSS styles for the like and dislike buttons */
-.like-button,
-.dislike-button {
-    padding: 10px 20px; /* Adjust padding as needed */
+.like-button {
+    padding: 7px 15px; /* Adjust padding as needed */
     border: none;
     background-color: #007bff; /* Blue color for like button */
     color: #fff; /* White text color */
@@ -165,7 +164,13 @@
 }
 
 .dislike-button {
-    background-color: #dc3545; /* Red color for dislike button */
+	padding: 7px 15px; /* Adjust padding as needed */
+    border: none;
+    background-color: #007bff; /* Blue color for like button */
+    color: #fff; /* White text color */
+    cursor: pointer;
+    border-radius: 5px; /* Rounded corners */
+    margin-right: 10px; /* Add some spacing between buttons */
 }
 
 
@@ -191,5 +196,18 @@
 }
 
 
+.discount-button {
+    background-color: #FF5733;
+    color: #FFFFFF;
+    border: 2px solid #FF5733;
+    padding: 7px;
+}
+
+.details-button{
+    background-color: #FF5733;
+    color: #FFFFFF;
+    border: none;
+    padding: 2px;
+}
 
 
