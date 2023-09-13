@@ -1,5 +1,6 @@
 
 
+
 $(document).ready(function () {
     //xarths
   let mymap = L.map('mapid');
@@ -104,6 +105,7 @@ for (let i = 0; i < result.length; i++) {
     let discount_id = data[i].discount_id;
     let store_id = data[i].store_id;
     let like_id = data[i].like_id;
+    var user_id = data[i].user_id
 
     let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
@@ -130,7 +132,7 @@ for (let i = 0; i < result.length; i++) {
             if (distance < 50) {
                 var DisplayDetails = [
                     'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
-                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}"  onclick="handleDetailsClick(this)">Details</button><br><br>`,
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}" data-userid = "${data[i].user_id}" onclick="handleDetailsClick(this)">Details</button><br><br>`,
                 ];
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
             } else {
@@ -231,6 +233,7 @@ function handleDetailsClick(button) {
     const product = button.getAttribute("data-product");
     const discount_id = button.getAttribute("data-discountid");
     const stock = button.getAttribute("data-stock");
+    const user_id = button.getAttribute("data-stock");
 
     //console.log(stock);
 
@@ -250,16 +253,22 @@ function handleDetailsClick(button) {
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <!--like -->
-            <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
+            
+            <button class="like-button" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Like</button>
+
             <!--Dislike -->
-            <button class="dislike-button" data-disliked="false" data-likes="0"  onclick="handleDislikeClick(${discount_id}, this)">Dislike</button><br>
+            
+            <button class="dislike-button" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Dislike</button><br>
+
             
             <!--Σε αποθεμα -->
             <button class="option-button1" onclick="handleInStockClick(${discount_id}, this)">Σε αποθεμα</button>
             
             <!-- Εξαντλήθηκε -->
             <button class="option-button2" onclick="handleOutOfStockClick(${discount_id}, this)">Εξαντλήθηκε</button>
-        `;
+        
+    `;
+
     
         const modal = document.getElementById("modal");
         modal.style.display = "block";
@@ -294,7 +303,9 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
         success: function (result) {
             // Iterate through the result array
             for (let i = 0; i < result.length; i++) {
+                
                 var discount_id_server = result[i].discount_id;
+                
 
                 // Check if the discount_id matches the one provided as an argument
                 if (discount_id = discount_id_server) {
@@ -305,7 +316,11 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
                         // Otherwise, increment the existing counter
                         likeCounts[discount_id]++;
                     }
+                    
+                    
+                    
                 }
+                
             }
 
             // Call the checkAndCallback function to check if both requests have completed
@@ -340,7 +355,7 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
 
 
 
-/*
+    /*
     $.ajax({
         type: "GET",
         url: "/update/stock",
@@ -375,7 +390,7 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
 
 
 
-function handleLikeClick(discount_id, button) {
+function handleLikeClick(discount_id, user_id, button) {
     // Check if the button is already liked
     const liked = button.getAttribute("data-liked") === "true";
 
@@ -393,6 +408,7 @@ function handleLikeClick(discount_id, button) {
 
         // Send the like to the server (optional)
         sendLikeToServer(discount_id);
+        AddScore(user_id)
     }
 }
 
@@ -426,7 +442,7 @@ function sendLikeToServer(discount_id) {
 
 
 
-function handleDislikeClick(discount_id, button) {
+function handleDislikeClick(discount_id, user_id, button) {
     const liked = button.getAttribute("data-disliked") === "true";
 
     if (!liked) {
@@ -443,6 +459,7 @@ function handleDislikeClick(discount_id, button) {
 
         // Send the like to the server (optional)
         sendDisLikeToServer(discount_id);
+        MinScore(user_id);
     }
 }
 
@@ -809,6 +826,66 @@ function updateData(product_id, store_id, enteredPrice) {
 
 
 
+function AddScore(user_id) {
+    
+
+    $.ajax({
+        type: "POST",
+        url: "/add/score", // Replace with your server endpoint URL
+        data: {
+            user_id: user_id 
+        },
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("User ID sent to the server:", user_id);
+            console.log("Server response:", response);
+            // You can add more code here to handle the response as per your requirements
+        }
+    });
+}
+
+
+function MinScore(user_id){
+    $.ajax({
+        type: "POST",
+        url: "/min/score", // Replace with your server endpoint URL
+        data: {
+            user_id: user_id
+        },
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("User ID sent to the server:", user_id);
+            console.log("Server response:", response);
+            // You can add more code here to handle the response as per your requirements
+        }
+    });
+}
+
+FinalScore();
+function FinalScore(){
+    $.ajax({
+        type: "GET",
+        url: "/final/score", 
+        success: function(result) {
+            console.log(result);
+
+            var ScoreBoard = [];
+
+            for (var i = 0; i < result.length; i++) {
+               var user_id = result[i].user_id;
+               var score_id = result[i].score_id;
+               var points = result[i].points; 
+               console.log(result.length);
+
+               ScoreBoard.push({user_id, score_id, points});
+            }
+
+            console.log(ScoreBoard);
+        
+        }
+    });
+
+}
 
 
 

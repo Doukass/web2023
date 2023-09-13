@@ -282,7 +282,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
   
-    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
+    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -332,6 +332,58 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 app.get("/admin/chart1", async (req, res)=> {
   
   const [results, fields] = await dbConnection.execute('date_entered FROM discount');
+ //console.log("Query returned ${results.length} results:");
+  
+  res.send(results);
+  
+});
+
+//------------ add 5 points for like-----------
+
+app.post('/add/score', (req, res) => {
+  const { user_id } = req.body;
+
+  const sql = `
+    INSERT INTO score (user_id, date, points)
+    VALUES (?, CURRENT_TIMESTAMP, 5)
+  `;
+
+  dbConnection.query(sql, [user_id], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+//---------------- -1 points fro dislike----------------
+app.post('/min/score', (req, res) => {
+  const { user_id } = req.body;
+
+  const sql = `
+    INSERT INTO score (user_id, date, points)
+    VALUES (?, CURRENT_TIMESTAMP, -1)
+  `;
+
+  dbConnection.query(sql, [user_id], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
+
+// --------------- upload score-------------
+
+app.get("/final/score", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
@@ -454,7 +506,7 @@ app.get("/dislike/counter", async (req, res)=> {
   
 });
 
-//----------------------- upload stock
+//----------------------- upload stock--- dexn xreazete
 app.get("/update/stock", async (req, res)=> {
   
   const [results, fields] = await dbConnection.execute('SELECT stock, discount_id FROM discount ;');
