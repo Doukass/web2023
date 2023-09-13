@@ -286,7 +286,7 @@ function handleDetailsClick(button) {
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
-            <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button><br>
+            <button class="dislike-button" data-disliked="false" data-likes="0"  onclick="handleDislikeClick(${discount_id}, this)">Dislike</button><br>
             
             <!--Σε αποθεμα -->
             <button class="option-button1" onclick="handleInStockClick(${discount_id}, this)">Σε αποθεμα</button>
@@ -395,10 +395,64 @@ function sendLikeToServer(discount_id) {
 
 
 
-function handleDislikeClick() {
-    // Handle dislike functionality here
-    console.log("Disliked");
+function handleDislikeClick(discount_id, button) {
+    const liked = button.getAttribute("data-disliked") === "true";
+
+    if (!liked) {
+        
+
+        // Update the button's data attributes and text
+        button.setAttribute("data-disliked", "true");
+        button.textContent = "Disliked";
+        button.style.backgroundColor = "black"; // Optional: Change button style
+
+        // Disable the button to prevent multiple clicks
+        button.disabled = true;
+
+
+        // Send the like to the server (optional)
+        sendDisLikeToServer(discount_id);
+    }
 }
+
+
+function sendDisLikeToServer(discount_id) {
+    // Prepare the data to send to the server
+    const requestData = {
+        discount_id: discount_id
+    };
+
+    // Send the data to the server using AJAX POST
+    $.ajax({
+        type: "POST",
+        url: "/update/dislike", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+            console.log("Dislike sent to the server for Discount ID:", discount_id);
+            console.log("Server response:", response);
+        },
+        error: function(error) {
+            // Handle errors here
+            console.error("Error sending like to the server:", error);
+        }
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 function handleOutOfStockClick(discount_id){

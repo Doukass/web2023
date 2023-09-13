@@ -403,7 +403,28 @@ dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
 });
   
 });
+//------------------------ dislike----------------
+app.post('/update/dislike', (req, res) => {
+  const { discount_id  } = req.body;
 
+  const sql = `
+  INSERT INTO dislike (user_id, discount_id)
+  VALUES (?, ?)
+  ON DUPLICATE KEY UPDATE user_id=user_id, discount_id =discount_id
+`;
+
+
+dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
+  if (error) {
+    console.error('Error inserting data into the database:', error);
+    res.status(500).json({ error: 'An error occurred while updating data' });
+  } else {
+    console.log('Data inserted successfully');
+    res.status(200).json({ message: 'Data inserted successfully' });
+  }
+});
+  
+});
 //------------------ out of stock-----
 
 
@@ -438,17 +459,6 @@ app.post('/in/stock', (req, res) => {
   });
 });
 
-//---------------------- upload stock---------
-
-
-app.get("/upload/stock", async (req, res)=> {
-  
-  const [results, fields] = await dbConnection.execute('SELECT stock, discount.discount_id FROM discount  ;');
- //console.log("Query returned ${results.length} results:");
-  console.log(results);
-  res.send(results);
-  
-});
 
 
 
