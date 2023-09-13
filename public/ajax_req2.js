@@ -337,6 +337,39 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
             checkAndCallback();
         }
     });
+
+
+
+/*
+    $.ajax({
+        type: "GET",
+        url: "/update/stock",
+        success: function (result) {
+            for (let i = 0; i < result.length; i++) {
+                var discount_id_server = result[i].discount_id;
+                var stock1 = result[i].stock
+                
+                if (discount_id = discount_id_server) {
+                    console.log('geia')
+                    // If this is the first time we encounter this discount_id, initialize its counter to 1
+                    if (stock.hasOwnProperty(discount_id)) {
+                        stock[discount_id] = stock1;
+                    } else {
+                        // Otherwise, increment the existing counter
+                        stock[discount_id] = stock1;
+                    }
+                }
+                
+                    //console.log(stock[discount_id]);
+                    
+                
+            }
+            
+            
+            checkAndCallback();
+        }
+    });
+    */
 }
 
 
@@ -460,6 +493,7 @@ function handleOutOfStockClick(discount_id){
     const requestData = {
         discount_id: discount_id
     };
+    //console.log(discount_id);
 
     $.ajax({
         type: "POST",

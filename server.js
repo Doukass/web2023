@@ -222,7 +222,7 @@ app.post('/home/profile', (req, res) => {
       
       console.log('User information updated successfully');
       // Redirect the user to a success page or send a response accordingly
-      res.render('/');
+      res.render('/home/profile');
     });}
   
 });
@@ -386,8 +386,32 @@ dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
 });
   
 });
-//------------------ out of stock-----
+//------------------ out of stock----- 
 
+ app.post('/out/of/stock', (req, res) => {
+  const { discount_id } = req.body;
+
+  const sql = `
+    UPDATE discount
+    SET stock = 0
+    WHERE discount_id = ?;
+  `;
+
+  dbConnection.query(sql, [discount_id], (error, results) => {
+    if (error) {
+      console.error('Error updating data in the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      if (results.affectedRows === 0) {
+        // If no rows were affected, the discount_id doesn't exist in the table.
+        res.status(404).json({ error: 'Discount not found' });
+      } else {
+        console.log('Data updated successfully');
+        res.status(200).json({ message: 'Data updated successfully' });
+      }
+    }
+  });
+});
 
 
 
@@ -430,7 +454,15 @@ app.get("/dislike/counter", async (req, res)=> {
   
 });
 
-
+//----------------------- upload stock
+app.get("/update/stock", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT stock, discount_id FROM discount ;');
+ //console.log("Query returned ${results.length} results:");
+  console.log(results);
+  res.send(results);
+  
+});
 
 
 //----------- upload likes 
