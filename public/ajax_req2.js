@@ -286,7 +286,9 @@ function handleDetailsClick(button) {
             Dislikes: ${dislikeCounts[discount_id]}<br> 
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
+            <!--like -->
             <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
+            <!--Dislike -->
             <button class="dislike-button" data-disliked="false" data-likes="0"  onclick="handleDislikeClick(${discount_id}, this)">Dislike</button><br>
             
             <!--Σε αποθεμα -->
