@@ -592,18 +592,12 @@ function handleAddDiscount(store_id) {
             var subcategoryDropdown = document.createElement("select");
             subcategoryDropdown.id = "subcategoryDropdown";
             subcategoryDropdown.style.display = "none";
-            var defaultSubcategoryOption = document.createElement("option");
-            defaultSubcategoryOption.value = "";
-            defaultSubcategoryOption.textContent = "Select Subcategory";
-            subcategoryDropdown.appendChild(defaultSubcategoryOption);
+           
 
             var productDropdown = document.createElement("select");
             productDropdown.id = "productDropdown";
             productDropdown.style.display = "none";
-            var defaultProductOption = document.createElement("option");
-            defaultProductOption.value = "";
-            defaultProductOption.textContent = "Select Product";
-            productDropdown.appendChild(defaultProductOption);
+            
 
             var inputTextarea = document.createElement("textarea");
             inputTextarea.style.display = "none"; // Initially hidden
