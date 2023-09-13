@@ -207,63 +207,24 @@ app.post('/', ifLoggedin, [
 //ALLAGH username kai password
 
 
-app.post("/home/profile", async (req, res) => {
-  let { newname, newpassword, secpassword } = req.body;
+app.post('/home/profile', (req, res) => {
+  const { newname, newpassword, secpassword } = req.body;
 
-  let errors = [];
-
-  console.log({
-    newname,
-    newpassword,
-    secpassword
-  });
-
-  if (!newname || !newpassword || !secpassword) {
-    errors.push({ message: "Please enter all fields" });
-  }
-
-  if (newpassword.length < 6) {
-    errors.push({ message: "Password must be a least 6 characters long." });
-  }
-  if (newpassword.match(/[a-z]+/) == null){
-    errors.push({ message: "Passwords must contain at least a small letter." });
-  }
-  if (newpassword.match(/[A-Z]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one capital letter." });
-  }
-  if (newpassword.match(/[0-9]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one number." });
-  }
-  if (newpassword.match(/[$@#&!]+/) == null) {
-    errors.push({ message: "Passwords must contain at least one symbol ($@#&!)" });
-  }
-
+  // Validate form data (e.g., check if newpassword matches secpassword)
   if (newpassword !== secpassword) {
-    errors.push({ message: "Passwords do not match" });
+    return res.status(400).send('Passwords do not match');
   }
-
-  if (errors.length > 0) {
-    res.render("profile", { name: req.session.name, password: req.session.password, errors, newname, newpassword, secpassword });
-  } else {
-    // Validation passed
-    dbConnection.execute(
-      `UPDATE users SET name = ?, password = ?
-          WHERE name = ? AND password = ?`,
-      [newname, newpassword, req.session.name, req.session.password],
-      (err, results) => {
-        if (err) {
-          console.log(err);
-        }
-        else {
-          console.log(results.rows);
-          req.session.name = newname;
-          req.session.password = newpassword;
-          req.flash("success", "Your information changed succesfully");
-          res.render('profile', { name: newname, password: newpassword });
-        }
-      }
-    );
-  }
+  else{// Update the user's information in the database
+    const userId = req.session.userID; // Replace with the actual user ID
+    const sql = 'UPDATE users SET name=?, password=? WHERE id=?';
+  
+    dbConnection.query(sql, [newname, newpassword, userId], (err, result) => {
+      
+      console.log('User information updated successfully');
+      // Redirect the user to a success page or send a response accordingly
+      res.render('/');
+    });}
+  
 });
 
 
