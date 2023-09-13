@@ -408,37 +408,46 @@ app.post("/upload/like", async (req, res)=> {
 app.post('/update-database', (req, res) => {
   const jsonData = req.body;
 
-  const insertQuery = `
-    INSERT INTO prices (product_id, latest_date, price1, price2, price3, price4, price5, price_avg)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    ON DUPLICATE KEY UPDATE
-      latest_date = VALUES(latest_date),
-      price1 = VALUES(price1),
-      price2 = VALUES(price2),
-      price3 = VALUES(price3),
-      price4 = VALUES(price4),
-      price5 = VALUES(price5),
-      price_avg = VALUES(price_avg)
-  `;
-
   for (const item of jsonData.data) {
-    const { product_id, prices } = item;
+    const { id: product_id, prices } = item;
 
-    //const latestPrice = prices[prices.length - 1].price;
     const priceValues = prices.map(price => price.price);
     const priceAvg = priceValues.reduce((total, price) => total + price, 0) / priceValues.length;
 
-    dbConnection.query(insertQuery, [product_id, new Date(), ...priceValues, priceAvg], (error, results) => {
-      if (error) {
-        console.error('Error updating database:', error);
-        res.status(500).json({ error: 'Database update failed' });
-        return;
+    const dateValues = prices.map(priceData => new Date(priceData.date));
+    const newest_date = new Date(Math.min(...dateValues));
+    const latest_date = new Date(Math.max(...dateValues));
+
+    const insertQuery = `
+      INSERT INTO prices (product_id, newest_date, latest_date, price1, price2, price3, price4, price5, price_avg)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        newest_date = VALUES(newest_date),
+        latest_date = VALUES(latest_date),
+        price1 = VALUES(price1),
+        price2 = VALUES(price2),
+        price3 = VALUES(price3),
+        price4 = VALUES(price4),
+        price5 = VALUES(price5),
+        price_avg = VALUES(price_avg)
+    `;
+
+    dbConnection.query(
+      insertQuery,
+      [product_id, newest_date, latest_date, ...priceValues, priceAvg],
+      (error, results) => {
+        if (error) {
+          console.error('Error updating database:', error);
+          res.status(500).json({ error: 'Database update failed' });
+          return;
+        }
       }
-    });
+    );
   }
 
   res.json({ message: 'Database updated successfully' });
 });
+
 
 
 app.post('/update-database1', (req, res) => {
