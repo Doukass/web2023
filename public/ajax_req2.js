@@ -15,7 +15,7 @@ $(document).ready(function () {
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
-    userCoords = [38.23609924316406, 21.733800888061523];
+    userCoords = [38.26340103149414, 21.74340057373047];
      // console.log(userCoords);
       //console.log(userCoords[1]);
       //console.log(userCoords[0]);
@@ -233,7 +233,7 @@ function handleDetailsClick(button) {
     const product = button.getAttribute("data-product");
     const discount_id = button.getAttribute("data-discountid");
     const stock = button.getAttribute("data-stock");
-    const user_id = button.getAttribute("data-stock");
+    const user_id = button.getAttribute("data-userid");
 
     //console.log(stock);
 
@@ -460,6 +460,7 @@ function handleDislikeClick(discount_id, user_id, button) {
         // Send the like to the server (optional)
         sendDisLikeToServer(discount_id);
         MinScore(user_id);
+        console.log(user_id);
     }
 }
 
@@ -862,30 +863,45 @@ function MinScore(user_id){
 }
 
 FinalScore();
-function FinalScore(){
+function FinalScore() {
     $.ajax({
         type: "GET",
-        url: "/final/score", 
-        success: function(result) {
-            console.log(result);
+        url: "/final/score",
+        success: function (result) {
+           // console.log(result);
 
-            var ScoreBoard = [];
+            // Create an object to store points for each user_id
+            var userPoints = {};
 
             for (var i = 0; i < result.length; i++) {
-               var user_id = result[i].user_id;
-               var score_id = result[i].score_id;
-               var points = result[i].points; 
-               console.log(result.length);
+                var user_id = result[i].user_id;
+               // var score_id = result[i].score_id;
+                var points = result[i].points;
 
-               ScoreBoard.push({user_id, score_id, points});
+                // Check if the user_id is already in the userPoints object
+                if (userPoints[user_id] === undefined) {
+                    // If not, initialize it with the points
+                    userPoints[user_id] = points;
+                } else {
+                    // If yes, add the points to the existing total
+                    userPoints[user_id] += points;
+                }
+            }
+
+            // Convert the userPoints object to an array of objects
+            var ScoreBoard = [];
+            for (var user_id in userPoints) {
+                ScoreBoard.push({
+                    user_id: user_id,
+                    points: userPoints[user_id]
+                });
             }
 
             console.log(ScoreBoard);
-        
         }
     });
-
 }
+
 
 
 
