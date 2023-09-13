@@ -146,7 +146,7 @@ for (let i = 0; i < result.length; i++) {
                 // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
                 var DisplayDetails = [
                     'Προιν:', product_name, 'τιμη:', price, '$', 'ημερομηνια', date, 'category name', catname, 'Discount ID:' , discount_id,
-                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}"  onclick="handleDetailsClick(this)">Details</button>
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}"  onclick="handleDetailsClick(this)">Details</button>
                     
                     `,
                     '<br>'
@@ -267,6 +267,11 @@ function handleDetailsClick(button) {
     const price = button.getAttribute("data-price");
     const product = button.getAttribute("data-product");
     const discount_id = button.getAttribute("data-discountid");
+    const stock = button.getAttribute("data-stock");
+
+    console.log(stock);
+
+
 
     // Define a callback function to display the modal with likeCounts
     function displayModalWithLikeCounts(likeCounts) {
@@ -278,6 +283,7 @@ function handleDetailsClick(button) {
             Product: ${product}<br>
             Discount ID: ${discount_id}<br>
             Likes: ${likeCounts[discount_id]}<br> 
+            Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <button class="like-button" data-liked="false" data-likes="0" onclick="handleLikeClick(${discount_id}, this)">Like</button>
             <button class="dislike-button" onclick="handleDislikeClick()">Dislike</button><br>
