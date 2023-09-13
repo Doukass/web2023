@@ -14,7 +14,7 @@ $(document).ready(function () {
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
-    userCoords = [38.26340103149414, 21.74310557373047];
+    userCoords = [38.23609924316406, 21.733800888061523];
      // console.log(userCoords);
       //console.log(userCoords[1]);
       //console.log(userCoords[0]);
@@ -105,95 +105,58 @@ for (let i = 0; i < result.length; i++) {
     let store_id = data[i].store_id;
     let like_id = data[i].like_id;
 
-    //console.log(like_id);
-    //let username =data[i].user_name;
-    //let selectedRating = null;
-    
-    //console.log(loc[0], loc[1]);
     let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
-    //console.log(data[i].user_name)
 
-    //console.log(data[i].username);
-    
-
-    //opoio store den exei discount ftiaxnoume ena circlemarker me popup sto opoio yparxei koumpi gia na balei prosfora
-
-    if (discount_on === 0) {
-        // bazw onoma kai marker sta supermarket pou den exoun kamia prosofra
-        let marker = L.circleMarker(L.latLng(loc),{ title: title , catname: catname });
-
-        let popupContent = `<strong>${title}</strong>  
-       
-      <br>`;
-
+    if (discount_id === null) {
+        let marker = L.circleMarker(L.latLng(loc), { title: title, catname: catname });
+        let popupContent = `<strong>${title}</strong><br>`;
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
-    } else { // parakatw exoume ftiaksei enan pinaka me basei ta gewgrafika stoixeia twn stores gia na mporoume na apothikeusoume parapanw apo mia prosfores sto kathena
+
+        if (distance < 50) {
+            console.log(store_id);
+            popupContent += `<div><button data-username="${store_id}" onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+        }
+       
+        marker.bindPopup(popupContent);
+        markersLayer.addLayer(marker);
+    } else {
         if (!productsByLocation[loc], !productsByLocation2[loc]) {
             productsByLocation[loc] = [];
             productsByLocation2[loc] = [];
-            //if rows toy pinaka >1 i-- i=0
-            //console.log(productsByLocation);
         }
         
-        // o parakatw kwdikas einai gia ta stores ta opoia einai sta 50metra
-        if (product_id !== null) {
-            
-            if(distance <50 )
-            {
-               // console.log(discount_id);
-
-                // kanw display ta data pou thelw sto popup kai bazw ena koumpi to opoio me stelnei se function sto telos tou kwdika 
+        
+            if (distance < 50) {
                 var DisplayDetails = [
-                    'Προιον:', product_name, '<br>' , 'Tιμη:', price, '$', '<br>' ,   'Hμερομηνια', date, '<br>' ,   'Discount ID:' , discount_id,
-                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}"  onclick="handleDetailsClick(this)">Details</button>
-                    
-                    `,
-                    '<br>' , '<br>' 
+                    'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}"  onclick="handleDetailsClick(this)">Details</button><br><br>`,
                 ];
-                //to concat kanei ennonei dyo pinakes
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
-                //console.log(DisplayDetails);
-               
-                
-           
-            
-            
-
-
+            } else {
+                productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
             }
-            else{
-                productsByLocation2[loc].push('Προιν:',product_name , '<br>' ,'Tιμη:', price , '$' , '<br>', 'Hμερομηνια', date , '<br>',  '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
-            // You can add an event listener to save the rating when the input changes.
-
-            }
-
-           
-            
-        }
-
-        let marker = L.marker(L.latLng(loc),{ title: title ,  catname: catname });
         
-        let popupContent = `<strong>${title}</strong> <br>`;
-                    
+
+        let marker = L.marker(L.latLng(loc), { title: title, catname: catname });
+        let popupContent = `<strong>${title}</strong><br>`;
         
         if (productsByLocation[loc].length > 0) {
-            popupContent += ` ${productsByLocation[loc].join(" ")}`;
+            popupContent += `${productsByLocation[loc].join(" ")}`;
         }
         if (productsByLocation2[loc].length > 0) {
-            popupContent += ` ${productsByLocation2[loc].join(" ")}`;
+            popupContent += `${productsByLocation2[loc].join(" ")}`;
         }
 
-        popupContent += ` <div>
-        <button onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button>
-    </div>
-  <br>`;
-
+        if (distance < 50) {
+            popupContent += `<div><button onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+        }
         
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
     }
 }
+
 
             
 

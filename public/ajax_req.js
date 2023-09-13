@@ -105,7 +105,7 @@ for (let i = 0; i < result.length; i++) {
 
     let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
 
-    if (discount_on === 0) {
+    if (discount_id === null) {
         let marker = L.circleMarker(L.latLng(loc), { title: title, catname: catname });
         let popupContent = `<strong>${title}</strong><br>`;
         marker.bindPopup(popupContent);
@@ -116,7 +116,7 @@ for (let i = 0; i < result.length; i++) {
             productsByLocation2[loc] = [];
         }
         
-        if (product_id !== null) {
+        
             if (distance < 50) {
                 var DisplayDetails = [
                     'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
@@ -126,7 +126,7 @@ for (let i = 0; i < result.length; i++) {
             } else {
                 productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
             }
-        }
+        
 
         let marker = L.marker(L.latLng(loc), { title: title, catname: catname });
         let popupContent = `<strong>${title}</strong><br>`;
