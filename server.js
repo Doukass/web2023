@@ -222,7 +222,6 @@ app.post('/home/profile', (req, res) => {
       
       console.log('User information updated successfully');
       // Redirect the user to a success page or send a response accordingly
-      res.render('/home/profile');
     });}
   
 });
@@ -331,7 +330,7 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 
 app.get("/admin/chart1", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('date_entered FROM discount');
+  const [results, fields] = await dbConnection.execute('SELECT DATE(date_entered) AS entry_date, COUNT(*) AS discount_count FROM discount GROUP BY entry_date  ORDER BY entry_date;');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
