@@ -528,7 +528,7 @@ app.get("/like/counter", async (req, res)=> {
 });
 
 
-//-------- upload discount
+//-------- save discount
 
 
 app.post('/updateData', (req, res) => {
@@ -550,15 +550,43 @@ app.post('/updateData', (req, res) => {
   });
 });
 
+//---------------------- upload prices in order to compare
 
 
 
+app.get("/prices/for/compare", async (req, res)=> {
+  
+  const [results, fields] = await dbConnection.execute('SELECT price_avg AS latest_price, price5 AS newest_price, product_id FROM prices ;');
+ //console.log("Query returned ${results.length} results:");
+  
+  res.send(results);
+  
+});
 
 
 
+//-------------- give 50 points after the add discount
+app.post('/add/score/50', (req, res) => {
+  const { points } = req.body;
 
 
-
+  // Create an SQL query to insert the data into the database
+const sql = `
+  INSERT INTO score (user_id, date, points)
+  VALUES (?, CURRENT_TIMESTAMP, ?)
+`;
+  
+  // Execute the SQL query
+  dbConnection.query(sql, [req.session.userID, points], (error, results) => {
+    if (error) {
+      console.error('Error inserting data into the database:', error);
+      res.status(500).json({ error: 'An error occurred while updating data' });
+    } else {
+      console.log('Data inserted successfully');
+      res.status(200).json({ message: 'Data inserted successfully' });
+    }
+  });
+});
 
 
 

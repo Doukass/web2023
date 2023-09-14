@@ -117,7 +117,7 @@ for (let i = 0; i < result.length; i++) {
 
         if (distance < 50) {
             console.log(store_id);
-            popupContent += `<div><button data-username="${store_id}" onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+            popupContent += `<div><button data-username="${store_id}" data-userid = "${data[i].user_id}" onclick="handleAddDiscount(${store_id}, ${user_id}, this ) class="discount-button">Add Discount</button></div>`;
         }
        
         marker.bindPopup(popupContent);
@@ -151,7 +151,7 @@ for (let i = 0; i < result.length; i++) {
         }
 
         if (distance < 50) {
-            popupContent += `<div><button onclick="handleAddDiscount(${store_id})" class="discount-button">Add Discount</button></div>`;
+            popupContent += `<div><button data-username="${store_id}" data-userid = "${data[i].user_id}" onclick="handleAddDiscount(${store_id}, ${user_id}, this )" class="discount-button">Add Discount</button></div>`;
         }
         
         marker.bindPopup(popupContent);
@@ -253,11 +253,11 @@ function handleDetailsClick(button) {
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <!--like -->
-            <button class="like-button ${stock === '0' ? 'disabled-button' : ''}" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id}, this)`}" ${stock === '0' ? 'disabled' : ''}>Like</button>
+            <button class="like-button ${stock === '0' ? 'disabled-button' : ''}" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id}, this)`}" >Like</button>
 
             
             <!-- Dislike -->
-            <button class="dislike-button ${stock === '0' ? 'disabled-button' : ''}" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id}, this)`}" ${stock === '0' ? 'disabled' : ''}>Dislike</button><br>
+            <button class="dislike-button ${stock === '0' ? 'disabled-button' : ''}" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id}, this)`}">Dislike</button><br>
             
             
             <!--Σε αποθεμα -->
@@ -562,9 +562,10 @@ function closeModal() {
 
 
 
-function handleAddDiscount(store_id) {
+function handleAddDiscount(store_id, user_id) {
 
     //console.log("Store ID:", store_id);
+    console.log(user_id);
     
 
 
@@ -763,7 +764,10 @@ function findProductID(selectedCatname, selectedSubname, selectedProduct) {
                 var selectedProduct = productDropdown.value;
                 var selectedProductID = findProductID(selectedCatname, selectedSubname, selectedProduct);
 
-                updateData(selectedProductID, store_id, enteredPrice);
+                updateData(selectedProductID, store_id, enteredPrice, );
+                LoadPrices(enteredPrice, selectedProductID);
+
+                
                 // edw prepei na mpei to call gia to function tou score. ean h timh einai toso mikroterh dwse tosous pontous.
                 modal.style.display = "none";
             });
@@ -860,7 +864,7 @@ function MinScore(user_id){
         }
     });
 }
-
+// apla gia na dw an mporw na parw to scoreboard
 FinalScore();
 function FinalScore() {
     $.ajax({
@@ -895,20 +899,104 @@ function FinalScore() {
                     points: userPoints[user_id]
                 });
             }
-            // sorting based on points
-            ScoreBoard.sort(function(a, b) {
-                return a.points + b.points;
-            });
+            // Sorting based on points in decreasing order
+                ScoreBoard.sort(function(a, b) {
+                    return b.points - a.points;
+                    });
+
 
             console.log(ScoreBoard);
+
+           
+            
         }
     });
 }
 
 
+function LoadPrices(enteredPrice, selectedProductID) {
+    var priceData = []; // Initialize an empty array to store the data
+  
+    $.ajax({
+      type: "GET",
+      url: "/prices/for/compare",
+      success: function (result) {
+        console.log(result);
+  
+        for (var i = 0; i < result.length; i++) {
+          var newest_price = result[i].newest_price;
+          var latest_price = result[i].latest_price;
+          var product_id = result[i].product_id;
+  
+          // Create an object with product_id, latest_price, and newest_price
+          var priceObj = {
+            product_id: product_id,
+            latest_price: latest_price,
+            newest_price: newest_price
+          };
+  
+          // Push the price object into the priceData array
+          priceData.push(priceObj);
+        }
+  
+        // Now, priceData contains an array of objects with product_id, latest_price, and newest_price
+        console.log(priceData);
+        CompareForPoints(priceData, enteredPrice, selectedProductID);
+      }
+    });
+    
+  }
+  
+
+  function CompareForPoints(priceData, enteredPrice, selectedProductID) {
+    console.log("Price Data:", priceData);
+    console.log("Entered Price:", enteredPrice);
+    console.log("Product ID:", selectedProductID);
+  
+    // Check if selectedProductID exists in priceData
+    const product = priceData.find(item => item.product_id == selectedProductID);
+  
+    if (product) {
+      console.log("Latest Price:", product.latest_price);
+      console.log("Newest Price:", product.newest_price);
+      
+
+
+        if(enteredPrice < (product.newest_price - product.newest_price * 0.2))
+         {      
+            let points = 50;
+            AddPointsBecauseOfAddDiscount(points)
+            
+         } 
+         if(enteredPrice < (product.latest_price - product.latest_price * 0.2)){
+             let  points = 20;
+            AddPointsBecauseOfAddDiscount(points)
+         }
 
 
 
+
+    } else {
+      console.log("Product ID not found in priceData.");
+    }
+  }
+  
+
+  function AddPointsBecauseOfAddDiscount(points){
+    $.ajax({
+        type: "POST",
+        url: "/add/score/50", // Replace with your server endpoint URL
+        data: {
+            points: points
+        },
+        success: function(response) {
+            
+        }
+    });
+}
+    
+
+  
 
 
 
