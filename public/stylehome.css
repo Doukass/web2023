@@ -211,3 +211,16 @@
 }
 
 
+.disabled-button {
+    background-color: #ccc; /* Gray background color */
+    color: #999; /* Gray text color */
+    cursor: not-allowed; /* Change cursor to not-allowed */
+    /* Add any other styles you want to indicate it's disabled */
+  }
+  
+  
+  
+  
+  
+  
+  

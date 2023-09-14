@@ -253,13 +253,12 @@ function handleDetailsClick(button) {
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <!--like -->
-            
-            <button class="like-button" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Like</button>
+            <button class="like-button ${stock === '0' ? 'disabled-button' : ''}" data-liked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleLikeClick(${discount_id}, ${user_id}, this)`}" ${stock === '0' ? 'disabled' : ''}>Like</button>
 
-            <!--Dislike -->
             
-            <button class="dislike-button" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id} ,this)`}" ${stock === '0' ? 'disabled' : ''}>Dislike</button><br>
-
+            <!-- Dislike -->
+            <button class="dislike-button ${stock === '0' ? 'disabled-button' : ''}" data-disliked="false" data-likes="0" onclick="${stock === '0' ? '' : `handleDislikeClick(${discount_id}, ${user_id}, this)`}" ${stock === '0' ? 'disabled' : ''}>Dislike</button><br>
+            
             
             <!--Σε αποθεμα -->
             <button class="option-button1" onclick="handleInStockClick(${discount_id}, this)">Σε αποθεμα</button>
@@ -896,6 +895,10 @@ function FinalScore() {
                     points: userPoints[user_id]
                 });
             }
+            // sorting based on points
+            ScoreBoard.sort(function(a, b) {
+                return a.points + b.points;
+            });
 
             console.log(ScoreBoard);
         }
