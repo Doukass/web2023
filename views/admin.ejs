@@ -68,13 +68,41 @@
 
     <input type="file" id="jsonInput" style="display: none;" accept=".json">
       <button id="Sumbit">Submit</button>
-      <button id="displayButton" onclick="chart1()">Discounts</button>
+     
+     
+
       
-      <canvas id="myChart" width="60" height="60"></canvas>
 
       
       
     </div>
+
+    <div class="chart1">
+<!-- Add a dropdown menu to select the month -->
+<select id="monthSelector">
+  <option value="01">January</option>
+  <option value="02">February</option>
+  <option value="03">March</option>
+  <option value="04">April</option>
+  <option value="05">May</option>
+  <option value="06">June</option>
+  <option value="07">July</option>
+  <option value="08">August</option>
+  <option value="09">September</option>
+  <option value="10">October</option>
+  <option value="11">November</option>
+  <option value="12">December</option>
+</select>
+<button onclick="updateChart()">Update Chart</button>
+
+
+<!-- Add a canvas element for the chart -->
+<canvas id="myChart" ></canvas>
+
+
+  </div>
+
+
 <!--drag and drop -->
 
 
@@ -92,14 +120,9 @@
 
     
 
-   <!--  <script id="discountItemTemplate" type="text/template">
-      <div class="discount-item">
-        
-      </div>
--->
-        <!--    dokimastiko gia charts-->
-      <canvas id="discountChart" width="800" height="400"></canvas>
-      <button id="dsicountChart" onclick="chart1()">Details</button>
+      
+      
+     
 
 
 

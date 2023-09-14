@@ -208,23 +208,27 @@ app.post('/', ifLoggedin, [
 
 
 app.post('/home/profile', (req, res) => {
-  const { newname, newpassword, secpassword } = req.body;
+  const { newname, newpassword } = req.body;
 
-  // Validate form data (e.g., check if newpassword matches secpassword)
-  if (newpassword !== secpassword) {
-    return res.status(400).send('Passwords do not match');
-  }
-  else{// Update the user's information in the database
-    const userId = req.session.userID; // Replace with the actual user ID
-    const sql = 'UPDATE users SET name=?, password=? WHERE id=?';
-  
-    dbConnection.query(sql, [newname, newpassword, userId], (err, result) => {
-      
+  const sql =  `UPDATE users SET name = ?, password = ? WHERE id = ?`;
+
+  dbConnection.query(sql, [newname, newpassword, req.session.userID], (err, result) => {
+    if (err) {
+      // Handle the error here
+      console.error('Database error:', err);
+      // You can send an error response to the client if needed
+      res.status(500).send('An error occurred while updating user information');
+    } else {
+      // The update was successful
       console.log('User information updated successfully');
-      // Redirect the user to a success page or send a response accordingly
-    });}
-  
+      // Send a response to the client to refresh the page
+      res.redirect('/home/profile'); // Redirect to the same page
+    }
+  });
 });
+
+
+
 
 
 
@@ -330,7 +334,7 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 
 app.get("/admin/chart1", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT DATE(date_entered) AS entry_date, COUNT(*) AS discount_count FROM discount GROUP BY entry_date  ORDER BY entry_date;');
+  const [results, fields] = await dbConnection.execute('SELECT date_entered , COUNT(*) AS discount_count FROM discount GROUP BY date_entered  ORDER BY date_entered;');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
