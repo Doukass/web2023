@@ -96,13 +96,14 @@
 
 <select id="yearSelector">
   <!-- Add options for the years you want to include -->
-  <option value="2020">2020</option>
   <option value="2021">2021</option>
   <option value="2022">2022</option>
   <option value="2023">2023</option>
   <!-- Add more years as needed -->
 </select>
-<button onclick="updateChart()">Update Chart</button>
+<button id = "updateChartButton" onclick="updateChart()">Update Chart</button>
+<button id="closeChartButton" onclick="closeChart()">Close Chart</button>
+
 
 
 <!-- Add a canvas element for the chart -->

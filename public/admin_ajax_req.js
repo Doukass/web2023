@@ -29,7 +29,7 @@ function updateChart() {
     success: function (result) {
       console.log(result);
 
-      // Extract the data for the chart
+      // Extract the data for the chart // na broume to .map
       const chartData = result
         .filter(item => item.date_only.startsWith(`${selectedYear}-${selectedMonth}`))
         .map(item => ({
@@ -39,6 +39,7 @@ function updateChart() {
 
       // Create an array to hold data for all days of the selected month
       const allDaysData = Array(lastDayOfMonth).fill(0);
+      //console.log()
 
       // Loop through the available data and populate the array accordingly
       for (const item of chartData) {
@@ -79,7 +80,12 @@ function updateChart() {
 
 
 
-
+function closeChart() {
+  // Ensure the chart instance exists before attempting to destroy it
+  if (myChart) {
+    myChart.destroy();
+  }
+}
 
 
 
