@@ -90,3 +90,29 @@
   margin-top: 10px;
 }
 
+
+
+/* Style for the chart1 container */
+.chart1 {
+  text-align: center;
+  margin: 20px;
+}
+
+/* Style for the button */
+#displayButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Style for the canvas */
+#myChart {
+  width: 100%; /* Make the canvas fill its container width */
+  max-width:1000px; /* Limit the canvas width if needed */
+  height: 80px; /* Automatically adjust the height to maintain aspect ratio */
+  border: 1px solid #ccc; /* Add a border for visibility */
+}

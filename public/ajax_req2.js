@@ -15,7 +15,13 @@ $(document).ready(function () {
   function onLocationFound(e) {
       var radius = e.accuracy / 50;
 
-    userCoords = [38.26340103149414, 21.74340057373047];
+   //userCoords = [38.26340103149414, 21.74340057373047];
+    // userCoords = [38.232398986816406, 21.747299194335938];
+    
+    userCoords = [38.301300048828125, 21.7814998626709];
+  
+    //userCoords = [38.25659942626953, 21.74180030822754];
+   // userCoords = [38.2504997253418, 21.739700317382812];
      // console.log(userCoords);
       //console.log(userCoords[1]);
       //console.log(userCoords[0]);
@@ -117,7 +123,7 @@ for (let i = 0; i < result.length; i++) {
 
         if (distance < 50) {
             console.log(store_id);
-            popupContent += `<div><button data-username="${store_id}" data-userid = "${data[i].user_id}" onclick="handleAddDiscount(${store_id}, ${user_id}, this ) class="discount-button">Add Discount</button></div>`;
+            popupContent += `<div><button data-username="${store_id}"  onclick="handleAddDiscount(${store_id} , this )" class="discount-button">Add Discount</button></div>`;
         }
        
         marker.bindPopup(popupContent);
@@ -151,7 +157,7 @@ for (let i = 0; i < result.length; i++) {
         }
 
         if (distance < 50) {
-            popupContent += `<div><button data-username="${store_id}" data-userid = "${data[i].user_id}" onclick="handleAddDiscount(${store_id}, ${user_id}, this )" class="discount-button">Add Discount</button></div>`;
+            popupContent += `<div><button data-username="${store_id}"  onclick="handleAddDiscount(${store_id}, this )" class="discount-button">Add Discount</button></div>`;
         }
         
         marker.bindPopup(popupContent);

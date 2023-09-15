@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const { error } = require('console');
+const { error, Console } = require('console');
 
 
 
@@ -203,28 +203,45 @@ app.post('/', ifLoggedin, [
 
 
 
-//-------------------
-//ALLAGH username kai password
+//-------------------//ALLAGH username kai password
 
 
-app.post('/home/profile', (req, res) => {
-  const { newname, newpassword, secpassword } = req.body;
+app.post('/changepassword', (req, res) => {
+  // Use express-validator to validate the newname and newpassword fields
+  const validation_result = validationResult(req);
+  const { newname, newpassword } = req.body;
+  const userID = req.session.userID;
 
-  // Validate form data (e.g., check if newpassword matches secpassword)
-  if (newpassword !== secpassword) {
-    return res.status(400).send('Passwords do not match');
+  if (validation_result.isEmpty()) {
+    // Validation passed, update the user's information in the database
+    const sql = "UPDATE users SET name = ?, password = ? WHERE id = ?";
+    
+    dbConnection.execute(sql, [newname, newpassword, userID])
+      .then((result) => {
+        // The update was successful
+        console.log('User information updated successfully');
+        // Send a response to the client to refresh the page
+        res.render('profile', { name: newname, password: newpassword });
+      })
+      .catch((err) => {
+        // Handle database query errors
+        console.log('Database error:', err);
+        // You can send an error response to the client if needed
+      });
+  } else {
+    // Validation failed, collect validation errors
+    let allErrors = validation_result.errors.map((error) => {
+      return error.msg;
+    });
+
+    // RENDER profile PAGE WITH VALIDATION ERRORS
+    res.render('profile', { validation_errors: allErrors });
   }
-  else{// Update the user's information in the database
-    const userId = req.session.userID; // Replace with the actual user ID
-    const sql = 'UPDATE users SET name=?, password=? WHERE id=?';
-  
-    dbConnection.query(sql, [newname, newpassword, userId], (err, result) => {
-      
-      console.log('User information updated successfully');
-      // Redirect the user to a success page or send a response accordingly
-    });}
-  
 });
+
+
+
+
 
 
 
@@ -330,7 +347,7 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 
 app.get("/admin/chart1", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT DATE(date_entered) AS entry_date, COUNT(*) AS discount_count FROM discount GROUP BY entry_date  ORDER BY entry_date;');
+  const [results, fields] = await dbConnection.execute('SELECT DATE_FORMAT(date_entered, "%Y-%m-%d") AS date_only, COUNT(*) AS discount_count  FROM discount GROUP BY DATE_FORMAT(date_entered, "%Y-%m-%d")  ORDER BY DATE_FORMAT(date_entered, "%Y-%m-%d");');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
