@@ -347,7 +347,7 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
 
 app.get("/admin/chart1", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT date_entered , COUNT(*) AS discount_count FROM discount GROUP BY date_entered  ORDER BY date_entered;');
+  const [results, fields] = await dbConnection.execute('SELECT DATE_FORMAT(date_entered, "%Y-%m-%d") AS date_only, COUNT(*) AS discount_count  FROM discount GROUP BY DATE_FORMAT(date_entered, "%Y-%m-%d")  ORDER BY DATE_FORMAT(date_entered, "%Y-%m-%d");');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
