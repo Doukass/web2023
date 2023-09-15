@@ -7,7 +7,7 @@ const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 const bodyParser = require('body-parser');
 const mysql = require('mysql2');
-const { error } = require('console');
+const { error, Console } = require('console');
 
 
 
@@ -203,29 +203,42 @@ app.post('/', ifLoggedin, [
 
 
 
-//-------------------
-//ALLAGH username kai password
+//-------------------//ALLAGH username kai password
 
 
-app.post('/home/profile', (req, res) => {
+app.post('/changepassword', (req, res) => {
+  // Use express-validator to validate the newname and newpassword fields
+  const validation_result = validationResult(req);
   const { newname, newpassword } = req.body;
+  const userID = req.session.userID;
 
-  const sql =  `UPDATE users SET name = ?, password = ? WHERE id = ?`;
+  if (validation_result.isEmpty()) {
+    // Validation passed, update the user's information in the database
+    const sql = "UPDATE users SET name = ?, password = ? WHERE id = ?";
+    
+    dbConnection.execute(sql, [newname, newpassword, userID])
+      .then((result) => {
+        // The update was successful
+        console.log('User information updated successfully');
+        // Send a response to the client to refresh the page
+        res.render('profile', { name: newname, password: newpassword });
+      })
+      .catch((err) => {
+        // Handle database query errors
+        console.log('Database error:', err);
+        // You can send an error response to the client if needed
+      });
+  } else {
+    // Validation failed, collect validation errors
+    let allErrors = validation_result.errors.map((error) => {
+      return error.msg;
+    });
 
-  dbConnection.query(sql, [newname, newpassword, req.session.userID], (err, result) => {
-    if (err) {
-      // Handle the error here
-      console.error('Database error:', err);
-      // You can send an error response to the client if needed
-      res.status(500).send('An error occurred while updating user information');
-    } else {
-      // The update was successful
-      console.log('User information updated successfully');
-      // Send a response to the client to refresh the page
-      res.redirect('/home/profile'); // Redirect to the same page
-    }
-  });
+    // RENDER profile PAGE WITH VALIDATION ERRORS
+    res.render('profile', { validation_errors: allErrors });
+  }
 });
+
 
 
 
