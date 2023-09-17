@@ -80,7 +80,13 @@ document.addEventListener("DOMContentLoaded", function () {
            let date_entered = result[i].date_entered;
         
 
-        discount = ['Discount ID: ', discount_id, 'Price: ' , price, '$', 'Date entered:' , date_entered];
+            discount = [
+            'Discount ID: ', discount_id,
+            'Price: ', price, '$',
+            'Date entered:', date_entered,
+            '<button class="discount-button">Click Me</button>'
+        ];
+        
 
         }
         
