@@ -369,6 +369,37 @@ app.get("/profile/button/like", async (req, res) => {
   
 });
 
+
+//--------------------- dislike
+
+app.get("/profile/button/dislike", async (req, res) => {
+  
+  const [results, fields] = await dbConnection.execute(
+    'SELECT dislike_id, discount_id FROM `dislike` WHERE user_id = ?',
+    [req.session.userID]
+  );
+
+  res.send(results);
+
+});
+
+//----------------- discount history 
+app.get("/profile/button/discountHisory", async (req, res) => {
+  
+  const [results, fields] = await dbConnection.execute(
+    'SELECT discount_id, price, DATE_FORMAT(date_entered, "%Y-%m-%d") AS date_entered FROM `discount` WHERE user_id = ?',
+    [req.session.userID]
+  );
+
+  res.send(results);
+
+});
+
+
+
+
+
+
 //--------------- Total Score------------
 app.get("/profile/total/score", async (req, res) => {
   
@@ -381,7 +412,7 @@ app.get("/profile/total/score", async (req, res) => {
 
 });
 
-
+//--------- monthly score
 app.get("/profile/month/score", async (req, res) => {
   
   const [results, fields] = await dbConnection.execute(
