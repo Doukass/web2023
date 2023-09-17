@@ -6,6 +6,9 @@
 	<!--     <link rel="stylesheet" href="style.css">      ------->
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link href="styleprofile.css" rel="stylesheet" type="text/css">
+<link href="sidebar.css" rel="stylesheet" type="text/css">
+<script src="profilebuttons.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
 		
@@ -52,9 +55,31 @@
                 </form>
             </div>
 
+			
+		</div>
+		
 
+
+
+
+
+
+		<div class="sidebar">
+			<!-- Sidebar content goes here -->
+			<div class="button-container">
+				<ul <button class="sidebar-button" id="likes">Likes</button> </ul>
+				<ul <button class="sidebar-button" id="totalScore">Total Score</button> </ul>
+				<ul <button class="sidebar-button" id="ScoreOfMonth">Score of the Month</button> </ul>
+				<ul <button class="sidebar-button" id="PrevTokensMonth">Tokens Previus Month</button> </ul>
+				<ul <button class="sidebar-button" id="allTokens">All Tokens</button> </ul>
+			</div>
+			
+			<div id="resultContainer"></div>
+	
 		</div>
-		</div>
+
+		<div id="resultContainer"></div>
+		
 
 
 

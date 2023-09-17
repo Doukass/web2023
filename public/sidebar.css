@@ -1,0 +1,48 @@
+
+.sidebar {
+    width: 250px;
+    background-color: transparent;
+    color: #fff;
+    padding: 20px;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 250px; /* Adjust this value to move the sidebar down by 50 pixels */
+}
+
+.content {
+    margin-left: 250px;
+    padding: 20px;
+}
+
+
+
+
+.button-container {
+    display: block; /* Each button in its own line */
+    margin-top: 10px; /* Adjust spacing between button rows */
+}
+
+.button-row {
+    margin-bottom: 10px; /* Adjust spacing between buttons */
+}
+
+.sidebar-button {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition for color change */
+}
+
+.sidebar-button.active {
+    background-color: #524f4f; /* Style for the active button */
+}
+
+.sidebar-button:hover {
+    background-color: #2dd12b; /* New background color when hovered */
+}
+
+

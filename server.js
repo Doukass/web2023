@@ -343,7 +343,7 @@ app.get("/users/map/aksiologhsh", async (req, res)=> {
   
 });
 
-
+//---------------chart 1--------
 
 app.get("/admin/chart1", async (req, res)=> {
   
@@ -353,6 +353,51 @@ app.get("/admin/chart1", async (req, res)=> {
   res.send(results);
   
 });
+
+//------------------ likes 
+
+
+
+app.get("/profile/button/like", async (req, res) => {
+  
+    const [results, fields] = await dbConnection.execute(
+      'SELECT like_id, discount_id FROM `like` WHERE user_id = ?',
+      [req.session.userID]
+    );
+
+    res.send(results);
+  
+});
+
+//--------------- Total Score------------
+app.get("/profile/total/score", async (req, res) => {
+  
+  const [results, fields] = await dbConnection.execute(
+    'SELECT points FROM score WHERE user_id = ?',
+    [req.session.userID]
+  );
+
+  res.send(results);
+
+});
+
+
+app.get("/profile/month/score", async (req, res) => {
+  
+  const [results, fields] = await dbConnection.execute(
+    'SELECT points FROM monthly_score WHERE user_id = ?',
+    [req.session.userID]
+  );
+
+  res.send(results);
+
+});
+
+
+
+
+
+
 
 //------------ add 5 points for like-----------
 
