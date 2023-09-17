@@ -116,3 +116,11 @@
   height: 80px; /* Automatically adjust the height to maintain aspect ratio */
   border: 1px solid #ccc; /* Add a border for visibility */
 }
+
+
+.delete-button{
+  background-color: #000000;
+  color: #FFFFFF;
+  border: none;
+  padding: 2px;
+}

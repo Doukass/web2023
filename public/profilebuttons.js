@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function () {
       type: "GET",
       url: "/profile/button/discountHisory", // Replace with the actual URL
       success: function (result) {
-        //console.log(result);
+        console.log(result);
 
         var discount = [];
         const discountCon= [];
@@ -84,17 +84,19 @@ document.addEventListener("DOMContentLoaded", function () {
             'Discount ID: ', discount_id,
             'Price: ', price, '$',
             'Date entered:', date_entered,
-            '<button class="discount-button">Click Me</button>'
+            
         ];
+
+
         
 
+        resultContainer.textContent =  discount;
         }
         
 
 
 
 
-        resultContainer.textContent =  discount;
       }
     });
   });

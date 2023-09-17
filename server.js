@@ -450,6 +450,20 @@ app.post('/add/score', (req, res) => {
     }
   });
 });
+//-----------------admin delete discount
+app.post('/admin/delete/discount', (req, res) => {
+  const { discount_id } = req.body;
+
+  const sql = `
+    DELETE FROM discount INNER JOIN dislike INNER JOIN 'like' ON discount.discount_id = dislike.discount_id ON discount.discount_id= like.discount_id  WHERE discount.discount_id =?
+  `;
+
+ 
+
+  dbConnection.query(sql, [discount_id], (error, results) => {
+    
+  });
+});
 
 //---------------- -1 points fro dislike----------------
 app.post('/min/score', (req, res) => {

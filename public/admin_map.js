@@ -112,10 +112,7 @@ for (let i = 0; i < result.length; i++) {
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
 
-        if (distance < 50) {
-            console.log(store_id);
-            popupContent += `<div><button data-username="${store_id}" onclick="handleAddDiscount( this )" class="discount-button">Add Discount</button></div>`;
-        }
+        
        
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
@@ -126,15 +123,14 @@ for (let i = 0; i < result.length; i++) {
         }
         
         
-            if (distance < 50) {
+            
                 var DisplayDetails = [
                     'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
-                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}" data-userid = "${data[i].user_id}" onclick="handleDetailsClick(this)">Details</button><br><br>`,
+                    `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}" data-userid = "${data[i].user_id}" onclick="handleDetailsClick(this)">Details</button>`,
+                    `<button class="delete-button" data-discountid="${discount_id}"  onclick="handleDeleteClick(${discount_id}, this)">Delete</button><br><br>`
                 ];
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
-            } else {
-                productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
-            }
+            
         
 
         let marker = L.marker(L.latLng(loc), { title: title, catname: catname });
@@ -147,9 +143,7 @@ for (let i = 0; i < result.length; i++) {
             popupContent += `${productsByLocation2[loc].join(" ")}`;
         }
 
-        if (distance < 50) {
-            popupContent += `<div><button data-username="${store_id}" onclick="handleAddDiscount(${store_id}, this )" class="discount-button">Add Discount</button></div>`;
-        }
+        
         
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
@@ -220,5 +214,25 @@ function toRad(degrees) {
 function handleAddDiscount(button){
     const di = button.getAttribute("data-username");
     console.log(di)
+
+}
+
+
+function handleDeleteClick(discount_id){
+    const requestData = {
+        discount_id: discount_id
+    };
+    //console.log(discount_id);
+
+    $.ajax({
+        type: "POST",
+        url: "/admin/delete/discount", // Replace with your server endpoint URL
+        data: requestData,
+        success: function(response) {
+            // Handle the success response from the server if needed
+           // console.log("Like sent to the server for Discount ID:", discount_id);
+           // console.log("Server response:", response);
+        }
+    });
 
 }
