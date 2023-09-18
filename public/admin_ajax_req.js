@@ -1,11 +1,54 @@
 
 
 $(document).ready(function () {
+  FinalScore();
 
+  function FinalScore() {
+    $.ajax({
+      type: "GET",
+      url: "/final/score",
+      success: function (result) {
+        var userPoints = {};
 
+        for (var i = 0; i < result.length; i++) {
+          var user_id = result[i].user_id;
+          var points = result[i].points;
 
-    
+          if (userPoints[user_id] === undefined) {
+            userPoints[user_id] = points;
+          } else {
+            userPoints[user_id] += points;
+          }
+        }
+
+        var ScoreBoard = [];
+        for (var user_id in userPoints) {
+          ScoreBoard.push({
+            user_id: user_id,
+            points: userPoints[user_id]
+          });
+        }
+
+        ScoreBoard.sort(function (a, b) {
+          return b.points - a.points;
+        });
+
+        // Generate HTML for the leaderboard
+        var leaderboardHTML = '<table class="table"><thead><tr><th>User ID</th><th>Points</th></tr></thead><tbody>';
+        
+        for (var i = 0; i < ScoreBoard.length; i++) {
+          leaderboardHTML += '<tr><td>' + ScoreBoard[i].user_id + '</td><td>' + ScoreBoard[i].points + '</td></tr>';
+        }
+        
+        leaderboardHTML += '</tbody></table>';
+
+        // Append the leaderboard HTML to the container
+        $('#leaderboard-container').html(leaderboardHTML);
+      }
+    });
+  }
 });
+
 
 
 

@@ -1,0 +1,77 @@
+.container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Center vertically within the viewport */
+}
+
+
+/* Style for the chart container */
+.chart1 {
+    text-align: center;
+    margin: 20px auto; /* Center the container horizontally */
+}
+
+/* Style for the button */
+#updateChartButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-right: 10px; /* Add some spacing between buttons */
+}
+
+#closeChartButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff0000; /* Red button for closing */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Style for the canvas */
+#myChart {
+    width: 100%; /* Make the canvas fill its container width */
+    max-width: 1000px; /* Limit the canvas width if needed */
+    height: 400px; /* Set the desired chart height */
+    border: 1px solid #ccc; /* Add a border for visibility */
+    margin-top: 20px; /* Add some spacing between the buttons and the chart */
+}
+
+/* Style for the dropdowns */
+#monthSelector,
+#yearSelector {
+    padding: 5px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+
+/* Style for the select button */
+#updateChartButton {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Style for the close button */
+#closeChartButton {
+    padding: 5px 10px;
+    background-color: #ff0000;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+

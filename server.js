@@ -86,7 +86,27 @@ app.get('/profile', ifNotLoggedin, (req, res, next) => {
 });
     
    
+app.get('/charts', ifNotLoggedin, (req, res, next) => {
+  dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
+    .then(([rows]) => {
+      res.render('charts', { name: rows[0].name});
+    });
+});
+
+
+app.get('/upload', ifNotLoggedin, (req, res, next) => {
+  dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
+    .then(([rows]) => {
+      res.render('upload', { name: rows[0].name});
+    });
+});
   
+app.get('/leaderboard', ifNotLoggedin, (req, res, next) => {
+  dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
+    .then(([rows]) => {
+      res.render('leaderboard', { name: rows[0].name });
+    });
+});
   
 
 

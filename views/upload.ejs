@@ -10,16 +10,9 @@
   <!-- Custom CSS -->
   <link href="stylehome.css" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="styleadmin.css">
+  <link rel="stylesheet" href="upload.css">
 
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-search@3.0.2/dist/leaflet-search.min.css" />
-
-  <!-- Leaflet and Leaflet Search scripts -->
-  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet@1.3.0/dist/leaflet.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-search/3.0.2/leaflet-search.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/leafletsearch@3.0.2/dist/leaflet-search.min.js"></script>
+  
   
   <!-- jQuery libraries -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -28,6 +21,7 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/admin_ajax_req.js"></script>
   <script src="/admin_map.js"></script>
+  <script src="/admin.js"></script>
  
 </head>
 <body>
@@ -40,10 +34,11 @@
             <h1>Hello, <%= name %></h1> -->
             <a class='hello' style="color:#e7e4e4;"> 		Welcome , <%= name %> </a>
           <ul>
-            <li><a class="active" href="/">Home</a></li>
+            <li><a  href="/">Home</a></li>
             <li><a  href="/charts">Charts</a></li>
-            <li><a  href="/upload">Upload</a></li>
+            <li><a class="active" href="/upload">Upload</a></li>
             <li><a  href="/leaderboard">LeaderBoard</a></li>
+
             <li><a href="/logout" class="btn btn-danger">Logout</a></li>
           <!--	<li><a href="#">Log Out</a></li>  -->
           </ul>
@@ -53,12 +48,46 @@
 
 
     <div class="center">
-		<div id="mapid"></div>
+		
   
 
 
-  
+    <!-- Add a button to trigger XML data display -->
+    <div class="center-container">
+      <!-- Add a button to trigger XML data display -->
+
+      <div id="dropArea" class="drop-area">
+        <p>Drag and drop  JSON file for PRICES here or click to select one.</p>
+        <input type="file" id="jsonInput" style="display: none;" accept=".json">
+        <div id="uploadIcon" class="upload-icon">&#10003;</div>
+      </div>
+
+      <div id="dropArea1" class="drop-area">
+        <p>Drag and drop a JSON file for STORES here or click to select one.</p>
+        <input type="file" id="jsonInput1" style="display: none;" accept=".json">
+        <div id="uploadIcon1" class="upload-icon">&#10003;</div>
+      </div>
+
+    <input type="file" id="jsonInput" style="display: none;" accept=".json">
+      <button id="Sumbit">Submit</button>
+     
+     
+    </div>
+
+
+
+
+  </div>
+
+
+
     
+    </div>
+      
+      
+     
+
+
 
 </body>
 </html>

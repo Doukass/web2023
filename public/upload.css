@@ -1,0 +1,47 @@
+/* Style for the center container */
+.center-container {
+    text-align: center;
+    margin-top: -100px; /* Adjust the top margin as needed */
+}
+
+/* Style for the drop areas */
+.drop-area {
+    border: 2px dashed #007bff; /* Dashed border style */
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    margin: 10px 0;
+}
+
+.drop-area p {
+    font-size: 16px;
+    margin: 0;
+}
+
+/* Style for the upload icon */
+.upload-icon {
+    font-size: 24px;
+    color: #007bff;
+    display: none; /* Hidden by default */
+}
+
+/* Style for the file input */
+.drop-area input[type="file"] {
+    display: none; /* Hide the file input */
+}
+
+/* Style for the Submit button */
+#Sumbit {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Style for the success icon */
+.upload-icon.success {
+    color: green;
+}

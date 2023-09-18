@@ -1,0 +1,49 @@
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* This sets the height to 100% of the viewport height */
+  }
+  
+
+
+
+
+#leaderboard-container {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -20px; /* Adjust the value as needed */
+    z-index: 1;
+  }
+  
+  
+  #leaderboard-container h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  #leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  #leaderboard-table th,
+  #leaderboard-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #leaderboard-table th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  #leaderboard-table tr:hover {
+    background-color: #e0e0e0;
+  }
+  
+
