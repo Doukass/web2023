@@ -527,7 +527,7 @@ app.post('/min/score', (req, res) => {
 
 app.get("/final/score", async (req, res)=> {
   
-  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
+  const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
  //console.log("Query returned ${results.length} results:");
   
   res.send(results);
