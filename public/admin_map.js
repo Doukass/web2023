@@ -104,7 +104,7 @@ for (let i = 0; i < result.length; i++) {
     let like_id = data[i].like_id;
     var user_id = data[i].user_id
 
-    let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+  
 
     if (discount_id === null) {
         let marker = L.circleMarker(L.latLng(loc), { title: title, catname: catname });
@@ -194,22 +194,6 @@ for (let i = 0; i < result.length; i++) {
 
 
 
-function haversine(lat1, lon1, lat2, lon2) {
-    const R = 6371000; // Earth's radius in meters
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
-}
-
-// Function to convert degrees to radians
-function toRad(degrees) {
-    return degrees * (Math.PI / 180);
-}
 
 function handleAddDiscount(button){
     const di = button.getAttribute("data-username");

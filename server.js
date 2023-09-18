@@ -455,14 +455,32 @@ app.post('/admin/delete/discount', (req, res) => {
   const { discount_id } = req.body;
 
   const sql = `
-    DELETE FROM discount INNER JOIN dislike INNER JOIN 'like' ON discount.discount_id = dislike.discount_id ON discount.discount_id= like.discount_id  WHERE discount.discount_id =?
+    DELETE FROM discount WHERE discount_id = ? 
   `;
 
- 
+  const sql2 = `
+    DELETE FROM 'like' WHERE discount_id = ? 
+  `;
 
-  dbConnection.query(sql, [discount_id], (error, results) => {
+  const sql3 = `
+  DELETE FROM dislike WHERE discount_id = ? =?
+`;
+
+dbConnection.query(sql, [discount_id], (err1, results1) => {
+  
+
+  // Execute the second SQL query
+  dbConnection.query(sql2, [discount_id], (err2, results2) => {
     
+
+    // Execute the third SQL query
+    dbConnection.query(sql3, [discount_id], (err3, results3) => {
+      
+
+      
+    });
   });
+});
 });
 
 //---------------- -1 points fro dislike----------------

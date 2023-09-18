@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-  discountHisory.addEventListener("click", () => {
+  discountHisoryButton.addEventListener("click", () => {
     // Make an AJAX call here
     $.ajax({
       type: "GET",
@@ -85,14 +85,16 @@ document.addEventListener("DOMContentLoaded", function () {
             'Price: ', price, '$',
             'Date entered:', date_entered,
             
+          
         ];
 
+          //console.log(discount);
+        
+          discountCon.push(discount)
 
         
-
-        resultContainer.textContent =  discount;
         }
-        
+        resultContainer.textContent =  discountCon;
 
 
 
