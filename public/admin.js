@@ -150,4 +150,80 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 })
+
+//upload products
+
+document.addEventListener('DOMContentLoaded', function () {
+  const dropArea2 = document.getElementById('dropArea2');
+  const jsonInput2 = document.getElementById('jsonInput2');
+  const dataContainer = document.getElementById('dataContainer2');
+
+  dropArea2.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    dropArea2.classList.add('active');
+  });
+
+  dropArea2.addEventListener('dragleave', function () {
+    dropArea2.classList.remove('active');
+  });
+
+  dropArea2.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dropArea2.classList.remove('active');
+
+    const file = e.dataTransfer.files[0];
+    handleFile2(file);
+  });
+
+  dropArea2.addEventListener('click', function () {
+    jsonInput2.click();
+  });
+
+  jsonInput2.addEventListener('change', function () {
+    const file = jsonInput2.files[0];
+    handleFile2(file);
+  });
+
+  function handleFile2(file) {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const fileContent = e.target.result;
+        
+          const jsonData2 = JSON.parse(fileContent);
+          
+
+          // Update the database with the JSON data
+          updateDatabase2(jsonData2);
+         
+          
+        
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  
+
+  function updateDatabase2(jsonData2) {
+    console.log(jsonData2)
+    fetch('/update-database2', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      
+      body: JSON.stringify(jsonData2)
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.message);
+    })
+    .catch(error => {
+      //console.error('Error updating database:', error);
+    });
+  }
+
+});
+
   
