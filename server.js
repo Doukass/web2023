@@ -114,7 +114,7 @@ app.get('/leaderboard', ifNotLoggedin, (req, res, next) => {
 
 
 
-//>>>>>>> Stashed changes
+
 
 
 
@@ -560,13 +560,10 @@ app.post('/min/score', (req, res) => {
 // --------------- upload score-------------
 
 app.get("/final/score", async (req, res)=> {
-//<<<<<<< Updated upstream
+
 
   const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
-//=======
 
-  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
-//>>>>>>> Stashed changes
  //console.log("Query returned ${results.length} results:");
 
   res.send(results);
