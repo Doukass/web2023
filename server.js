@@ -84,9 +84,9 @@ app.get('/profile', ifNotLoggedin, (req, res, next) => {
       res.render('profile', { name: rows[0].name, password:rows[0].password });
     });
 });
-<<<<<<< Updated upstream
-    
-   
+
+
+
 app.get('/charts', ifNotLoggedin, (req, res, next) => {
   dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
@@ -101,20 +101,19 @@ app.get('/upload', ifNotLoggedin, (req, res, next) => {
       res.render('upload', { name: rows[0].name});
     });
 });
-  
+
 app.get('/leaderboard', ifNotLoggedin, (req, res, next) => {
   dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
     .then(([rows]) => {
       res.render('leaderboard', { name: rows[0].name });
     });
 });
-  
-=======
 
 
 
 
->>>>>>> Stashed changes
+
+
 
 
 
@@ -408,26 +407,26 @@ app.get("/admin/chart1", async (req, res)=> {
 
 });
 
-//------------------ likes 
+//------------------ likes
 
 
 
 app.get("/profile/button/like", async (req, res) => {
-  
+
     const [results, fields] = await dbConnection.execute(
       'SELECT like_id, discount_id FROM `like` WHERE user_id = ?',
       [req.session.userID]
     );
 
     res.send(results);
-  
+
 });
 
 
 //--------------------- dislike
 
 app.get("/profile/button/dislike", async (req, res) => {
-  
+
   const [results, fields] = await dbConnection.execute(
     'SELECT dislike_id, discount_id FROM `dislike` WHERE user_id = ?',
     [req.session.userID]
@@ -437,9 +436,9 @@ app.get("/profile/button/dislike", async (req, res) => {
 
 });
 
-//----------------- discount history 
+//----------------- discount history
 app.get("/profile/button/discountHisory", async (req, res) => {
-  
+
   const [results, fields] = await dbConnection.execute(
     'SELECT discount_id, price, DATE_FORMAT(date_entered, "%Y-%m-%d") AS date_entered FROM `discount` WHERE user_id = ?',
     [req.session.userID]
@@ -456,7 +455,7 @@ app.get("/profile/button/discountHisory", async (req, res) => {
 
 //--------------- Total Score------------
 app.get("/profile/total/score", async (req, res) => {
-  
+
   const [results, fields] = await dbConnection.execute(
     'SELECT points FROM score WHERE user_id = ?',
     [req.session.userID]
@@ -468,7 +467,7 @@ app.get("/profile/total/score", async (req, res) => {
 
 //--------- monthly score
 app.get("/profile/month/score", async (req, res) => {
-  
+
   const [results, fields] = await dbConnection.execute(
     'SELECT points FROM monthly_score WHERE user_id = ?',
     [req.session.userID]
@@ -509,11 +508,11 @@ app.post('/admin/delete/discount', (req, res) => {
   const { discount_id } = req.body;
 
   const sql = `
-    DELETE FROM discount WHERE discount_id = ? 
+    DELETE FROM discount WHERE discount_id = ?
   `;
 
   const sql2 = `
-    DELETE FROM 'like' WHERE discount_id = ? 
+    DELETE FROM 'like' WHERE discount_id = ?
   `;
 
   const sql3 = `
@@ -521,17 +520,17 @@ app.post('/admin/delete/discount', (req, res) => {
 `;
 
 dbConnection.query(sql, [discount_id], (err1, results1) => {
-  
+
 
   // Execute the second SQL query
   dbConnection.query(sql2, [discount_id], (err2, results2) => {
-    
+
 
     // Execute the third SQL query
     dbConnection.query(sql3, [discount_id], (err3, results3) => {
-      
 
-      
+
+
     });
   });
 });
@@ -560,13 +559,13 @@ app.post('/min/score', (req, res) => {
 // --------------- upload score-------------
 
 app.get("/final/score", async (req, res)=> {
-<<<<<<< Updated upstream
-  
+
+
   const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
-=======
+
 
   const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
->>>>>>> Stashed changes
+
  //console.log("Query returned ${results.length} results:");
 
   res.send(results);
