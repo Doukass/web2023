@@ -44,3 +44,84 @@
   border: none;
   padding: 2px;
 }
+
+
+
+
+
+/* ta parakatw einai gia ta mynhmata pou emfanizei to button add discount */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+text-align: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+}
+
+.modal-message {
+  font-size: 18px;
+  line-height: 1.5;
+  margin-top: 15px;
+color: #333; /* Darker text color */
+  font-family: Arial, sans-serif;
+}
+
+.modal-content {
+text-align: left;
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 70%;
+  max-width: 500px;
+  border-radius: 10px;
+  position: relative;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+
+}
+
+.close:hover {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+/* CSS styles for the like and dislike buttons */
+.like-button {
+  padding: 7px 15px; /* Adjust padding as needed */
+  border: none;
+  background-color: #007bff; /* Blue color for like button */
+  color: #fff; /* White text color */
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+  margin-right: 10px; /* Add some spacing between buttons */
+}
+
+.dislike-button {
+padding: 7px 15px; /* Adjust padding as needed */
+  border: none;
+  background-color: #007bff; /* Blue color for like button */
+  color: #fff; /* White text color */
+  cursor: pointer;
+  border-radius: 5px; /* Rounded corners */
+  margin-right: 10px; /* Add some spacing between buttons */
+}

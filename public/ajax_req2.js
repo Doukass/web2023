@@ -1,6 +1,5 @@
 
 
-
 $(document).ready(function () {
     //xarths
   let mymap = L.map('mapid');
