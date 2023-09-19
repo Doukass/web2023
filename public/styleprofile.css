@@ -98,3 +98,41 @@ body {
 .form .btn:hover {
     background-color: #346ca8;
 }
+
+
+
+#resultContainer {
+    background-color: #f2f2f2;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    top: -20px; /* Adjust the value as needed */
+    z-index: 1;
+  }
+  
+  
+  #resultContainer h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  #resultContainer {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  #resultContainer th,
+  #resultContainer td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #resultContainer th {
+    background-color:transparent;
+    font-weight: bold;
+  }
+  
+  
+  
