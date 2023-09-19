@@ -37,40 +37,20 @@ document.addEventListener('DOMContentLoaded', function () {
       const reader = new FileReader();
       reader.onload = function (e) {
         const fileContent = e.target.result;
-        try {
+        
           const jsonData = JSON.parse(fileContent);
-          displayJsonData(jsonData);
+          
 
           // Update the database with the JSON data
           updateDatabase(jsonData);
-          update
-        } catch (error) {
-          console.error('Error parsing JSON:', error);
-        }
+          
+        
       };
       reader.readAsText(file);
     }
   }
 
-  function displayJsonData(data) {
-    const marker = document.createElement('div');
-    marker.classList.add('marker');
-
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        const keyElement = document.createElement('h3');
-       //keyElement.textContent = key;
-
-        const valueElement = document.createElement('p');
-        //valueElement.textContent = JSON.stringify(data[key]);
-
-        //marker.appendChild(keyElement);
-        //marker.appendChild(valueElement);
-      }
-    }
-
-    dataContainer.appendChild(marker);
-  }
+  
 
   function updateDatabase(jsonData) {
     fetch('/update-database', {
@@ -132,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const fileContent = e.target.result;
         try {
           const jsonData = JSON.parse(fileContent);
-          displayJsonData1(jsonData);
+          
 
           // Update the database with the JSON data
           updateDatabase1(jsonData);
@@ -144,25 +124,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
 
-  function displayJsonData1(data) {
-    const marker1 = document.createElement('div');
-    marker1.classList.add('marker');
-  
-    for (const key in data) {
-      if (data.hasOwnProperty(key)) {
-        const keyElement1 = document.createElement('h3');
-        keyElement1.textContent = key;
-  
-        const valueElement1 = document.createElement('p');
-        valueElement1.textContent = JSON.stringify(data[key]);
-  
-        marker1.appendChild(keyElement1); // Append key
-        marker1.appendChild(valueElement1); // Append value
-      }
-    }
-  
-    dataContainer1.appendChild(marker1); // Append marker to dataContainer1
-  }
+ 
   
 
   function updateDatabase1(jsonData1) {
