@@ -66,8 +66,8 @@
                               <label for="email" class="label">Email Address</label>
                               <input id="email" name="email" type="text" class="input" placeholder="Enter your email address">
                             </div>
-                            <% if (locals.register_error) {
-                              register_error.forEach(function(error_msg){ %>
+                         <% if (locals.register_error) {
+                            register_error.forEach(function(error_msg){ %>
                                 <div class="alert alert-warning" role="alert"><%= error_msg %></div>
                                 <% });
                         } %>

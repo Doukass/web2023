@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< Updated upstream
 	<meta charset="UTF-8">
 	<title>Web 2023</title>
 	<!--     <link rel="stylesheet" href="style.css">      ------->
@@ -84,8 +85,55 @@
 		<div id="resultContainer"></div>
 
 		
+=======
+    <meta charset="UTF-8">
+    <title>Web 2023</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="styleprofile.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <div class="wrapper">
+        <nav class="navbar">
+            <a class='hello' style="color:#e7e4e4; font-size: 20px; ">Welcome , <%= name %> </a>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a class="active" href="profile">Profile</a></li>
+                <li><a href="contact">Contact</a></li>
+                <li><a href="/logout" class="btn btn-danger">Logout</a></li>
+            </ul>
+        </nav>
+>>>>>>> Stashed changes
+
+        <ul class="centered-list">
+            <li>Your current Username is : <%= name %></li>
+        </ul>
+
+        <ul class="centered-list2">
+            <li>Your current Password is : <%= password %></li>
+        </ul>
+
+        <div class="form">
+            <form style="width: 400px;" method="POST" action="/changepassword">
+                <div class="field">
+                    <input style="width: 400px;" name="newname" type="text" placeholder="New Username" required>
+                </div>
+                <div class="field">
+                    <input style="width: 400px;" name="newpassword" type="password" placeholder="New Password" required>
+                </div>
+                <div style="padding-top: 40px;" class="d-grid gap-2">
+                    <input class="btn btn-primary" type="submit" value="Confirm new information">
+                </div>
+            </form>
+        </div>
 
 
-
+        <% if (locals.password_validation_errors) { %>
+            <% locals.password_validation_errors.forEach(function (error_msg) { %>
+                <div class="alert alert-warning" role="alert">
+                    <%= error_msg %>
+                </div>
+            <% }); %>
+        <% } %>
+    </div>
 </body>
 </html>

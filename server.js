@@ -55,7 +55,7 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
         res.render('home', { name: rows[0].name }); // Render home.ejs for non-admin users
       }
     });
-}); 
+});
 
 
 
@@ -84,6 +84,7 @@ app.get('/profile', ifNotLoggedin, (req, res, next) => {
       res.render('profile', { name: rows[0].name, password:rows[0].password });
     });
 });
+<<<<<<< Updated upstream
     
    
 app.get('/charts', ifNotLoggedin, (req, res, next) => {
@@ -108,6 +109,12 @@ app.get('/leaderboard', ifNotLoggedin, (req, res, next) => {
     });
 });
   
+=======
+
+
+
+
+>>>>>>> Stashed changes
 
 
 
@@ -187,24 +194,23 @@ app.post('/', ifLoggedin, [
 
   if (validation_result.isEmpty()) {
     dbConnection.execute("SELECT * FROM users WHERE name=?", [username])
-        .then(([rows]) => {
-            if (rows.length === 0) {
-                res.render('login-register', { login_errors: ['User not found.'] });
-            } else if (rows[0].password === password) {
-                req.session.isLoggedIn = true;
-                req.session.userID = rows[0].id;
-                res.redirect('/');
-            } else {
-                res.render('login-register', { login_errors: ['Invalid Password!'] });
-            }
-        }).catch(err => {
-            // Handle database query errors
-            if (err) throw err;
-        });
-}
-
-  
-  else {
+      .then(([rows]) => {
+        if (rows.length === 0) {
+          res.render('login-register', { login_errors: ['User not found.'] });
+        } else if (rows[0].password === password) {
+          req.session.isLoggedIn = true;
+          req.session.userID = rows[0].id;
+          req.session.name = rows[0].name; // Set the user's name in the session
+          req.session.password = rows[0].password; // Set the user's password in the session
+          res.redirect('/');
+        } else {
+          res.render('login-register', { login_errors: ['Invalid Password!'] });
+        }
+      }).catch(err => {
+        // Handle database query errors
+        if (err) throw err;
+      });
+  } else {
     let allErrors = validation_result.errors.map((error) => {
       return error.msg;
     });
@@ -221,43 +227,71 @@ app.post('/', ifLoggedin, [
 
 
 
+/// ALLAGH PASSWORD KAI USERNAME
+
+/// ALLAGH PASSWORD KAI USERNAME
 
 
-//-------------------//ALLAGH username kai password
+app.post('/changepassword', [
+    body('newname', 'Username is Empty!').trim().not().isEmpty(),
+    body('newpassword', 'The password must be of minimum length 8 characters').trim().isLength({ min: 8 }),
+    body('newpassword', 'The password must contain at least one uppercase letter').trim().not().isLowercase(),
+    body('newpassword', 'The password must contain at least one number').trim().matches(/\d/),
+    body('newpassword', 'The password must contain at least one special character').matches(/[!@#$%^&*(),.?":{}|<>]/),
+], (req, res, next) => {
+    const validation_result = validationResult(req);
+    const { newname, newpassword } = req.body;
+    const userID = req.session.userID;
 
+    if (validation_result.isEmpty()) {
+        // Validation passed, update the user's information in the database
+        const sql = "UPDATE users SET name = ?, password = ? WHERE id = ?";
 
-app.post('/changepassword', (req, res) => {
-  // Use express-validator to validate the newname and newpassword fields
-  const validation_result = validationResult(req);
-  const { newname, newpassword } = req.body;
-  const userID = req.session.userID;
+        dbConnection.execute(sql, [newname, newpassword, userID])
+            .then((result) => {
+                // The update was successful
+                console.log('User information updated successfully');
+                // Update the session data with the new name and password
+                req.session.name = newname;
+                req.session.password = newpassword;
+                // Send a response to the client to refresh the page
+                res.redirect('/profile');
+            })
+            .catch((err) => {
+                // Handle database query errors
+                console.log('Database error:', err);
+                if (err) throw err;
+                // You can send an error response to the client if needed
+            });
+    } else {
+        // Validation failed, collect validation errors
+        let allErrors = validation_result.errors.map((error) => {
+            return error.msg;
+        });
 
-  if (validation_result.isEmpty()) {
-    // Validation passed, update the user's information in the database
-    const sql = "UPDATE users SET name = ?, password = ? WHERE id = ?";
-    
-    dbConnection.execute(sql, [newname, newpassword, userID])
-      .then((result) => {
-        // The update was successful
-        console.log('User information updated successfully');
-        // Send a response to the client to refresh the page
-        res.render('profile', { name: newname, password: newpassword });
-      })
-      .catch((err) => {
-        // Handle database query errors
-        console.log('Database error:', err);
-        // You can send an error response to the client if needed
-      });
-  } else {
-    // Validation failed, collect validation errors
-    let allErrors = validation_result.errors.map((error) => {
-      return error.msg;
-    });
-
-    // RENDER profile PAGE WITH VALIDATION ERRORS
-    res.render('profile', { validation_errors: allErrors });
-  }
+        // RENDER profile PAGE WITH VALIDATION ERRORS
+        res.render('profile', {
+            validation_errors: allErrors,
+            name: req.session.name,
+            password: req.session.password,
+            // Pass the password validation errors to the template
+            password_validation_errors: allErrors.filter(error => error.startsWith('The password'))
+        });
+    }
 });
+
+
+
+
+
+
+
+// ...
+// ...
+
+
+// ...
+
 
 
 
@@ -317,12 +351,12 @@ app.get("/users/map/stores", async (req, res) => {
     //ara mporoume na to xreisimopoioyme sthn arxh gia na doume ean to kommati tou kwdika poy theloume douleuei kai meta to sbhnoume
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
-  
+
     const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
-    
+
    //sthn parakatw entolh stelnoume ston client to results
     res.send(results);
 
@@ -331,23 +365,23 @@ app.get("/users/map/stores", async (req, res) => {
 
 
 app.get("/users/map/search", async (req, res)=> {
-  
+
    const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id,   FROM stores INNER JOIN discount ON stores.store_id = discount.store_id');
   //console.log("Query returned ${results.length} results:");
    //console.log(results);
    res.send(results);
-   
+
 });
 
 
 
 app.get("/users/map/category", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT  c.name AS category_name,  s.subcategory_id, s.name AS subcategory_name,  p.name AS product_name, p.product_id AS product_id FROM  products p JOIN  subcategory s ON p.subcategory_id = s.subcategory_id JOIN  category c ON s.category_id = c.category_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
-  
+
 });
 
 
@@ -355,23 +389,23 @@ app.get("/users/map/category", async (req, res)=> {
 
 
 app.get("/users/map/aksiologhsh", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
-  
+
 });
 
 //---------------chart 1--------
 
 app.get("/admin/chart1", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT DATE_FORMAT(date_entered, "%Y-%m-%d") AS date_only, COUNT(*) AS discount_count  FROM discount GROUP BY DATE_FORMAT(date_entered, "%Y-%m-%d")  ORDER BY DATE_FORMAT(date_entered, "%Y-%m-%d");');
  //console.log("Query returned ${results.length} results:");
-  
+
   res.send(results);
-  
+
 });
 
 //------------------ likes 
@@ -526,12 +560,17 @@ app.post('/min/score', (req, res) => {
 // --------------- upload score-------------
 
 app.get("/final/score", async (req, res)=> {
+<<<<<<< Updated upstream
   
   const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
+=======
+
+  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
+>>>>>>> Stashed changes
  //console.log("Query returned ${results.length} results:");
-  
+
   res.send(results);
-  
+
 });
 
 
@@ -558,7 +597,7 @@ dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
     res.status(200).json({ message: 'Data inserted successfully' });
   }
 });
-  
+
 });
 //------------------------ dislike----------------
 app.post('/update/dislike', (req, res) => {
@@ -580,9 +619,9 @@ dbConnection.query(sql,[req.session.userID, discount_id ], (error,results)=> {
     res.status(200).json({ message: 'Data inserted successfully' });
   }
 });
-  
+
 });
-//------------------ out of stock----- 
+//------------------ out of stock-----
 
  app.post('/out/of/stock', (req, res) => {
   const { discount_id } = req.body;
@@ -642,33 +681,33 @@ app.post('/in/stock', (req, res) => {
 
 //---------------------- upload dislike---------
 app.get("/dislike/counter", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM dislike  ;');
  //console.log("Query returned ${results.length} results:");
   console.log(results);
   res.send(results);
-  
+
 });
 
 //----------------------- upload stock--- dexn xreazete
 app.get("/update/stock", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT stock, discount_id FROM discount ;');
  //console.log("Query returned ${results.length} results:");
   console.log(results);
   res.send(results);
-  
+
 });
 
 
-//----------- upload likes 
+//----------- upload likes
 app.get("/like/counter", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT user_id, discount_id FROM \`like\`  ;');
  //console.log("Query returned ${results.length} results:");
   console.log(results);
   res.send(results);
-  
+
 });
 
 
@@ -681,7 +720,7 @@ app.post('/updateData', (req, res) => {
 
   // Create an SQL query to insert the data into the database
   const sql = 'INSERT INTO discount (user_id, product_id, store_id, price, date_entered, stock) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP, 1)';
-  
+
   // Execute the SQL query
   dbConnection.query(sql, [req.session.userID, product_id, store_id, enteredPrice], (error, results) => {
     if (error) {
@@ -699,12 +738,12 @@ app.post('/updateData', (req, res) => {
 
 
 app.get("/prices/for/compare", async (req, res)=> {
-  
+
   const [results, fields] = await dbConnection.execute('SELECT price_avg AS latest_price, price5 AS newest_price, product_id FROM prices ;');
  //console.log("Query returned ${results.length} results:");
-  
+
   res.send(results);
-  
+
 });
 
 
@@ -719,7 +758,7 @@ const sql = `
   INSERT INTO score (user_id, date, points)
   VALUES (?, CURRENT_TIMESTAMP, ?)
 `;
-  
+
   // Execute the SQL query
   dbConnection.query(sql, [req.session.userID, points], (error, results) => {
     if (error) {
@@ -809,7 +848,7 @@ app.post('/update-database1', (req, res) => {
     const {
       "@id": id,
       name: store_name,
-      discount_on = 0, //because the json file does not have it 
+      discount_on = 0, //because the json file does not have it
     } = item.properties;
 
     //take only the number from id json
