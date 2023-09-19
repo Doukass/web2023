@@ -8,8 +8,10 @@
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 <link href="styleprofile.css" rel="stylesheet" type="text/css">
 <link href="sidebar.css" rel="stylesheet" type="text/css">
+<link href="navbar.css" rel="stylesheet" type="text/css">
 <script src="profilebuttons.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 
 
@@ -55,16 +57,21 @@
                 </form>
             </div>
 
-
-		</div>
-
-        <% if (locals.password_validation_errors) { %>
+            
+ <% if (locals.password_validation_errors) { %>
             <% locals.password_validation_errors.forEach(function (error_msg) { %>
                 <div class="alert alert-warning" role="alert">
                     <%= error_msg %>
                 </div>
             <% }); %>
         <% } %>
+
+
+
+
+		</div>
+
+       
 
 
 
