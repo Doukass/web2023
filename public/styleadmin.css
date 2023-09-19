@@ -14,29 +14,6 @@
   width:100%;
 }
 
-/* Style the display button */
-#displayButton,
-#uploadButton, /* Added this */
-#DeleteButton {
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-bottom: 10px;
-}
-
-#displayButton:hover,
-#uploadButton:hover, /* Added this */
-#DeleteButton:hover {
-  background-color: #0056b3;
-}
-
-#DeleteButton {
-  margin-bottom: 0px;
-}
-
 
 .marker {
   border: 1px solid #ccc;
@@ -54,5 +31,16 @@
   margin: 5px 0;
 }
 
+.details-button{
+  background-color: #FF5733;
+  color: #FFFFFF;
+  border: none;
+  padding: 2px;
+}
 
-
+.delete-button{
+  background-color: #000000;
+  color: #FFFFFF;
+  border: none;
+  padding: 2px;
+}
