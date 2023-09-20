@@ -122,7 +122,6 @@ for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
     let catname = data[i].category_name;
     let loc = [data[i].store_latitude, data[i].store_longitude];
-    let discount_on = data[i].discount_on;
     let product_id = data[i].product_id;
     let product_name = data[i].product_name;
     let price = data[i].price
@@ -331,6 +330,7 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
                     
                     
                 }
+                
                 
             }
 
@@ -979,9 +979,13 @@ function LoadPrices(enteredPrice, selectedProductID) {
             let points = 50;
             AddPointsBecauseOfAddDiscount(points)
             
+            
          } 
-         if(enteredPrice < (product.latest_price - product.latest_price * 0.2)){
+         else if (enteredPrice < (product.latest_price - product.latest_price * 0.2)){
              let  points = 20;
+            AddPointsBecauseOfAddDiscount(points)
+         }else {
+            let points = 0;
             AddPointsBecauseOfAddDiscount(points)
          }
 

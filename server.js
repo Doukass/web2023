@@ -352,7 +352,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
 
-    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
+    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -390,7 +390,7 @@ app.get("/users/map/category", async (req, res)=> {
 
 app.get("/users/map/aksiologhsh", async (req, res)=> {
 
-  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
+  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
@@ -831,12 +831,11 @@ app.post('/update-database1', (req, res) => {
   const jsonData1 = req.body;
 
   const insertQuery1 = `
-    INSERT INTO stores (store_id, store_name, discount_on, store_latitude, store_longitude)
+    INSERT INTO stores (store_id, store_name, store_latitude, store_longitude)
     VALUES (?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       store_id = VALUES(store_id),
       store_name = VALUES(store_name),
-      discount_on = VALUES(discount_on),
       store_latitude = VALUES(store_latitude),
       store_longitude = VALUES(store_longitude)
   `;
@@ -845,7 +844,6 @@ app.post('/update-database1', (req, res) => {
     const {
       "@id": id,
       name: store_name,
-      discount_on = 0, //because the json file does not have it
     } = item.properties;
 
     //take only the number from id json
@@ -857,11 +855,11 @@ app.post('/update-database1', (req, res) => {
 
     console.log('store_id:', store_id);
     console.log('store_name:', store_name);
-    console.log('discount_on:', discount_on);
+    
     console.log('store_latitude:', store_latitude);
     console.log('store_longitude:', store_longitude);
 
-    dbConnection.query(insertQuery1,[store_id, store_name, discount_on, store_latitude, store_longitude],(error, results) => {
+    dbConnection.query(insertQuery1,[store_id, store_name, store_latitude, store_longitude],(error, results) => {
         if (error) {
           console.error('Error updating database:', error);
           res.status(500).json({ error: 'Database update failed' });
