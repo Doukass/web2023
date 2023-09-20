@@ -583,7 +583,7 @@ app.post('/min/score', (req, res) => {
 app.get("/final/score", async (req, res)=> {
 
 
-  const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
+  const [results, fields] = await dbConnection.execute('SELECT tokens.user_id, users.name, tokens.total_tokens, total_sum_of_score.total_sum_of_points, total_sum_of_tokens.sum_of_tokens FROM tokens JOIN total_sum_of_score ON tokens.user_id = total_sum_of_score.user_id JOIN total_sum_of_tokens ON tokens.user_id = total_sum_of_tokens.user_id JOIN users ON tokens.user_id = users.id; ');
 
  //console.log("Query returned ${results.length} results:");
 
