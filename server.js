@@ -141,7 +141,15 @@ app.post(
           return true;
         });
     }),
-    body('username', 'Username is Empty!').trim().not().isEmpty(),
+    body('username', 'Username is Empty!').trim().not().isEmpty().custom((value) => {
+      return dbConnection.execute('SELECT `name` FROM `users` WHERE `name`=?', [value])
+        .then(([rows]) => {
+          if (rows.length > 0) {
+            return Promise.reject('This username already in use!');
+          }
+          return true;
+        });
+    }),
     body('password', 'The password must be of minimum length 8 characters').trim().isLength({ min: 8 }),
     body('password', 'The password must contain at least one uppercase letter').trim().not().isLowercase(),
     body('password', 'The password must contain at least one number').trim().matches(/\d/),
@@ -478,7 +486,7 @@ app.get("/profile/month/score", async (req, res) => {
 
 });
 
-//------ previus month tokens 
+//------ previus month tokens
 app.get("/profile/month/tokens", async (req, res) => {
 
   const [results, fields] = await dbConnection.execute(
@@ -876,7 +884,7 @@ app.post('/update-database1', (req, res) => {
 
     console.log('store_id:', store_id);
     console.log('store_name:', store_name);
-    
+
     console.log('store_latitude:', store_latitude);
     console.log('store_longitude:', store_longitude);
 
