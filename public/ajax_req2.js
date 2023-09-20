@@ -1,6 +1,5 @@
 
 
-
 $(document).ready(function () {
     //xarths
   let mymap = L.map('mapid');
@@ -98,12 +97,31 @@ const productsByLocation2 = {};
 
 
 
+// haversine
+function haversine(lat1, lon1, lat2, lon2) {
+    const R = 6371000; // Earth's radius in meters
+    const dLat = toRad(lat2 - lat1);
+    const dLon = toRad(lon2 - lon1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance;
+}
+
+// Function to convert degrees to radians
+function toRad(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+
+var distance;
 //analysh twn apotelesmatwn tou ajax call
 for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
     let catname = data[i].category_name;
     let loc = [data[i].store_latitude, data[i].store_longitude];
-    let discount_on = data[i].discount_on;
     let product_id = data[i].product_id;
     let product_name = data[i].product_name;
     let price = data[i].price
@@ -113,7 +131,10 @@ for (let i = 0; i < result.length; i++) {
     let like_id = data[i].like_id;
     var user_id = data[i].user_id
 
-    let distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+
+
+    distance = haversine(userCoords[0], userCoords[1], loc[0], loc[1]);
+
 
     if (discount_id === null) {
         let marker = L.circleMarker(L.latLng(loc), { title: title, catname: catname });
@@ -142,7 +163,7 @@ for (let i = 0; i < result.length; i++) {
                 ];
                 productsByLocation[loc] = productsByLocation[loc].concat(DisplayDetails);
             } else {
-                productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', '<button id="test" onclick="test()">Διαγραφη</button>', '<br>');
+                productsByLocation2[loc].push('Προιν:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>',  '<br>');
             }
         
 
@@ -206,22 +227,6 @@ for (let i = 0; i < result.length; i++) {
 
 });
 
-function haversine(lat1, lon1, lat2, lon2) {
-    const R = 6371000; // Earth's radius in meters
-    const dLat = toRad(lat2 - lat1);
-    const dLon = toRad(lon2 - lon1);
-    const a =
-        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    const distance = R * c;
-    return distance;
-}
-
-// Function to convert degrees to radians
-function toRad(degrees) {
-    return degrees * (Math.PI / 180);
-}
 
 
 
@@ -325,6 +330,7 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
                     
                     
                 }
+                
                 
             }
 
@@ -973,9 +979,13 @@ function LoadPrices(enteredPrice, selectedProductID) {
             let points = 50;
             AddPointsBecauseOfAddDiscount(points)
             
+            
          } 
-         if(enteredPrice < (product.latest_price - product.latest_price * 0.2)){
+         else if (enteredPrice < (product.latest_price - product.latest_price * 0.2)){
              let  points = 20;
+            AddPointsBecauseOfAddDiscount(points)
+         }else {
+            let points = 0;
             AddPointsBecauseOfAddDiscount(points)
          }
 

@@ -114,7 +114,7 @@ app.get('/leaderboard', ifNotLoggedin, (req, res, next) => {
 
 
 
-//>>>>>>> Stashed changes
+
 
 
 
@@ -141,7 +141,15 @@ app.post(
           return true;
         });
     }),
-    body('username', 'Username is Empty!').trim().not().isEmpty(),
+    body('username', 'Username is Empty!').trim().not().isEmpty().custom((value) => {
+      return dbConnection.execute('SELECT `name` FROM `users` WHERE `name`=?', [value])
+        .then(([rows]) => {
+          if (rows.length > 0) {
+            return Promise.reject('This username already in use!');
+          }
+          return true;
+        });
+    }),
     body('password', 'The password must be of minimum length 8 characters').trim().isLength({ min: 8 }),
     body('password', 'The password must contain at least one uppercase letter').trim().not().isLowercase(),
     body('password', 'The password must contain at least one number').trim().matches(/\d/),
@@ -352,7 +360,7 @@ app.get("/users/map/stores", async (req, res) => {
     //se ayto to shmeio to problhma pou eixame lythike me thn xrhsh async kai await.
 
 
-    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.discount_on, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
+    const [results, fields] = await dbConnection.execute('SELECT  COALESCE(stores.store_name, "Unknown") AS store_name, stores.store_latitude,  stores.store_longitude, stores.store_id ,  COALESCE(discount.product_id, "Unknown") AS product_id, COALESCE(discount.price, "Unknown") AS price, COALESCE(discount.date_entered, "Unknown") AS date_entered,  COALESCE(discount.stock, "Unknown") AS stock,  discount_id AS discount_id,  COALESCE(products.name, "Unknown") AS product_name,  COALESCE(category.name, "Unknown") AS category_name,  COALESCE(users.name, "Unknown") AS user_name, COALESCE(users.id, "Unknown") AS user_id FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN products ON discount.product_id = products.product_id LEFT JOIN category ON products.category_id = category.category_id LEFT JOIN users ON discount.user_id = users.id;');
     //ta parakatw console tha amfanistoyn mono sto terminal tou VSC
     //console.log("Query returned ${results.length} results:");
     //console.log(results);
@@ -390,7 +398,7 @@ app.get("/users/map/category", async (req, res)=> {
 
 app.get("/users/map/aksiologhsh", async (req, res)=> {
 
-  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, stores.discount_on, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
+  const [results, fields] = await dbConnection.execute('SELECT stores.store_name, stores.store_latitude, stores.store_longitude, discount.store_id, discount.product_id, discount.discount_id ,discount.price, discount.date_entered, products.name AS product_name, users.name AS user_name FROM stores LEFT JOIN discount ON stores.store_id = discount.store_id LEFT JOIN users ON discount.user_id = users.id LEFT JOIN products ON discount.product_id = products.product_id;');
  //console.log("Query returned ${results.length} results:");
   //console.log(results);
   res.send(results);
@@ -458,7 +466,7 @@ app.get("/profile/button/discountHisory", async (req, res) => {
 app.get("/profile/total/score", async (req, res) => {
 
   const [results, fields] = await dbConnection.execute(
-    'SELECT points FROM score WHERE user_id = ?',
+    'SELECT total_sum_of_points FROM total_sum_of_score WHERE user_id = ?',
     [req.session.userID]
   );
 
@@ -478,8 +486,29 @@ app.get("/profile/month/score", async (req, res) => {
 
 });
 
+//------ previus month tokens
+app.get("/profile/month/tokens", async (req, res) => {
 
+  const [results, fields] = await dbConnection.execute(
+    'SELECT total_tokens FROM tokens WHERE user_id = ?',
+    [req.session.userID]
+  );
+  console.log( results);
+  res.send(results);
 
+});
+
+//---------- sum of tokens
+app.get("/profile/sum/of/tokens", async (req, res) => {
+
+  const [results, fields] = await dbConnection.execute(
+    'SELECT sum_of_tokens FROM total_sum_of_tokens WHERE user_id = ?',
+    [req.session.userID]
+  );
+  console.log( results);
+  res.send(results);
+
+});
 
 
 
@@ -560,13 +589,12 @@ app.post('/min/score', (req, res) => {
 // --------------- upload score-------------
 
 app.get("/final/score", async (req, res)=> {
-//<<<<<<< Updated upstream
 
-  const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
-//=======
 
  // const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
 //>>>>>>> Stashed changes
+  const [results, fields] = await dbConnection.execute('SELECT tokens.user_id, users.name, tokens.total_tokens, total_sum_of_score.total_sum_of_points, total_sum_of_tokens.sum_of_tokens FROM tokens JOIN total_sum_of_score ON tokens.user_id = total_sum_of_score.user_id JOIN total_sum_of_tokens ON tokens.user_id = total_sum_of_tokens.user_id JOIN users ON tokens.user_id = users.id; ');
+
  //console.log("Query returned ${results.length} results:");
 
   res.send(results);
@@ -834,12 +862,11 @@ app.post('/update-database1', (req, res) => {
   const jsonData1 = req.body;
 
   const insertQuery1 = `
-    INSERT INTO stores (store_id, store_name, discount_on, store_latitude, store_longitude)
+    INSERT INTO stores (store_id, store_name, store_latitude, store_longitude)
     VALUES (?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
       store_id = VALUES(store_id),
       store_name = VALUES(store_name),
-      discount_on = VALUES(discount_on),
       store_latitude = VALUES(store_latitude),
       store_longitude = VALUES(store_longitude)
   `;
@@ -848,7 +875,6 @@ app.post('/update-database1', (req, res) => {
     const {
       "@id": id,
       name: store_name,
-      discount_on = 0, //because the json file does not have it
     } = item.properties;
 
     //take only the number from id json
@@ -860,11 +886,11 @@ app.post('/update-database1', (req, res) => {
 
     console.log('store_id:', store_id);
     console.log('store_name:', store_name);
-    console.log('discount_on:', discount_on);
+
     console.log('store_latitude:', store_latitude);
     console.log('store_longitude:', store_longitude);
 
-    dbConnection.query(insertQuery1,[store_id, store_name, discount_on, store_latitude, store_longitude],(error, results) => {
+    dbConnection.query(insertQuery1,[store_id, store_name, store_latitude, store_longitude],(error, results) => {
         if (error) {
           console.error('Error updating database:', error);
           res.status(500).json({ error: 'Database update failed' });

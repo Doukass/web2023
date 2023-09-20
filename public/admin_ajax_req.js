@@ -9,41 +9,35 @@ $(document).ready(function () {
       url: "/final/score",
       success: function (result) {
         console.log(result);
-        var userPoints = {};
+
+        var leaderboard = [];
 
         for (var i = 0; i < result.length; i++) {
           var user_id = result[i].user_id;
-          var points = result[i].points;
           var username = result[i].name;
+          var monthly_tokens = result[i].total_tokens;
+          var total_points = result[i].total_sum_of_points;
+          var total_tokens = result[i].sum_of_tokens;
 
-          if (userPoints[user_id] === undefined) {
-            userPoints[user_id] = {
-              points: points,
-              username: username
-            };
-          } else {
-            userPoints[user_id].points += points;
-          }
-        }
 
-        var ScoreBoard = [];
-        for (var user_id in userPoints) {
-          ScoreBoard.push({
+          var data = {
             user_id: user_id,
-            points: userPoints[user_id].points,
-            username: userPoints[user_id].username
-          });
+            username: username,
+            monthly_tokens: monthly_tokens,
+            total_points: total_points,
+            total_tokens: total_tokens
+          };
+
+
+          leaderboard.push(data);
         }
 
-        ScoreBoard.sort(function (a, b) {
-          return b.points - a.points;
-        });
 
         // Generate HTML for the leaderboard
-        var leaderboardHTML = '<table class="table"><thead><tr><th>User ID</th><th>Username</th><th>Points</th></tr></thead><tbody>';
+        var leaderboardHTML = '<table class="table"><thead><tr><th>User ID</th><th>Username</th><th>Total Points</th><th>Monthly Tokens</th><th>Total Tokens</th></tr></thead><tbody>';
         
-        for (var i = 0; i < ScoreBoard.length; i++) {
-          leaderboardHTML += '<tr><td>' + ScoreBoard[i].user_id + '</td><td>' + ScoreBoard[i].username + '</td><td>' + ScoreBoard[i].points + '</td></tr>';
+        for (var i = 0; i < leaderboard.length; i++) {
+          leaderboardHTML += '<tr><td>' + leaderboard[i].user_id + '</td><td>' + leaderboard[i].username + '</td><td>' + leaderboard[i].total_points + '</td><td>' + leaderboard[i].monthly_tokens + '</td><td>' + leaderboard[i].total_tokens +'</td></tr>';
         }
         
         leaderboardHTML += '</tbody></table>';
