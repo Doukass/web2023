@@ -1,12 +1,11 @@
 const express = require('express');
 const path = require('path');
 const cookieSession = require('cookie-session');
-const bcrypt = require('bcryptjs');
 const dbConnection = require('./database');
 const { body, validationResult } = require('express-validator');
 const { name } = require('ejs');
 const bodyParser = require('body-parser');
-const mysql = require('mysql2');
+
 const { error, Console } = require('console');
 
 
@@ -235,7 +234,6 @@ app.post('/', ifLoggedin, [
 
 
 
-/// ALLAGH PASSWORD KAI USERNAME
 
 /// ALLAGH PASSWORD KAI USERNAME
 
@@ -287,51 +285,6 @@ app.post('/changepassword', [
         });
     }
 });
-
-
-
-
-
-
-
-// ...
-// ...
-
-
-// ...
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//-------------------------
-
-
-
-
-
-
 
 
 
@@ -802,15 +755,6 @@ const sql = `
 
 
 
-//----------
-
-// giati exei mpei h parakatw malakia
-//gtxm
-//app.use('/', (req, res) => {
-//  res.status(404).send('<h1>404 Page Not Found!!!!!!</h1>');
-//});
-
-//-----------
 
 //------ update database -----------//
 app.post('/update-database', (req, res) => {
@@ -927,21 +871,21 @@ console.log(jsonData2)
 });
 
 app.post('/delete_from_Prices', (req, res) => {
-  console.log("aaa")
+  
   const sql='DELETE  FROM prices';
   dbConnection.query(sql);
  
   });
 
   app.post('/delete_from_Stores', (req, res) => {
-    console.log("aaa")
+    
     const sql='DELETE  FROM stores';
     dbConnection.query(sql);
    
     });
 
     app.post('/delete_from_Products', (req, res) => {
-      console.log("aaa")
+      
       const sql='DELETE  FROM products';
       dbConnection.query(sql);
      
