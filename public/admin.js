@@ -226,4 +226,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 
-  
+ function Delete_prices(){
+  $.ajax({
+    type: "POST",
+    url: "/delete_from_Prices", // Replace with your server endpoint URL
+    success: {
+        // Handle the success response from the server if needed
+       // console.log("Like sent to the server for Discount ID:", discount_id);
+       // console.log("Server response:", response);
+    }
+});
+
+ } 
+
+ function Delete_stores(){
+  $.ajax({
+    type: "POST",
+    url: "/delete_from_Stores", // Replace with your server endpoint URL
+    success: {
+        // Handle the success response from the server if needed
+       // console.log("Like sent to the server for Discount ID:", discount_id);
+       // console.log("Server response:", response);
+    }
+});
+
+ } 
+
+ function Delete_products(){
+  $.ajax({
+    type: "POST",
+    url: "/delete_from_Products", // Replace with your server endpoint URL
+    success: {
+        // Handle the success response from the server if needed
+       // console.log("Like sent to the server for Discount ID:", discount_id);
+       // console.log("Server response:", response);
+    }
+});
+
+ } 

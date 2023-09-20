@@ -565,7 +565,7 @@ app.get("/final/score", async (req, res)=> {
   const [results, fields] = await dbConnection.execute('SELECT score.score_id, score.user_id, score.points, users.name FROM score INNER JOIN users ON score.user_id = users.id;  ');
 //=======
 
-  const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
+ // const [results, fields] = await dbConnection.execute('SELECT score_id, user_id, points FROM score ');
 //>>>>>>> Stashed changes
  //console.log("Query returned ${results.length} results:");
 
@@ -878,4 +878,47 @@ app.post('/update-database1', (req, res) => {
 //------ end of update database -----------//
 
 
+app.post('/update-database2', (req, res) => {
+  const jsonData2 = req.body;
+  const products = jsonData2.products;
+console.log(jsonData2)
+
+  // Loop through the products and insert them into the database
+  products.forEach((product) => {
+    const sql = `INSERT INTO products (product_id, name, category_id, subcategory_id) VALUES (?, ?, ?, ?)`;
+    const values = [product.id, product.name, product.category, product.subcategory];
+
+    dbConnection.query(sql, values, (err, result) => {
+      if (err) {
+        console.error('Error inserting product:', err);
+      } else {
+        console.log('Product inserted:', result);
+      }
+    });
+  });
+
+  res.send('Data inserted into the database');
+});
+
+app.post('/delete_from_Prices', (req, res) => {
+  console.log("aaa")
+  const sql='DELETE  FROM prices';
+  dbConnection.query(sql);
+ 
+  });
+
+  app.post('/delete_from_Stores', (req, res) => {
+    console.log("aaa")
+    const sql='DELETE  FROM stores';
+    dbConnection.query(sql);
+   
+    });
+
+    app.post('/delete_from_Products', (req, res) => {
+      console.log("aaa")
+      const sql='DELETE  FROM products';
+      dbConnection.query(sql);
+     
+      });
+  
 app.listen(3000, () => console.log("Server is Running..."));
