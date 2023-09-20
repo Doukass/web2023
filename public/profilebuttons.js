@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", function () {
       success: function (result) {
         var points = 0;
         for (var i = 0; i < result.length; i++) {
-          points += result[i].points;
+          points += result[i].total_sum_of_points;
         }
   
         // Create an HTML table to display the total score
@@ -144,9 +144,17 @@ document.addEventListener("DOMContentLoaded", function () {
     // Make an AJAX call here
     $.ajax({
       type: "GET",
-      url: "/prevTokensMonth", // Replace with the actual URL
+      url: "/profile/month/tokens", // Replace with the actual URL
       success: function (result) {
         console.log( result);
+        var tokens = 0;
+        for (var i = 0; i < result.length; i++) {
+          tokens = result[i].total_tokens;
+        }
+
+  
+        // Set the content of resultContainer with the monthly score
+        $('#resultContainer').text('Your Previus Month Tokens are: ' + tokens);
       }
     });
   });
@@ -155,9 +163,18 @@ document.addEventListener("DOMContentLoaded", function () {
     // Make an AJAX call here
     $.ajax({
       type: "GET",
-      url: "/allTokens", // Replace with the actual URL
+      url: "/profile/sum/of/tokens", // Replace with the actual URL
       success: function (result) {
-        console.log(result);
+        //console.log(result);
+        
+        var SumOfTokens = 0;
+        for (var i = 0; i < result.length; i++) {
+          SumOfTokens = result[i].sum_of_tokens;
+        }
+
+  
+        // Set the content of resultContainer with the monthly score
+        $('#resultContainer').text('Your Total Tokens are: ' + SumOfTokens);
       }
     });
   });

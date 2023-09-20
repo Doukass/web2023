@@ -458,7 +458,7 @@ app.get("/profile/button/discountHisory", async (req, res) => {
 app.get("/profile/total/score", async (req, res) => {
 
   const [results, fields] = await dbConnection.execute(
-    'SELECT points FROM score WHERE user_id = ?',
+    'SELECT total_sum_of_points FROM total_sum_of_score WHERE user_id = ?',
     [req.session.userID]
   );
 
@@ -478,8 +478,29 @@ app.get("/profile/month/score", async (req, res) => {
 
 });
 
+//------ previus month tokens 
+app.get("/profile/month/tokens", async (req, res) => {
 
+  const [results, fields] = await dbConnection.execute(
+    'SELECT total_tokens FROM tokens WHERE user_id = ?',
+    [req.session.userID]
+  );
+  console.log( results);
+  res.send(results);
 
+});
+
+//---------- sum of tokens
+app.get("/profile/sum/of/tokens", async (req, res) => {
+
+  const [results, fields] = await dbConnection.execute(
+    'SELECT sum_of_tokens FROM total_sum_of_tokens WHERE user_id = ?',
+    [req.session.userID]
+  );
+  console.log( results);
+  res.send(results);
+
+});
 
 
 
