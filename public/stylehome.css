@@ -220,7 +220,39 @@
   
   
   
+  select {
+    padding: 10px;
+    margin: 5px;
+    width: 100%;
+    background-color: #fff; /* White background for dropdowns */
+    border: 1px solid #ff9800; /* Orange border */
+    border-radius: 5px;
+    color: #333; /* Dark gray text color */
+  }
   
+  /* Textarea */
+  textarea {
+    padding: 10px;
+    margin: 5px;
+    width: 100%;
+    height: 100px;
+    background-color: #fff; /* White background for textarea */
+    border: 1px solid #ff9800; /* Orange border */
+    border-radius: 5px;
+    color: #333; /* Dark gray text color */
+  }
+  
+  /* Submit Button */
+  button {
+    padding: 10px 20px;
+    background-color: #28a745; /* Green button color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
   
   
   
