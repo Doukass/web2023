@@ -23,7 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Apply cookie session middleware
-// na moy to ekshghsei o teo
+
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2'],
@@ -869,6 +869,9 @@ console.log(jsonData2)
 
   res.send('Data inserted into the database');
 });
+
+
+
 
 app.post('/delete_from_Prices', (req, res) => {
   
