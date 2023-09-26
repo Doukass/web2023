@@ -122,7 +122,6 @@ for (let i = 0; i < result.length; i++) {
     let title = data[i].store_name;
     let catname = data[i].category_name;
     let loc = [data[i].store_latitude, data[i].store_longitude];
-    let discount_on = data[i].discount_on;
     let product_id = data[i].product_id;
     let product_name = data[i].product_name;
     let price = data[i].price
@@ -660,86 +659,8 @@ function FinalScore() {
 }
 
 
-function LoadPrices(enteredPrice, selectedProductID) {
-    var priceData = []; // Initialize an empty array to store the data
-  
-    $.ajax({
-      type: "GET",
-      url: "/prices/for/compare",
-      success: function (result) {
-        console.log(result);
-  
-        for (var i = 0; i < result.length; i++) {
-          var newest_price = result[i].newest_price;
-          var latest_price = result[i].latest_price;
-          var product_id = result[i].product_id;
-  
-          // Create an object with product_id, latest_price, and newest_price
-          var priceObj = {
-            product_id: product_id,
-            latest_price: latest_price,
-            newest_price: newest_price
-          };
-  
-          // Push the price object into the priceData array
-          priceData.push(priceObj);
-        }
-  
-        // Now, priceData contains an array of objects with product_id, latest_price, and newest_price
-        console.log(priceData);
-        CompareForPoints(priceData, enteredPrice, selectedProductID);
-      }
-    });
-    
-  }
-  
-
-  function CompareForPoints(priceData, enteredPrice, selectedProductID) {
-    console.log("Price Data:", priceData);
-    console.log("Entered Price:", enteredPrice);
-    console.log("Product ID:", selectedProductID);
-  
-    // Check if selectedProductID exists in priceData
-    const product = priceData.find(item => item.product_id == selectedProductID);
-  
-    if (product) {
-      console.log("Latest Price:", product.latest_price);
-      console.log("Newest Price:", product.newest_price);
-      
 
 
-        if(enteredPrice < (product.newest_price - product.newest_price * 0.2))
-         {      
-            let points = 50;
-            AddPointsBecauseOfAddDiscount(points)
-            
-         } 
-         if(enteredPrice < (product.latest_price - product.latest_price * 0.2)){
-             let  points = 20;
-            AddPointsBecauseOfAddDiscount(points)
-         }
-
-
-
-
-    } else {
-      console.log("Product ID not found in priceData.");
-    }
-  }
-  
-
-  function AddPointsBecauseOfAddDiscount(points){
-    $.ajax({
-        type: "POST",
-        url: "/add/score/50", // Replace with your server endpoint URL
-        data: {
-            points: points
-        },
-        success: function(response) {
-            
-        }
-    });
-}
     
 
 function handleDeleteClick(discount_id){
