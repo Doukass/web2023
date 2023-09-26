@@ -11,6 +11,7 @@
 <link href="navbar.css" rel="stylesheet" type="text/css">
 <script src="profilebuttons.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="ajax_req2.js"></script>
 
 
 
@@ -28,6 +29,13 @@
 				<ul>
 					<li><a href="/">Home</a></li>
 					<li><a class="active" href="profile">Profile</a></li>
+					<li class="btn-with-image">
+						<a href="#">
+							<%= total_tokens %>
+						  <img src="star.png" class="hover-image">
+
+						</a>
+					  </li>
 					<li><a href="/logout" class="btn btn-danger">Logout</a></li>
 
 				</ul>
@@ -57,7 +65,7 @@
                 </form>
             </div>
 
-            
+
  <% if (locals.password_validation_errors) { %>
             <% locals.password_validation_errors.forEach(function (error_msg) { %>
                 <div class="alert alert-warning" role="alert">
@@ -71,7 +79,7 @@
 
 		</div>
 
-       
+
 
 
 

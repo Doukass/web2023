@@ -78,9 +78,9 @@ app.get('/', ifNotLoggedin, (req, res, next) => {
 // sthn selida tou profile emfanizoyme plhrogories opws name, email
 
 app.get('/profile', ifNotLoggedin, (req, res, next) => {
-  dbConnection.execute("SELECT name, password FROM users WHERE id=?", [req.session.userID])
+  dbConnection.execute("SELECT name, password , total_tokens FROM users LEFT JOIN tokens ON users.id= tokens.user_id  WHERE id=?", [req.session.userID])
     .then(([rows]) => {
-      res.render('profile', { name: rows[0].name, password:rows[0].password });
+      res.render('profile', { name: rows[0].name, password:rows[0].password , total_tokens: rows[0].total_tokens});
     });
 });
 //<<<<<<< Updated upstream
@@ -874,24 +874,24 @@ console.log(jsonData2)
 
 
 app.post('/delete_from_Prices', (req, res) => {
-  
+
   const sql='DELETE  FROM prices';
   dbConnection.query(sql);
- 
+
   });
 
   app.post('/delete_from_Stores', (req, res) => {
-    
+
     const sql='DELETE  FROM stores';
     dbConnection.query(sql);
-   
+
     });
 
     app.post('/delete_from_Products', (req, res) => {
-      
+
       const sql='DELETE  FROM products';
       dbConnection.query(sql);
-     
+
       });
-  
+
 app.listen(3000, () => console.log("Server is Running..."));

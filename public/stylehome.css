@@ -6,7 +6,7 @@
 
 #mapid {
 
-		margin-top: 20px;
+		margin-top: 85px;
 		height: 450px;
 		width:100%;
 }
@@ -78,35 +78,16 @@
 
 
 .btn-with-image img {
-    width: 50px; /* Adjust the width to your desired size */
+    width: 37px; /* Adjust the width to your desired size */
     height: auto; /* Maintain aspect ratio */
 }
 .btn-with-image {
     position: relative;
     display: inline-block;
   }
-  
-  .hover-content {
-    display: none;
-    position: absolute;
-    top: 80%;
-    left: 0;
-    background-color: #17a2b8; /* Background color of the hover content */
-    border: 1px solid #363535;
-    padding: 22px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    height: 80px;
-    font-size: 16px; /* Adjust the font size to your desired value */
-    transition: font-size 0.3s ease; /* Add a transition for smooth resizing */
-}
 
-.hover-image:hover + .hover-content {
-    display: block;
-    font-size: 20px; /* Adjust the font size on hover */
-    top: 80%;
-}
-  
-  
+
+
 
 
 
@@ -188,7 +169,7 @@
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-	
+
 }
 
 .close:hover {
@@ -269,9 +250,9 @@
     cursor: not-allowed; /* Change cursor to not-allowed */
     /* Add any other styles you want to indicate it's disabled */
   }
-  
-  
-  
+
+
+
   select {
     padding: 10px;
     margin: 5px;
@@ -281,7 +262,7 @@
     border-radius: 5px;
     color: #333; /* Dark gray text color */
   }
-  
+
   /* Textarea */
   textarea {
     padding: 10px;
@@ -293,7 +274,7 @@
     border-radius: 5px;
     color: #333; /* Dark gray text color */
   }
-  
+
   /* Submit Button */
   button {
     padding: 10px 20px;
@@ -304,7 +285,3 @@
     cursor: pointer;
     margin-top: 10px;
   }
-
-  
-  
-  
