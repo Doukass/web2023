@@ -259,8 +259,8 @@ function handleDetailsClick(button) {
             Price: ${price}<br>
             Product: ${product}<br>
             Discount ID: ${discount_id}<br>
-            Likes: ${likeCounts[discount_id]}<br> 
-            Dislikes: ${dislikeCounts[discount_id]}<br> 
+            Likes: ${likeCounts[discount_id] !== undefined ? likeCounts[discount_id] : 0}<br> 
+            Dislikes: ${dislikeCounts[discount_id] !== undefined ? dislikeCounts[discount_id] : 0}<br> 
             Stock: ${stock == '0' ? 'Out Of Stock' : 'In Stock'}<br>
             
             <!--like -->
@@ -312,7 +312,11 @@ function uploadLikeDisLikeCounter(discount_id, callback) {
         url: "/like/counter",
         success: function (result) {
             // Iterate through the result array
+
+            //console.log(discount_id);
+            
             for (let i = 0; i < result.length; i++) {
+                
                 
                 var discount_id_server = result[i].discount_id;
                 
