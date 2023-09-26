@@ -12,6 +12,23 @@
     text-align: center;
     margin: 20px auto; /* Center the container horizontally */
 }
+/* Style for the dropdowns */
+#monthSelector{
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px;
+    
+}
+
+#yearSelector {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    margin-right: 10px;
+}
 
 
 /* Style for the canvas */
@@ -23,22 +40,7 @@
     margin-top: 20px; /* Add some spacing between the buttons and the chart */
 }
 
-/* Style for the dropdowns */
-#monthSelector{
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-right: 10px;
-}
 
-#yearSelector {
-    padding: 5px 10px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    margin-right: 10px;
-}
 
 /* Style for the select button */
 #updateChartButton {

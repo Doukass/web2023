@@ -51,11 +51,8 @@
 
     
     <div class="container1">
-<div class="chart1">
-    
-        
-<!-- Add a dropdown menu to select the month -->
-<select id="monthSelector">
+      <div>
+        <select id="monthSelector">
   <option value="01">January</option>
   <option value="02">February</option>
   <option value="03">March</option>
@@ -71,16 +68,19 @@
 </select>
 
 <select id="yearSelector">
-  <!-- Add options for the years you want to include -->
+
   <option value="2021">2021</option>
   <option value="2022">2022</option>
   <option value="2023">2023</option>
   <!-- Add more years as needed -->
 </select>
 
+      </div>
+        <canvas id="myChart" ></canvas>
 
-<!-- Add a canvas element for the chart -->
-<canvas id="myChart" ></canvas>
+      <div class="chart1">
+    
+
 
 <button id = "updateChartButton" onclick="updateChart()">Update Chart</button>
 <button id="closeChartButton" onclick="closeChart()">Close Chart</button>
