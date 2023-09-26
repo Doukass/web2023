@@ -112,8 +112,27 @@ function updateChart() {
         },
         options: {
           scales: {
+            x: {
+              display: true,
+              title: {
+                display: true,
+                text: 'Days of the Month'
+              },
+              ticks: {
+                stepSize: 1,
+                beginAtZero: true
+              }
+            },
             y: {
-              beginAtZero: true
+              display: true,
+              title: {
+                display: true,
+                text: 'Number of Discounts'
+              },
+              stepSize: 1,
+              beginAtZero: true,
+              max: 12,
+              min: 0
             }
           }
         }
