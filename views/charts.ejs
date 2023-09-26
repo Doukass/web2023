@@ -8,8 +8,8 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
   <!-- Custom CSS -->
-  <link href="stylehome.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="styleadmin.css">
+  <link href="navbar.css" rel="stylesheet" type="text/css">
+ 
   <link rel="stylesheet" href="chart.css">
 
   <!-- Leaflet CSS -->
@@ -49,10 +49,11 @@
     </nav>
 
 
+    
     <div class="container1">
+<div class="chart1">
     
-    
-        <div class="chart1">
+        
 <!-- Add a dropdown menu to select the month -->
 <select id="monthSelector">
   <option value="01">January</option>
@@ -76,13 +77,17 @@
   <option value="2023">2023</option>
   <!-- Add more years as needed -->
 </select>
+
+
+<!-- Add a canvas element for the chart -->
+<canvas id="myChart" ></canvas>
+
 <button id = "updateChartButton" onclick="updateChart()">Update Chart</button>
 <button id="closeChartButton" onclick="closeChart()">Close Chart</button>
 
 
 
-<!-- Add a canvas element for the chart -->
-<canvas id="myChart" ></canvas>
+
 
 
   </div>

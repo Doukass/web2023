@@ -12,7 +12,7 @@ $(document).ready(function () {
   let userCoords ;
 //topothesia pou theloume
   function onLocationFound(e) {
-      var radius = e.accuracy / 50;
+      var radius = 25;
 
    //userCoords = [38.26340103149414, 21.74340057373047];
     // userCoords = [38.232398986816406, 21.747299194335938];
