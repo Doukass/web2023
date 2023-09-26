@@ -46,12 +46,12 @@ const ifLoggedin = (req, res, next) => {
 };
 
 app.get('/', ifNotLoggedin, (req, res, next) => {
-  dbConnection.execute("SELECT name FROM users WHERE id=?", [req.session.userID])
+  dbConnection.execute("SELECT name, total_tokens FROM users  LEFT JOIN tokens ON users.id = tokens.user_id WHERE id=? ", [req.session.userID])
     .then(([rows]) => {
       if (rows[0].name === 'admin') {
         res.render('admin', { name: rows[0].name }); // Render admin.ejs for admin
       } else {
-        res.render('home', { name: rows[0].name }); // Render home.ejs for non-admin users
+        res.render('home', { name: rows[0].name , total_tokens: rows[0].total_tokens}); // Render home.ejs for non-admin users
       }
     });
 });
