@@ -609,55 +609,6 @@ function MinScore(user_id){
         }
     });
 }
-// apla gia na dw an mporw na parw to scoreboard
-FinalScore();
-function FinalScore() {
-    $.ajax({
-        type: "GET",
-        url: "/final/score",
-        success: function (result) {
-           // console.log(result);
-
-            // Create an object to store points for each user_id
-            var userPoints = {};
-
-            for (var i = 0; i < result.length; i++) {
-                var user_id = result[i].user_id;
-               // var score_id = result[i].score_id;
-                var points = result[i].points;
-
-                // Check if the user_id is already in the userPoints object
-                if (userPoints[user_id] === undefined) {
-                    // If not, initialize it with the points
-                    userPoints[user_id] = points;
-                } else {
-                    // If yes, add the points to the existing total
-                    userPoints[user_id] += points;
-                }
-            }
-
-            // Convert the userPoints object to an array of objects
-            var ScoreBoard = [];
-            for (var user_id in userPoints) {
-                ScoreBoard.push({
-                    user_id: user_id,
-                    points: userPoints[user_id]
-                });
-            }
-            // Sorting based on points in decreasing order
-                ScoreBoard.sort(function(a, b) {
-                    return b.points - a.points;
-                    });
-
-
-            console.log(ScoreBoard);
-
-           
-            
-        }
-    });
-}
-
 
 
 
