@@ -10,8 +10,11 @@
 /* Style for the chart container */
 .chart1 {
     text-align: center;
+    width: 50%; /* Set the desired width (adjust as needed) */
     margin: 20px auto; /* Center the container horizontally */
+    
 }
+
 /* Style for the dropdowns */
 #monthSelector{
     padding: 5px 10px;
@@ -35,9 +38,10 @@
 #myChart {
     width: 100%; /* Make the canvas fill its container width */
     max-width: 1000px; /* Limit the canvas width if needed */
-    height: 400px; /* Set the desired chart height */
+    max-height: 400px; /* Set the desired chart height */
     border: 1px solid #ccc; /* Add a border for visibility */
     margin-top: 20px; /* Add some spacing between the buttons and the chart */
+
 }
 
 

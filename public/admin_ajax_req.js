@@ -73,7 +73,7 @@ function updateChart() {
     success: function (result) {
       console.log(result);
 
-      // Extract the data for the chart // na broume to .map
+      // Extract the data for the chart 
       const chartData = result
         .filter(item => item.date_only.startsWith(`${selectedYear}-${selectedMonth}`))
         .map(item => ({
@@ -101,12 +101,12 @@ function updateChart() {
       myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: Array.from({ length: lastDayOfMonth }, (_, i) => (i + 1).toString()), // Labels for each day of the month
+          labels: Array.from({ length: lastDayOfMonth }, (_ , i) => (i + 1).toString()), // Labels for each day of the month
           datasets: [{
             label: 'Discount Count',
             data: allDaysData,
-            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Customize the color
-            borderColor: 'rgba(75, 192, 192, 1)', // Customize the border color
+            backgroundColor: 'black', // Customize the color
+            borderColor: 'black', // Customize the border color
             borderWidth: 1 // Customize the border width
           }]
         },
