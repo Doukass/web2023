@@ -142,7 +142,7 @@ for (let i = 0; i < result.length; i++) {
         marker.bindPopup(popupContent);
         markersLayer.addLayer(marker);
 
-        if (distance < 50) {
+        if (distance < 50000) {
             console.log(store_id);
             popupContent += `<div><button data-username="${store_id}"  onclick="handleAddDiscount(${store_id} , this )" class="discount-button">Add Discount</button></div>`;
         }
@@ -156,7 +156,7 @@ for (let i = 0; i < result.length; i++) {
         }
         
         
-            if (distance < 50) {
+            if (distance < 50000) {
                 var DisplayDetails = [
                     'Προιον:', product_name, '<br>', 'Tιμη:', price, '$', '<br>', 'Hμερομηνια', date, '<br>', 'Discount ID:', discount_id,
                     `<button class="details-button" data-discountid="${discount_id}" data-username="${data[i].user_name}" data-date="${data[i].date_entered}" data-price="${data[i].price}" data-product="${data[i].product_name}" data-stock ="${data[i].stock}" data-userid = "${data[i].user_id}" onclick="handleDetailsClick(this)">Details</button><br><br>`,
@@ -177,7 +177,7 @@ for (let i = 0; i < result.length; i++) {
             popupContent += `${productsByLocation2[loc].join(" ")}`;
         }
 
-        if (distance < 50) {
+        if (distance < 50000) {
             popupContent += `<div><button data-username="${store_id}"  onclick="handleAddDiscount(${store_id}, this )" class="discount-button">Add Discount</button></div>`;
         }
         

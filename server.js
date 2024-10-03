@@ -809,7 +809,6 @@ app.post('/update-database1', (req, res) => {
     INSERT INTO stores (store_id, store_name, store_latitude, store_longitude)
     VALUES (?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
-      store_id = VALUES(store_id),
       store_name = VALUES(store_name),
       store_latitude = VALUES(store_latitude),
       store_longitude = VALUES(store_longitude)
